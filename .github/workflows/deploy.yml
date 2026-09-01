@@ -68,6 +68,14 @@ jobs:
             echo "Ensuring build tools (make) are installed on VPS..."
             sudo apt-get update && sudo apt-get install -y make
             
+            echo "Checking if pnpm is installed..."
+            if ! command -v pnpm &> /dev/null; then
+                echo "pnpm not found. Installing pnpm globally..."
+                sudo npm install -g pnpm || npm install -g pnpm
+            else
+                echo "pnpm is already installed ($(pnpm --version)). Skipping installation."
+            fi
+            
             echo "Writing environment variables to .env..."
             echo "DOCKER_USER=${{ secrets.DOCKER_USERNAME }}" > .env
             echo "TAG=${{ github.sha }}" >> .env
