@@ -1,0 +1,10 @@
+{
+  "name": "@startupjigawa/web-corporate",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.js",
+  "dependencies": {
+    "@startupjigawa/auth-client": "workspace:*",
+    "@startupjigawa/ui-components": "workspace:*"
+  }
+}

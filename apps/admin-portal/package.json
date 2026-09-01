@@ -1,0 +1,13 @@
+{
+  "name": "@startupjigawa/admin-portal",
+  "version": "1.0.0",
+  "description": "Central Administration & Governance Portal for Startup Jigawa",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node ../../scripts/test-admin-governance.js"
+  },
+  "dependencies": {
+    "@startupjigawa/ui-components": "workspace:*",
+    "@startupjigawa/database": "workspace:*"
+  }
+}

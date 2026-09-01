@@ -1,0 +1,76 @@
+/* Startup Jigawa IdP — 3-Tier OS-Aware System Preference Dynamic Color Engine */
+
+/* Layer 1: Default Light Mode (System Light / Fallback Canvas) */
+:root {
+  --bg-canvas: #f5f5f7;          /* White smoke background */
+  --surface-card: #ffffff;       /* Pure white containers */
+  --surface-border: #e2e8f0;     /* Crisp slate border */
+  
+  --text-primary: #0f172a;       /* Deep slate high-contrast text */
+  --text-secondary: #475569;     /* Slate muted metadata text */
+  
+  --accent-primary: #2563eb;     /* Enterprise blue */
+  --accent-glow: rgba(37, 99, 235, 0.12);
+  
+  --status-success: #059669;     /* Operational health pulse */
+  --status-warning: #d97706;     /* Warning status */
+}
+
+/* Layer 2: OS-Level System Dark Mode (Automatic Detection via prefers-color-scheme) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="high-contrast"]) {
+    --bg-canvas: #090d16;        /* Deep obsidian canvas */
+    --surface-card: #111827;     /* Dark navy surface card */
+    --surface-border: #1f293d;   /* Subdued border */
+    
+    --text-primary: #f8fafc;     /* Bright slate text */
+    --text-secondary: #94a3b8;   /* Soft slate secondary text */
+    
+    --accent-primary: #3b82f6;   /* Electric blue accent */
+    --accent-glow: rgba(59, 130, 246, 0.15);
+    
+    --status-success: #10b981;   /* Emerald pulse */
+    --status-warning: #f59e0b;   /* Amber warning */
+  }
+}
+
+/* Layer 3: Explicit Manual Overrides & Field Modes */
+
+/* Explicit Light Mode Override */
+[data-theme="light"] {
+  --bg-canvas: #f5f5f7;
+  --surface-card: #ffffff;
+  --surface-border: #e2e8f0;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --accent-primary: #2563eb;
+  --accent-glow: rgba(37, 99, 235, 0.12);
+  --status-success: #059669;
+  --status-warning: #d97706;
+}
+
+/* Explicit Dark Mode Override */
+[data-theme="dark"] {
+  --bg-canvas: #090d16;
+  --surface-card: #111827;
+  --surface-border: #1f293d;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  --accent-primary: #3b82f6;
+  --accent-glow: rgba(59, 130, 246, 0.15);
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+}
+
+/* Outdoor High-Contrast Sunlight Mode (For Field Enumerators) */
+[data-theme="high-contrast"] {
+  --bg-canvas: #ffffff;
+  --surface-card: #ffffff;
+  --surface-border: #000000;
+  --text-primary: #000000;
+  --text-secondary: #333333;
+  --accent-primary: #0000ff;
+  --accent-glow: rgba(0, 0, 255, 0.2);
+  --status-success: #008000;
+  --status-warning: #cc6600;
+}

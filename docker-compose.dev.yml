@@ -1,0 +1,15 @@
+services:
+  auth-service:
+    build:
+      context: .
+      dockerfile: apps/auth-service/Dockerfile
+    image: startupjigawa/auth-service:dev
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: 'true'
+      WATCHPACK_POLLING: 'true'
+      TS_NODE_DEV_POLL: 'true'
+    command: ["node", "apps/auth-service/dist/index.js"]
+    volumes:
+      - ./apps/auth-service/src:/workspace/apps/auth-service/src
+      - ./packages:/workspace/packages

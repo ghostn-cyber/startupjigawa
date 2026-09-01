@@ -1,0 +1,14 @@
+{
+  "name": "startupjigawa",
+  "private": true,
+  "packageManager": "pnpm@9.12.3",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "pnpm -r --if-present run build",
+    "dev": "pnpm -r --parallel --if-present run dev",
+    "dev:packages": "tsc -p packages/auth-client/tsconfig.json --watch"
+  }
+}

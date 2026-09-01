@@ -1,0 +1,13 @@
+{
+  "name": "@startupjigawa/cloud-control",
+  "version": "1.0.0",
+  "description": "SJ Cloud Control Plane & Telemetry Dashboard for Startup Jigawa",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "node ../../scripts/test-cloud-control-plane.js"
+  },
+  "dependencies": {
+    "@startupjigawa/ui-components": "workspace:*",
+    "@startupjigawa/database": "workspace:*"
+  }
+}

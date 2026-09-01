@@ -1,0 +1,88 @@
+name: startupjigawa
+
+services:
+  jigawa_postgres:
+    image: postgres:15
+    container_name: jigawa_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: jigawa
+      POSTGRES_PASSWORD: jigawa_pass
+      POSTGRES_DB: jigawa_dev
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - '5432:5432'
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U jigawa -d jigawa_dev']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - startup-jigawa-net
+
+  jigawa_redis:
+    image: redis:7
+    container_name: jigawa_redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - startup-jigawa-net
+
+  auth-service:
+    image: ${DOCKER_USER:-startupjigawa}/auth-service:${TAG:-latest}
+    restart: unless-stopped
+    environment:
+      PORT: 4000
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.test}
+      DATABASE_URL: postgresql://jigawa:jigawa_pass@jigawa_postgres:5432/jigawa_dev
+      REDIS_URL: redis://jigawa_redis:6379
+      JWT_SECRET: changeme
+      JWT_REFRESH_SECRET: changeme_refresh
+      NODE_ENV: production
+    ports:
+      - '4000:4000'
+    depends_on:
+      jigawa_postgres:
+        condition: service_healthy
+      jigawa_redis:
+        condition: service_healthy
+    networks:
+      - startup-jigawa-net
+
+  jigawa_nginx_proxy:
+    image: nginx:alpine
+    container_name: jigawa_nginx_proxy
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    environment:
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.test}
+      NGINX_ENVSUBST_FILTER: BASE_DOMAIN
+    volumes:
+      - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
+      - ./infrastructure/nginx/certs:/etc/nginx/certs:ro
+      - ./infrastructure/nginx/html:/usr/share/nginx/html:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - startup-jigawa-net
+
+networks:
+  startup-jigawa-net:
+    driver: bridge
+
+volumes:
+  db_data:
+    driver: local
+
