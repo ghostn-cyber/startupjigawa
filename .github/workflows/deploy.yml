@@ -43,7 +43,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "Makefile,docker-compose.yml,infrastructure"
+          source: "Makefile,docker-compose.yml,infrastructure,scripts"
           target: "/var/www/acons"
 
       - name: Deploy to VPS via SSH
