@@ -59,6 +59,11 @@ jobs:
             echo "Ensuring build tools (make) are installed on VPS..."
             sudo apt-get update && sudo apt-get install -y make
             
+            echo "Stopping conflicting native host web services on port 80/443..."
+            sudo systemctl stop nginx 2>/dev/null || true
+            sudo systemctl disable nginx 2>/dev/null || true
+            sudo systemctl stop apache2 2>/dev/null || true
+            
             echo "Writing environment variables to .env..."
             echo "DOCKER_USER=${{ secrets.DOCKER_USERNAME }}" > .env
             echo "TAG=${{ github.sha }}" >> .env
