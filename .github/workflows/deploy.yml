@@ -37,7 +37,7 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.sha }}
 
-      - name: Deploy toVPS via SSH
+      - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.VPS_HOST }}
@@ -50,16 +50,13 @@ jobs:
             sudo chown -R $USER:$USER /var/www/acons
             cd /var/www/acons
             
-            echo "Exporting environment variables..."
-            export DOCKER_USER=${{ secrets.DOCKER_USERNAME }}
-            export TAG=${{ github.sha }}
+            echo "Writing environment variables to .env..."
+            echo "DOCKER_USER=${{ secrets.DOCKER_USERNAME }}" > .env
+            echo "TAG=${{ github.sha }}" >> .env
             
-            echo "Pulling latest images..."
-            docker compose pull
+            echo "Executing production deployment via Makefile..."
+            make prod-deploy
             
-            echo "Restarting services..."
-            docker compose up -d --remove-orphans
-            
-            echo "Cleaning up old images..."
+            echo "Cleaning up old unused images..."
             docker image prune -f
             echo "Deployment completed successfully!"
