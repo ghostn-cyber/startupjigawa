@@ -52,7 +52,7 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "Makefile,docker-compose.yml,Dockerfile.gateway,infrastructure,scripts"
+          source: "Makefile,docker-compose.yml,Dockerfile.gateway,infrastructure,scripts,package.json,pnpm-workspace.yaml,tsconfig.json"
           target: "/var/www/startupjigawa"
 
       - name: Deploy to VPS via SSH
