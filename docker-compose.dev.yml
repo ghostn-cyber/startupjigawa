@@ -13,3 +13,19 @@ services:
     volumes:
       - ./apps/auth-service/src:/workspace/apps/auth-service/src
       - ./packages:/workspace/packages
+
+  subdomain-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.gateway
+    image: startupjigawa/subdomain-gateway:dev
+    environment:
+      NODE_ENV: development
+      CHOKIDAR_USEPOLLING: 'true'
+      WATCHPACK_POLLING: 'true'
+    command: ["node", "scripts/subdomain-server.js"]
+    volumes:
+      - ./apps:/workspace/apps
+      - ./packages:/workspace/packages
+      - ./scripts:/workspace/scripts
+

@@ -57,6 +57,21 @@ services:
     networks:
       - startup-jigawa-net
 
+  subdomain-gateway:
+    image: ${DOCKER_USER:-hhhamza}/subdomain-gateway:${TAG:-latest}
+    container_name: subdomain_gateway
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
+    ports:
+      - '3000:3000'
+    depends_on:
+      - auth-service
+    networks:
+      - startup-jigawa-net
+
   jigawa_nginx_proxy:
     image: nginx:alpine
     container_name: jigawa_nginx_proxy
@@ -74,8 +89,12 @@ services:
       - ./infrastructure/nginx/html:/usr/share/nginx/html:ro
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - auth-service
+      - subdomain-gateway
     networks:
       - startup-jigawa-net
+
 
 networks:
   startup-jigawa-net:

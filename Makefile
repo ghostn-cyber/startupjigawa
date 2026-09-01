@@ -105,25 +105,25 @@ prod-build: clean ## Compile monorepo workspaces and build zero-cache production
 	@docker compose -f docker-compose.yml build --no-cache
 	@echo "✨ Production build completed successfully."
 
-prod-deploy: ## Build workspaces, start host gateway on port 3000, pull registry images & deploy with zero downtime
+prod-deploy: ## Build workspaces, pull registry images & deploy full containerized production stack with zero downtime
 	@echo "=================================================="
 	@echo "🚀 Deploying Startup Jigawa Production Stack..."
 	@echo "=================================================="
 	@echo "1. Installing workspace dependencies and building monorepo..."
 	@pnpm install || npm install
 	@npm run build
-	@echo "2. Freeing up port 3000 and starting Host Subdomain Unified Gateway Router..."
+	@echo "2. Freeing up ecosystem ports and pulling container registry images..."
 	@fuser -k 3000/tcp 2>/dev/null || true
-	@nohup node scripts/subdomain-server.js > subdomain-stack.log 2>&1 &
-	@sleep 2
-	@echo "3. Pulling container registry images and starting Docker infrastructure..."
-	@docker compose pull
+	@fuser -k 4000/tcp 2>/dev/null || true
+	@docker compose pull || true
+	@echo "3. Starting fully containerized Docker infrastructure (Postgres, Redis, Auth Service, Subdomain Gateway, Nginx Proxy)..."
 	@docker compose up -d --remove-orphans
 	@echo "=================================================="
-	@echo "✨ Production Stack and Host Gateway successfully deployed!"
+	@echo "✨ Production Stack successfully deployed in Containerized Mode!"
 	@echo "   - Main Domain: http://www.$(BASE_DOMAIN):8080"
 	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN):8080"
 	@echo "=================================================="
+
 
 build: clean ## Install dependencies and build all monorepo workspaces
 	@echo "=================================================="
