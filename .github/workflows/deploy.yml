@@ -71,8 +71,10 @@ jobs:
             echo "Writing environment variables to .env..."
             echo "DOCKER_USER=${{ secrets.DOCKER_USERNAME }}" > .env
             echo "TAG=${{ github.sha }}" >> .env
+            echo "BASE_DOMAIN=startupjigawa.com" >> .env
             
             echo "Executing production deployment via Makefile..."
+            make switch-to-com
             make prod-deploy
             
             echo "Cleaning up old unused images..."
