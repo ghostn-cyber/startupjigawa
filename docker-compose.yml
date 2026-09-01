@@ -1,3 +1,5 @@
+version: '3.8'
+
 name: startupjigawa
 
 services:
@@ -15,7 +17,7 @@ services:
     volumes:
       - db_data:/var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U jigawa -d jigawa_dev']
+      test: [ 'CMD-SHELL', 'pg_isready -U jigawa -d jigawa_dev' ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -28,9 +30,9 @@ services:
     restart: unless-stopped
     ports:
       - '6379:6379'
-    command: ['redis-server', '--save', '', '--appendonly', 'no']
+    command: [ 'redis-server', '--save', '', '--appendonly', 'no' ]
     healthcheck:
-      test: ['CMD', 'redis-cli', 'ping']
+      test: [ 'CMD', 'redis-cli', 'ping' ]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -38,7 +40,8 @@ services:
       - startup-jigawa-net
 
   auth-service:
-    image: ${DOCKER_USER:-startupjigawa}/auth-service:${TAG:-latest}
+    image: ${DOCKER_USER:-hhhamza}/auth-service:${TAG:-latest}
+    container_name: auth_service
     restart: unless-stopped
     environment:
       PORT: 4000
@@ -85,4 +88,3 @@ networks:
 volumes:
   db_data:
     driver: local
-
