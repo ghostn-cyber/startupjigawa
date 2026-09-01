@@ -50,6 +50,9 @@ jobs:
             sudo chown -R $USER:$USER /var/www/acons
             cd /var/www/acons
             
+            echo "Ensuring build tools (make) are installed on VPS..."
+            sudo apt-get update && sudo apt-get install -y make
+            
             echo "Writing environment variables to .env..."
             echo "DOCKER_USER=${{ secrets.DOCKER_USERNAME }}" > .env
             echo "TAG=${{ github.sha }}" >> .env
