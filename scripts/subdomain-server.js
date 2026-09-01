@@ -52,7 +52,7 @@ const {
 } = require('../apps/admin-portal/src/index.js');
 
 
-const BASE_DOMAIN = process.env.BASE_DOMAIN || 'startupjigawa.test';
+const BASE_DOMAIN = process.env.BASE_DOMAIN || 'startupjigawa.com';
 
 const LOGO_JPEG_PATH = path.join(__dirname, '../packages/ui-components/logo.jpeg');
 const LOGO_PNG_PATH = path.join(__dirname, '../packages/ui-components/logo.png');

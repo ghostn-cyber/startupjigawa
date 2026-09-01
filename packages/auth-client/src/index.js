@@ -140,7 +140,7 @@ function validateReturnTo(url) {
     return null;
 }
 function getCrossDomainCookieConfig(reqHost) {
-    const envDomain = process.env.BASE_DOMAIN || 'startupjigawa.test';
+    const envDomain = process.env.BASE_DOMAIN || 'startupjigawa.com';
     const host = reqHost || envDomain;
     let domain = undefined;
     if (host.includes('localhost') || /^127\./.test(host)) {
@@ -191,7 +191,8 @@ function getThemeCookieConfig(reqHost) {
     };
 }
 function buildLoginRedirectUrl(options = {}) {
-    const host = options.authHost || process.env.AUTH_SERVICE_HOST || 'auth.startupjigawa.test';
+    const baseDomain = process.env.BASE_DOMAIN || 'startupjigawa.com';
+    const host = options.authHost || process.env.AUTH_SERVICE_HOST || `auth.${baseDomain}`;
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
     return `${protocol}://${host}/login`;
 }

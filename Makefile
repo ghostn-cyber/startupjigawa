@@ -1,6 +1,8 @@
 .DEFAULT_GOAL := help
 
-.PHONY: help up down restart reload-nginx test-routing logs clean local-clean local-dev prod-build prod-deploy clean-volumes seed build docker-clean docker-build clean-rebuild test-all rebuild-code rebuild-s local-maintenance-on local-maintenance-off prod-maintenance-s prod-restore-s maintenance-s restore-s maintenance-except-www restore-all off on status-all status
+BASE_DOMAIN ?= startupjigawa.com
+
+.PHONY: help up down restart reload-nginx test-routing logs clean local-clean local-dev prod-build prod-deploy clean-volumes seed build docker-clean docker-build clean-rebuild test-all rebuild-code rebuild-s local-maintenance-on local-maintenance-off prod-maintenance-s prod-restore-s maintenance-s restore-s maintenance-except-www restore-all off on status-all status render-vhosts switch-to-com switch-to-test
 
 help: ## Display this help operations manual
 	@echo "=================================================="
@@ -31,9 +33,9 @@ up: ## Start full Startup Jigawa ecosystem stack
 	@sleep 2
 	@echo "=================================================="
 	@echo "✨ Ecosystem successfully online!"
-	@echo "   - Main Domain: http://startupjigawa.test"
-	@echo "   - Auth IdP:    http://auth.startupjigawa.test"
-	@echo "   - Portal SSO:  http://portal.startupjigawa.test"
+	@echo "   - Main Domain: http://$(BASE_DOMAIN)"
+	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN)"
+	@echo "   - Portal SSO:  http://portal.$(BASE_DOMAIN)"
 	@echo "=================================================="
 
 # --- ECOSYSTEM OFF SWITCH ---
@@ -89,9 +91,9 @@ local-dev: ## Start ecosystem stack in local development mode (live reload, watc
 	@sleep 2
 	@echo "=================================================="
 	@echo "✨ Local Development Environment successfully online with Live Reload!"
-	@echo "   - Main Domain: http://startupjigawa.test"
-	@echo "   - Auth IdP:    http://auth.startupjigawa.test"
-	@echo "   - Portal SSO:  http://portal.startupjigawa.test"
+	@echo "   - Main Domain: http://$(BASE_DOMAIN)"
+	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN)"
+	@echo "   - Portal SSO:  http://portal.$(BASE_DOMAIN)"
 	@echo "=================================================="
 
 prod-build: clean ## Compile monorepo workspaces and build zero-cache production containers
@@ -103,13 +105,25 @@ prod-build: clean ## Compile monorepo workspaces and build zero-cache production
 	@docker compose -f docker-compose.yml build --no-cache
 	@echo "✨ Production build completed successfully."
 
-prod-deploy: ## Pull pre-built images from Docker Hub registry and deploy with zero downtime
+prod-deploy: ## Build workspaces, start host gateway on port 3000, pull registry images & deploy with zero downtime
 	@echo "=================================================="
-	@echo "🚀 Deploying Startup Jigawa Production Stack from Container Registry..."
+	@echo "🚀 Deploying Startup Jigawa Production Stack..."
 	@echo "=================================================="
+	@echo "1. Installing workspace dependencies and building monorepo..."
+	@pnpm install || npm install
+	@npm run build
+	@echo "2. Freeing up port 3000 and starting Host Subdomain Unified Gateway Router..."
+	@fuser -k 3000/tcp 2>/dev/null || true
+	@nohup node scripts/subdomain-server.js > subdomain-stack.log 2>&1 &
+	@sleep 2
+	@echo "3. Pulling container registry images and starting Docker infrastructure..."
 	@docker compose pull
 	@docker compose up -d --remove-orphans
-	@echo "✨ Production Stack deployed successfully!"
+	@echo "=================================================="
+	@echo "✨ Production Stack and Host Gateway successfully deployed!"
+	@echo "   - Main Domain: http://www.$(BASE_DOMAIN):8080"
+	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN):8080"
+	@echo "=================================================="
 
 build: clean ## Install dependencies and build all monorepo workspaces
 	@echo "=================================================="
@@ -142,10 +156,6 @@ rebuild-code: ## Recompile TypeScript workspaces & rebuild/restart ALL Docker se
 	docker compose up -d
 	@echo "✅ All code changes deployed across all subdomains! Perform a hard browser refresh (Ctrl + Shift + R)."
 
-# Usage examples:
-#   make rebuild-s s=auth-service
-#   make rebuild-s s=portal
-#   make rebuild-s s=tracker
 rebuild-s: ## Recompile TypeScript & rebuild/restart single service (e.g. s=auth-service)
 	@echo "🔨 Recompiling TypeScript workspaces..."
 	npm run build
@@ -190,7 +200,7 @@ local-maintenance-on: ## Test maintenance mode locally by stopping auth-service
 	@echo "🚨 [LOCAL TEST] Stopping auth-service to simulate upstream downtime..."
 	docker compose stop auth-service
 	@echo "🔍 Verifying Nginx error interception via curl..."
-	curl -i -H "Host: auth.startupjigawa.test" http://localhost/
+	curl -i -H "Host: auth.$(BASE_DOMAIN)" http://localhost/
 
 local-maintenance-off: ## Restore local services from maintenance testing
 	@echo "🔄 [LOCAL TEST] Restarting auth-service..."
@@ -262,7 +272,7 @@ maintenance-except-www: ## Enable maintenance mode for ALL subdomains except www
 		fi; \
 	done
 	@make reload-nginx
-	@echo "🚨 All ecosystem subdomains are now in Maintenance Mode (HTTP 503)! Only www.startupjigawa.test is LIVE."
+	@echo "🚨 All ecosystem subdomains are now in Maintenance Mode (HTTP 503)! Only www.$(BASE_DOMAIN) is LIVE."
 
 restore-all: ## Restore live production traffic for ALL ecosystem subdomains
 	@echo "🔄 Restoring live traffic for ALL ecosystem subdomains..."
@@ -274,6 +284,39 @@ restore-all: ## Restore live production traffic for ALL ecosystem subdomains
 	done
 	@make reload-nginx
 	@echo "✅ All ecosystem subdomains restored to Live Production Mode (HTTP 200)!"
+
+render-vhosts: ## Render Nginx vhost configuration files from templates using BASE_DOMAIN
+	@echo "🔧 Rendering Nginx Virtual Hosts for domain: $(BASE_DOMAIN)..."
+	@export BASE_DOMAIN=$(BASE_DOMAIN); \
+	cd infrastructure/nginx/conf.d && \
+	for f in *.template; do \
+		if [ -f "$$f" ]; then \
+			target=$$(echo "$$f" | sed 's/\.template$$//'); \
+			envsubst '$$BASE_DOMAIN' < "$$f" > "$$target"; \
+		fi; \
+	done
+	@make reload-nginx
+	@echo "✨ Virtual host configs rendered and Nginx reloaded for domain: $(BASE_DOMAIN)!"
+
+switch-to-com: ## Switch ecosystem domain configuration to .com (Production)
+	@echo "🌐 Switching ecosystem domain configuration to startupjigawa.com..."
+	@if [ -f .env ]; then \
+		sed -i 's/BASE_DOMAIN=.*/BASE_DOMAIN=startupjigawa.com/g' .env 2>/dev/null || true; \
+		grep -q "BASE_DOMAIN" .env || echo "BASE_DOMAIN=startupjigawa.com" >> .env; \
+	else \
+		echo "BASE_DOMAIN=startupjigawa.com" > .env; \
+	fi
+	@$(MAKE) render-vhosts BASE_DOMAIN=startupjigawa.com
+
+switch-to-test: ## Switch ecosystem domain configuration to .test (Local Dev)
+	@echo "🧪 Switching ecosystem domain configuration to startupjigawa.test..."
+	@if [ -f .env ]; then \
+		sed -i 's/BASE_DOMAIN=.*/BASE_DOMAIN=startupjigawa.test/g' .env 2>/dev/null || true; \
+		grep -q "BASE_DOMAIN" .env || echo "BASE_DOMAIN=startupjigawa.test" >> .env; \
+	else \
+		echo "BASE_DOMAIN=startupjigawa.test" > .env; \
+	fi
+	@$(MAKE) render-vhosts BASE_DOMAIN=startupjigawa.test
 
 test-routing: ## Run subdomain routing verification script
 	@node scripts/test-subdomains.js

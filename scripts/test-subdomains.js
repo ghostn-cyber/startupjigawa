@@ -2,7 +2,7 @@ const http = require('http');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
 
-const BASE_DOMAIN = process.env.BASE_DOMAIN || 'startupjigawa.test';
+const BASE_DOMAIN = process.env.BASE_DOMAIN || 'startupjigawa.com';
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 const TEST_CASES = [

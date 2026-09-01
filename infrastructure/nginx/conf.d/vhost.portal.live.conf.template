@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name academy.startupjigawa.com;
+    server_name portal.${BASE_DOMAIN};
 
     location / {
         proxy_pass http://corporate_gateway;

@@ -1,6 +1,6 @@
 server {
     listen 80;
-    server_name civic.startupjigawa.com;
+    server_name admin.${BASE_DOMAIN};
 
     location / {
         return 503;
