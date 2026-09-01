@@ -35,7 +35,7 @@ jobs:
           
           echo "Pushing images to Docker Hub..."
           docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
-          docker push ${{ secrets.DOCKER_USERNAME}}//auth-service:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.sha }}
 
       - name: Deploy to VPS via SSH
         uses: appleboy/ssh-action@v1.0.3
