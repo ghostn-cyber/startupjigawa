@@ -1,5 +1,5 @@
 FROM node:18-alpine AS base
-RUN apk add --no-cache openssl && ln -sf /usr/lib/libssl.so.3 /usr/lib/libssl.so.1.1 && ln -sf /usr/lib/libcrypto.so.3 /usr/lib/libcrypto.so.1.1
+RUN apk add --no-cache openssl libc6-compat && ln -sf /usr/lib/libssl.so.3 /usr/lib/libssl.so.1.1 && ln -sf /usr/lib/libcrypto.so.3 /usr/lib/libcrypto.so.1.1
 RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
 WORKDIR /workspace
 
@@ -19,8 +19,7 @@ RUN pnpm --filter @startupjigawa/database generate || true
 RUN pnpm --dir packages/auth-client build
 RUN pnpm -r --if-present run build || npm run build || true
 
-FROM node:18-alpine AS runtime
-RUN corepack enable && corepack prepare pnpm@9.12.3 --activate
+FROM base AS runtime
 WORKDIR /workspace
 ENV NODE_ENV=production
 COPY --from=dependencies /workspace/package.json ./package.json
