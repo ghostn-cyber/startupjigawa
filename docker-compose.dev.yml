@@ -14,18 +14,31 @@ services:
       - ./apps/auth-service/src:/workspace/apps/auth-service/src
       - ./packages:/workspace/packages
 
-  subdomain-gateway:
-    build:
-      context: .
-      dockerfile: Dockerfile.gateway
-    image: startupjigawa/subdomain-gateway:dev
+  www_service:
     environment:
       NODE_ENV: development
-      CHOKIDAR_USEPOLLING: 'true'
-      WATCHPACK_POLLING: 'true'
-    command: ["node", "scripts/subdomain-server.js"]
-    volumes:
-      - ./apps:/workspace/apps
-      - ./packages:/workspace/packages
-      - ./scripts:/workspace/scripts
+  academy_service:
+    environment:
+      NODE_ENV: development
+  tracker_service:
+    environment:
+      NODE_ENV: development
+  portal_service:
+    environment:
+      NODE_ENV: development
+  civic_service:
+    environment:
+      NODE_ENV: development
+  labs_service:
+    environment:
+      NODE_ENV: development
+  products_service:
+    environment:
+      NODE_ENV: development
+  cloud_service:
+    environment:
+      NODE_ENV: development
+  admin_service:
+    environment:
+      NODE_ENV: development
 

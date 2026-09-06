@@ -27,9 +27,9 @@ class TelemetryService {
     }
 
     return [
-      { id: 'srv-gateway', name: 'Gateway Subdomain Server', port: 3000, status: 'ONLINE', latencyMs: 2, uptimePercent: 99.99, version: 'v2.4.0' },
-      { id: 'srv-auth', name: 'Central Auth Service (IdP)', port: 3004, status: 'ONLINE', latencyMs: 5, uptimePercent: 99.98, version: 'v1.8.2' },
-      { id: 'srv-corporate', name: 'Corporate Landing Gateway', port: 3000, status: 'ONLINE', latencyMs: 3, uptimePercent: 100.0, version: 'v1.0.0' },
+      { id: 'srv-www', name: 'Corporate Web Service', port: 3001, status: 'ONLINE', latencyMs: 2, uptimePercent: 99.99, version: 'v2.4.0' },
+      { id: 'srv-auth-service', name: 'Central Auth Service (IdP)', port: 4000, status: 'ONLINE', latencyMs: 5, uptimePercent: 99.98, version: 'v1.8.2' },
+      { id: 'srv-auth', name: 'Central Auth Service (IdP)', port: 4000, status: 'ONLINE', latencyMs: 3, uptimePercent: 100.0, version: 'v1.0.0' },
       { id: 'srv-academy', name: 'Digital Skills Academy', port: 3001, status: 'ONLINE', latencyMs: 4, uptimePercent: 99.95, version: 'v1.2.1' },
       { id: 'srv-tracker', name: 'Beneficiary & Project Tracker', port: 3002, status: 'ONLINE', latencyMs: 4, uptimePercent: 99.97, version: 'v1.1.0' },
       { id: 'srv-portal', name: 'Partner & Pilot Portal', port: 3003, status: 'ONLINE', latencyMs: 6, uptimePercent: 99.92, version: 'v1.5.0' },

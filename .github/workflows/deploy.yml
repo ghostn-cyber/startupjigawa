@@ -37,22 +37,13 @@ jobs:
           docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:latest
           docker push ${{ secrets.DOCKER_USERNAME }}/auth-service:${{ github.sha }}
 
-      - name: Build and Push Subdomain Gateway Image
-        run: |
-          echo "Building Docker image for subdomain-gateway..."
-          docker build -f Dockerfile.gateway -t ${{ secrets.DOCKER_USERNAME }}/subdomain-gateway:latest -t ${{ secrets.DOCKER_USERNAME }}/subdomain-gateway:${{ github.sha }} .
-          
-          echo "Pushing subdomain-gateway images to Docker Hub..."
-          docker push ${{ secrets.DOCKER_USERNAME }}/subdomain-gateway:latest
-          docker push ${{ secrets.DOCKER_USERNAME }}/subdomain-gateway:${{ github.sha }}
-
       - name: Copy Deployment Files to VPS
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          source: "Makefile,docker-compose.yml,Dockerfile.gateway,infrastructure,scripts,package.json,pnpm-workspace.yaml,tsconfig.json"
+          source: "Makefile,docker-compose.yml,docker-compose.dev.yml,Dockerfile.app,infrastructure,apps,packages,package.json,pnpm-workspace.yaml,tsconfig.json,pnpm-lock.yaml"
           target: "/var/www/startupjigawa"
 
       - name: Deploy to VPS via SSH

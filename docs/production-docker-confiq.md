@@ -28,7 +28,7 @@ A preliminary audit of production host environments highlights potential port co
 |  [Port 5432] --> Internal PostgreSQL 15 (Container isolated / mapped internal)    |
 |  [Port 6379] --> Internal Redis 7 Cache (Container isolated / mapped internal)     |
 |  [Port 4000] --> Auth IdP Service (Container internal bridge)                      |
-|  [Ports 3000-3007] --> Host Subdomain Applications (Local Node.js Workspaces)      |
+|  [Internal service ports] --> Isolated application containers behind Nginx       |
 +-----------------------------------------------------------------------------------+
 ```
 
@@ -43,11 +43,11 @@ A preliminary audit of production host environments highlights potential port co
 
 | Service Container | Primary Technology | Internal Port | Host Exposed Port | Isolation Rule |
 | :--- | :--- | :--- | :--- | :--- |
-| `jigawa_nginx_proxy` | Nginx Alpine | `80`, `443` | `80:80`, `443:443` | Public Edge Ingress Proxy |
-| `auth-service` | Node.js / Express | `4000` | `4000:4000` | Subdomain IdP (Internal Network) |
-| `jigawa_postgres` | PostgreSQL 15 | `5432` | `5432:5432` | Persistent DB (`db_data` volume) |
-| `jigawa_redis` | Redis 7 | `6379` | `6379:6379` | Session & Cache Store |
-| Host Apps Gateway | Node Subdomain Gateway | `3000` | `3000` (Host Loopback) | Internal Gateway Proxy Target |
+| `jigawa_nginx_proxy` | Nginx Alpine | `80`, `443` | `8080:80`, `8443:443` by default | Public Edge Ingress Proxy |
+| `auth-service` | Node.js / Express | `4000` | Docker bridge only | Subdomain IdP |
+| `jigawa_postgres` | PostgreSQL 15 | `5432` | Docker bridge only | Persistent DB (`db_data` volume) |
+| `jigawa_redis` | Redis 7 | `6379` | Docker bridge only | Session & Cache Store |
+| Corporate Web Service | Node application service | `3001` | Docker bridge only | Nginx upstream |
 
 ---
 
@@ -108,26 +108,122 @@ The central Nginx reverse proxy container (`jigawa_nginx_proxy` / `web-proxy`) a
 
 - **Ports**: Listens on port `80` (HTTP) and port `443` (HTTPS/SSL).
 - **SSL Certificate Mounting**: Certificates are mounted read-only into `/etc/nginx/certs:ro` to support TLS termination across all subdomains.
-- **Dynamic DNS Resolution**: Uses Docker embedded DNS (`resolver 127.0.0.11 valid=5s ipv6=off;`) with dynamic variable proxying (`set $auth_target "http://auth-service:4000";`) to ensure backend container IP changes do not break routing.
+- **Dynamic DNS Resolution**: Uses Docker embedded DNS (`resolver 127.0.0.11 valid=5s ipv6=off;`) and Compose service names such as `auth-service:4000` so container IP changes do not break routing.
 
 ### 4.2 Subdomain Routing Matrix
 
 | Subdomain Virtual Host | Upstream Gateway Target | Function |
 | :--- | :--- | :--- |
-| `startupjigawa.test` / `www.*` | `http://corporate_gateway` | Main Corporate Portal |
+| `startupjigawa.test` / `www.*` | `http://www_service:3001` | Main Corporate Portal |
 | `auth.startupjigawa.test` | `http://auth-service:4000` | SSO & Identity Provider (IdP) |
-| `academy.startupjigawa.test` | `http://corporate_gateway` | Digital Skills Academy |
-| `tracker.startupjigawa.test` | `http://corporate_gateway` | Beneficiary & M&E Tracker |
-| `portal.startupjigawa.test` | `http://corporate_gateway` | Partner Pilot Portal |
-| `civic.startupjigawa.test` | `http://corporate_gateway` | Civic Tech Hub |
-| `labs.startupjigawa.test` | `http://corporate_gateway` | AgriTech & Climate Labs |
-| `products.startupjigawa.test` | `http://corporate_gateway` | Product Showcase Directory |
-| `admin.startupjigawa.test` | `http://corporate_gateway` | Central ERP & Governance Vault |
-| `*.startupjigawa.test` | `http://corporate_gateway` | Wildcard Ecosystem Catch-All |
+| `academy.startupjigawa.test` | `http://academy_service:3002` | Digital Skills Academy |
+| `tracker.startupjigawa.test` | `http://tracker_service:3003` | Beneficiary & M&E Tracker |
+| `portal.startupjigawa.test` | `http://portal_service:3004` | Partner Pilot Portal |
+| `civic.startupjigawa.test` | `http://civic_service:3005` | Civic Tech Hub |
+| `labs.startupjigawa.test` | `http://labs_service:3006` | AgriTech & Climate Labs |
+| `products.startupjigawa.test` | `http://products_service:3007` | Product Showcase Directory |
+| `admin.startupjigawa.test` | `http://admin_service:3009` | Central ERP & Governance Vault |
+| `cloud.startupjigawa.test` | `http://cloud_service:3008` | Cloud Control Plane |
 
----
+## 5. Public DNS Setup
 
-## 5. Subdomain HTTP 503 Maintenance Mode Architecture
+Configure DNS at the provider that is authoritative for `startupjigawa.com`. Replace `203.0.113.10` below with the production VPS public IPv4 address.
+
+### 5.1 Required Production Records
+
+Create these records:
+
+| Type | Name | Value | Purpose |
+| :--- | :--- | :--- | :--- |
+| `A` | `@` | `203.0.113.10` | Root domain |
+| `A` | `*` | `203.0.113.10` | All Startup Jigawa subdomains |
+| `CNAME` | `www` | `@` | Corporate site alias |
+
+The wildcard record covers `auth`, `academy`, `tracker`, `portal`, `civic`, `labs`, `products`, `cloud`, and `admin`. If the DNS provider does not support wildcard records, create an `A` record for each subdomain instead. Never point public DNS at Docker container IPs; those addresses are private and can change.
+
+Use DNS-only mode while validating the VPS and certificates. If a DNS/CDN proxy is enabled later, it must forward HTTPS to the VPS and preserve the original `Host` header.
+
+### 5.2 Verify DNS Before Deployment
+
+Run these commands from a machine outside the VPS and confirm each name resolves to the VPS public IP:
+
+```bash
+dig +short startupjigawa.com A
+dig +short www.startupjigawa.com A
+dig +short academy.startupjigawa.com A
+dig +short auth.startupjigawa.com A
+dig +short cloud.startupjigawa.com A
+```
+
+DNS propagation must complete before HTTP/TLS smoke tests. DNS resolution does not provision certificates and does not start Docker services.
+
+### 5.3 Local Development Domain
+
+`.startupjigawa.test` is for local development and should not be added to public DNS. Add the local names to `/etc/hosts` with:
+
+```bash
+sudo bash scripts/setup-hosts.sh
+```
+
+The development Compose listener is available at `http://127.0.0.1:8080`. Test a specific vhost with `curl -H "Host: academy.startupjigawa.test" http://127.0.0.1:8080/`.
+
+## 6. GitHub Actions Deployment Pipeline
+
+The workflow at `.github/workflows/deploy.yml` is triggered automatically by every push to the `main` branch. Trigger a production deployment with:
+
+```bash
+git add .
+git commit -m "deploy: update Startup Jigawa"
+git push origin main
+```
+
+The pipeline checks out the repository, builds and publishes the `auth-service` image, copies the Compose/Docker/Nginx/application files to `/var/www/startupjigawa`, then runs `make switch-to-com` and `make prod-deploy` over SSH. The deployment now builds isolated app services and starts them behind Nginx; there is no host gateway process or port-3000 router.
+
+### 6.1 Required GitHub Repository Secrets
+
+Configure these under **Repository Settings → Secrets and variables → Actions → Secrets**:
+
+| Secret | Value |
+| :--- | :--- |
+| `DOCKER_USERNAME` | Docker Hub username used for the auth image |
+| `DOCKER_PASSWORD` | Docker Hub access token |
+| `VPS_HOST` | Public DNS name or IPv4 address of the production VPS |
+| `VPS_USER` | SSH deployment user with Docker access |
+| `VPS_SSH_KEY` | Private SSH key matching the VPS user's `authorized_keys` |
+
+The VPS must have Docker Engine, the Docker Compose plugin, GitHub Actions SSH access, and a deployment user with permission to run Docker. The workflow may use `sudo apt-get` to install `make`; ensure that user has the required sudo permission.
+
+### 6.2 First-Time VPS Preparation
+
+After installing Docker using Section 3, prepare the deployment directory and verify the runtime as the deployment user:
+
+```bash
+ssh VPS_USER@VPS_HOST
+docker info
+docker compose version
+sudo mkdir -p /var/www/startupjigawa
+sudo chown -R "$USER":"$USER" /var/www/startupjigawa
+exit
+```
+
+Allow inbound TCP `80` and `443` in the VPS firewall/security group. Keep application ports `3001` through `3009`, auth port `4000`, PostgreSQL `5432`, and Redis `6379` private to the Docker network.
+
+### 6.3 Verify a Pipeline Deployment
+
+Monitor **Actions → CI/CD Pipeline (Docker Hub & VPS)** after pushing to `main`. Then verify the VPS deployment:
+
+```bash
+ssh VPS_USER@VPS_HOST
+cd /var/www/startupjigawa
+docker compose ps
+docker compose exec jigawa_nginx_proxy nginx -t
+curl -I -H "Host: www.startupjigawa.com" http://127.0.0.1:8080/
+curl -I -H "Host: auth.startupjigawa.com" http://127.0.0.1:8080/health
+```
+
+Expected results are healthy containers, a successful Nginx syntax check, and HTTP `200` or a valid application redirect. For failures, inspect `docker compose logs --tail=100 <service>` before rerunning the pipeline.
+
+## 7. Subdomain HTTP 503 Maintenance Mode Architecture
 
 ### 5.1 Interception Mechanism
 Nginx intercepts upstream downtime (connection refusal, 502, 503, 504 status codes) and returns an explicit `503 Service Temporarily Unavailable` HTTP response code:
@@ -151,7 +247,7 @@ The maintenance page is rendered from `/usr/share/nginx/html/maintenance.html` (
 
 ---
 
-## 6. Operational Runbook & Zero-Downtime Management
+## 8. Operational Runbook & Zero-Downtime Management
 
 ### 6.1 Validating Configuration Syntax
 ```bash

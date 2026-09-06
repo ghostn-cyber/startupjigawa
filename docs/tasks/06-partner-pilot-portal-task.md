@@ -12,7 +12,7 @@
 
 ### Phase 1: Infrastructure & Subdomain Routing Registration
 
-* [ ] **Task 1.1**: Register `portal.startupjigawa.test` (Port `3003`) in `scripts/subdomain-server.js` within the unified subdomain routing map.
+* [ ] **Task 1.1**: Route `portal.startupjigawa.test` to the isolated `portal_service` container.
 * [ ] **Task 1.2**: Update Nginx upstream templates (`infrastructure/nginx/templates/default.conf.template` and `startupjigawa.conf`) to map `portal.startupjigawa.test` to port `3003` with dynamic DNS resolution (`resolver 127.0.0.11 valid=5s;`).
 * [ ] **Task 1.3**: Verify local `/etc/hosts` contains the `portal.startupjigawa.test` entry pointing to `127.0.0.1`.
 
@@ -44,7 +44,7 @@
 
 ### Phase 5: Automated Integration Test Suite & Verification
 
-* [ ] **Task 5.1**: Create automated test assertions in `scripts/test-subdomains.js` verifying `portal.startupjigawa.test:3003` HTTP behavior.
+* [ ] **Task 5.1**: Add automated Nginx smoke-test assertions verifying `portal.startupjigawa.test` HTTP behavior through the development listener.
 * [ ] **Task 5.2**: Write unit tests verifying SSO redirection behavior for unauthenticated requests.
 * [ ] **Task 5.3**: Write integration test cases validating role-based authorization (Partner vs. MDA Official vs. System Admin).
 * [ ] **Task 5.4**: Execute full stack restart (`make restart`) and validation suite (`make test-routing`), confirming a 100% pass rate.

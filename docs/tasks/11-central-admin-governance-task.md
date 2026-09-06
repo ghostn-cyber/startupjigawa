@@ -1,6 +1,6 @@
 Milestone 11 Task Tracking Ledger (11-central-admin-governance-task.md)
 Phase 1: Subdomain Routing & Gateway Parity
-[ ] Task 1.1: Register admin.startupjigawa.test (Port 3007) in scripts/subdomain-server.js with highest-tier authentication and administrative role restrictions.
+[ ] Task 1.1: Route admin.startupjigawa.test to the isolated admin_service container with highest-tier authentication and administrative role restrictions.
 
 [ ] Task 1.2: Update Nginx upstream configuration templates to support low-latency proxying to the admin service.
 

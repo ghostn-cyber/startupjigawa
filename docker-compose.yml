@@ -1,6 +1,20 @@
-version: '3.8'
-
 name: startupjigawa
+
+x-app-service: &app-service
+  build:
+    context: .
+    dockerfile: Dockerfile.app
+  restart: unless-stopped
+  environment:
+    BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+    NODE_ENV: production
+  networks:
+    - startup-jigawa-net
+  healthcheck:
+    test: [ 'CMD-SHELL', 'node -e "require(\"http\").get(\"http://127.0.0.1:$${PORT}\", response => process.exit(response.statusCode < 500 ? 0 : 1)).on(\"error\", () => process.exit(1))"' ]
+    interval: 10s
+    timeout: 5s
+    retries: 5
 
 services:
   jigawa_postgres:
@@ -47,8 +61,13 @@ services:
       JWT_SECRET: changeme
       JWT_REFRESH_SECRET: changeme_refresh
       NODE_ENV: production
-    ports:
-      - '4000:4000'
+    expose:
+      - '4000'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'node -e "require(\"http\").get(\"http://127.0.0.1:4000/health\", response => process.exit(response.statusCode < 500 ? 0 : 1)).on(\"error\", () => process.exit(1))"' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     depends_on:
       jigawa_postgres:
         condition: service_healthy
@@ -57,20 +76,73 @@ services:
     networks:
       - startup-jigawa-net
 
-  subdomain-gateway:
-    image: ${DOCKER_USER:-hhhamza}/subdomain-gateway:${TAG:-latest}
-    container_name: subdomain_gateway
-    restart: unless-stopped
+  www_service:
+    <<: *app-service
+    image: startupjigawa/www:latest
+    container_name: www_service
     environment:
-      PORT: 3000
+      APP_KIND: www
+      PORT: 3001
       BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
       NODE_ENV: production
-    ports:
-      - '3000:3000'
-    depends_on:
-      - auth-service
-    networks:
-      - startup-jigawa-net
+    expose:
+      - '3001'
+
+  academy_service:
+    <<: *app-service
+    environment:
+      APP_KIND: academy
+      PORT: 3002
+    expose: ['3002']
+
+  tracker_service:
+    <<: *app-service
+    environment:
+      APP_KIND: tracker
+      PORT: 3003
+    expose: ['3003']
+
+  portal_service:
+    <<: *app-service
+    environment:
+      APP_KIND: portal
+      PORT: 3004
+    expose: ['3004']
+
+  civic_service:
+    <<: *app-service
+    environment:
+      APP_KIND: civic
+      PORT: 3005
+    expose: ['3005']
+
+  labs_service:
+    <<: *app-service
+    environment:
+      APP_KIND: labs
+      PORT: 3006
+    expose: ['3006']
+
+  products_service:
+    <<: *app-service
+    environment:
+      APP_KIND: products
+      PORT: 3007
+    expose: ['3007']
+
+  cloud_service:
+    <<: *app-service
+    environment:
+      APP_KIND: cloud
+      PORT: 3008
+    expose: ['3008']
+
+  admin_service:
+    <<: *app-service
+    environment:
+      APP_KIND: admin
+      PORT: 3009
+    expose: ['3009']
 
   jigawa_nginx_proxy:
     image: nginx:alpine
@@ -84,14 +156,27 @@ services:
       NGINX_ENVSUBST_FILTER: BASE_DOMAIN
     volumes:
       - ./infrastructure/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d
+      - ./infrastructure/nginx/conf.d:/etc/nginx/conf.d:ro
       - ./infrastructure/nginx/certs:/etc/nginx/certs:ro
       - ./infrastructure/nginx/html:/usr/share/nginx/html:ro
+    healthcheck:
+      test: [ 'CMD-SHELL', 'nginx -t' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     extra_hosts:
       - "host.docker.internal:host-gateway"
     depends_on:
       - auth-service
-      - subdomain-gateway
+      - www_service
+      - academy_service
+      - tracker_service
+      - portal_service
+      - civic_service
+      - labs_service
+      - products_service
+      - cloud_service
+      - admin_service
     networks:
       - startup-jigawa-net
 

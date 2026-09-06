@@ -30,7 +30,7 @@ const inMemoryFlags = [
 const inMemoryAuditLogs = [
   { id: 'log-801', actorId: 'usr-001', actorEmail: 'admin@startupjigawa.ng', action: 'ROLE_ELEVATION', resource: 'user:usr-002', details: 'Elevated role to governance_officer', ipAddress: '197.210.45.12', subdomain: 'admin', createdAt: '2026-08-26T14:10:00Z' },
   { id: 'log-802', actorId: 'usr-002', actorEmail: 'gov.officer@jigawastate.gov.ng', action: 'FEATURE_FLAG_TOGGLE', resource: 'flag:ENABLE_MDA_DOCUMENT_ENCRYPTION_V2', details: 'Set state to ENABLED', ipAddress: '197.210.45.14', subdomain: 'admin', createdAt: '2026-08-26T15:22:00Z' },
-  { id: 'log-803', actorId: 'usr-003', actorEmail: 'infra.lead@startupjigawa.ng', action: 'ROUTER_RELOAD', resource: 'gateway:subdomain-server', details: 'Flushed dev proxy upstreams', ipAddress: '127.0.0.1', subdomain: 'cloud', createdAt: '2026-08-26T16:05:00Z' },
+  { id: 'log-803', actorId: 'usr-003', actorEmail: 'infra.lead@startupjigawa.ng', action: 'ROUTER_RELOAD', resource: 'nginx:cloud_service', details: 'Reloaded cloud service upstream', ipAddress: '127.0.0.1', subdomain: 'cloud', createdAt: '2026-08-26T16:05:00Z' },
   { id: 'log-804', actorId: 'usr-004', actorEmail: 'partner@jica.org', action: 'DOCUMENT_DOWNLOAD', resource: 'vault:doc-101', details: 'Downloaded MOU Agreement JICA-2026', ipAddress: '105.112.18.9', subdomain: 'portal', createdAt: '2026-08-26T16:45:00Z' }
 ];
 

@@ -3,7 +3,7 @@ server {
     server_name ${BASE_DOMAIN} www.${BASE_DOMAIN};
 
     location / {
-        proxy_pass http://corporate_gateway;
+        proxy_pass http://www_service:3001;
     }
 
     location = /logo.jpeg {

@@ -1,6 +1,6 @@
 Milestone 9 Task Tracking Ledger (09-sj-cloud-control-plane-task.md)
 Phase 1: Subdomain Routing & Gateway Parity
-[ ] Task 1.1: Register cloud.startupjigawa.test (Port 3005) in scripts/subdomain-server.js with strict administrative authentication guards.
+[ ] Task 1.1: Route cloud.startupjigawa.test to the isolated cloud_service container with strict administrative authentication guards.
 
 [ ] Task 1.2: Update Nginx upstream templates to support low-latency proxying to the cloud control plane service.
 

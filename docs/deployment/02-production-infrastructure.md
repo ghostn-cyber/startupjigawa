@@ -23,7 +23,7 @@ Client Request (HTTPS)
        ├─► labs.startupjigawa.com   ──► [http://127.0.0.1:3005](http://127.0.0.1:3005) (Climate & Idea Lab)[cite: 1]
        ├─► products.startupjigawa.com──► [http://127.0.0.1:3006](http://127.0.0.1:3006) (Product Showcase)[cite: 1]
        ├─► admin.startupjigawa.com   ──► [http://127.0.0.1:3007](http://127.0.0.1:3007) (Admin ERP & Vault)[cite: 1]
-       └─► [www.startupjigawa.com](https://www.startupjigawa.com)   ──► [http://127.0.0.1:3000](http://127.0.0.1:3000) (Corporate Gateway)[cite: 1]
+       └─► [www.startupjigawa.com](https://www.startupjigawa.com)   ──► `www_service:3001` (Nginx upstream)
 
 ```
 

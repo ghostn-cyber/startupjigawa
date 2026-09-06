@@ -3,7 +3,7 @@ server {
     server_name civic.${BASE_DOMAIN};
 
     location / {
-        proxy_pass http://corporate_gateway;
+        proxy_pass http://civic_service:3005;
     }
 
     location = /logo.jpeg {

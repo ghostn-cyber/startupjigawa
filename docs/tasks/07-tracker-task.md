@@ -16,7 +16,7 @@ Here is the dedicated Task Tracking Ledger (`07-project-tracker-task.md`) and im
 
 ### Phase 1: Gateway Routing & Subdomain Registration
 
-* [ ] **Task 1.1**: Register `tracker` (Port `3002`) in `scripts/subdomain-server.js` within the unified subdomain routing map.
+* [ ] **Task 1.1**: Route `tracker` to the isolated `tracker_service` container.
 * [ ] **Task 1.2**: Update Nginx upstream templates (`infrastructure/nginx/templates/default.conf.template` and `startupjigawa.conf`) to proxy `tracker.startupjigawa.test` securely with dynamic DNS resolution.
 
 ### Phase 2: Database Schema & Prisma Models (`packages/database`)

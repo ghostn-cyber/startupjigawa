@@ -120,7 +120,7 @@ make up
 ### Local Subdomain Access Points:
 
 * **Central Authentication IdP:** `http://auth.startupjigawa.test:4000`
-* **Corporate Gateway:** `http://www.startupjigawa.test:3000`
+* **Corporate Web Service:** `http://www.startupjigawa.test` through the Nginx development listener
 * **Digital Skills Academy:** `http://academy.startupjigawa.test:3001`
 * **Beneficiary Tracker:** `http://tracker.startupjigawa.test:3002`
 * **Partner Portal:** `http://portal.startupjigawa.test:3003`

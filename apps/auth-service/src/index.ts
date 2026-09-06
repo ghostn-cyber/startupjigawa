@@ -20,7 +20,7 @@ const app = express();
 const PORT = Number(process.env.PORT || 4000);
 
 const allowedOrigins = [
-  'http://localhost:3000',
+  'http://localhost:8080',
   'http://localhost:3001',
   'http://auth.test',
   'http://academy.test',

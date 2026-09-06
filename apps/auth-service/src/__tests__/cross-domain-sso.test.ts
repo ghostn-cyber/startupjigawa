@@ -20,7 +20,7 @@ import {
 import { generateAccessToken } from '../config/jwt';
 
 test('getCookieOptions correctly scopes cookies to .startupjigawa.test and .startupjigawa.com', () => {
-  const devOpts = getCookieOptions('auth.startupjigawa.test:3000');
+  const devOpts = getCookieOptions('auth.startupjigawa.test:8080');
   assert.equal(devOpts.domain, '.startupjigawa.test');
   assert.equal(devOpts.httpOnly, true);
   assert.equal(devOpts.sameSite, 'lax');
@@ -30,7 +30,7 @@ test('getCookieOptions correctly scopes cookies to .startupjigawa.test and .star
   assert.equal(prodOpts.httpOnly, true);
   assert.equal(prodOpts.sameSite, 'lax');
 
-  const localhostOpts = getCookieOptions('localhost:3000');
+  const localhostOpts = getCookieOptions('localhost:8080');
   assert.equal(localhostOpts.domain, undefined);
 });
 
@@ -73,7 +73,7 @@ test('login controller reads sj_intent cookie, issues domain-scoped tokens, and 
     },
     query: {},
     headers: {
-      host: 'auth.startupjigawa.test:3000',
+      host: 'auth.startupjigawa.test:8080',
       cookie: 'sj_intent=http%3A%2F%2Fportal.startupjigawa.test%2Fdashboard',
       'user-agent': 'Integration-Test-Agent'
     },

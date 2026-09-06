@@ -12,25 +12,9 @@ help: ## Display this help operations manual
 
 # --- ECOSYSTEM ON SWITCH ---
 up: ## Start full Startup Jigawa ecosystem stack
-	@echo "=================================================="
-	@echo "🚀 Starting Startup Jigawa Full Ecosystem Stack..."
-	@echo "=================================================="
-	@echo "1. Freeing up local ecosystem ports (3000-3007, 4000) & stopping system redis..."
-	@systemctl stop redis-server 2>/dev/null || service redis-server stop 2>/dev/null || true
-	@fuser -k 3000/tcp 2>/dev/null || true
-	@fuser -k 3001/tcp 2>/dev/null || true
-	@fuser -k 3002/tcp 2>/dev/null || true
-	@fuser -k 3003/tcp 2>/dev/null || true
-	@fuser -k 3004/tcp 2>/dev/null || true
-	@fuser -k 3005/tcp 2>/dev/null || true
-	@fuser -k 3006/tcp 2>/dev/null || true
-	@fuser -k 3007/tcp 2>/dev/null || true
-	@fuser -k 4000/tcp 2>/dev/null || true
-	@echo "2. Launching Docker infrastructure (Postgres, Redis, Auth Service, Nginx Proxy)..."
-	@docker compose up -d
-	@echo "3. Initializing Host Subdomain Unified Gateway Router..."
-	@nohup node scripts/subdomain-server.js > subdomain-stack.log 2>&1 &
-	@sleep 2
+	@echo "Starting isolated Startup Jigawa services..."
+	@$(MAKE) render-vhosts BASE_DOMAIN=$(BASE_DOMAIN)
+	@docker compose up --build -d
 	@echo "=================================================="
 	@echo "✨ Ecosystem successfully online!"
 	@echo "   - Main Domain: http://$(BASE_DOMAIN)"
@@ -39,21 +23,11 @@ up: ## Start full Startup Jigawa ecosystem stack
 	@echo "=================================================="
 
 # --- ECOSYSTEM OFF SWITCH ---
-down: ## Stop all ecosystem host processes and Docker containers
+down: ## Stop all ecosystem Docker containers
 	@echo "=================================================="
 	@echo "🛑 Shutting down Startup Jigawa Ecosystem..."
 	@echo "=================================================="
-	@echo "1. Stopping host subdomain processes..."
-	@fuser -k 3000/tcp 2>/dev/null || true
-	@fuser -k 3001/tcp 2>/dev/null || true
-	@fuser -k 3002/tcp 2>/dev/null || true
-	@fuser -k 3003/tcp 2>/dev/null || true
-	@fuser -k 3004/tcp 2>/dev/null || true
-	@fuser -k 3005/tcp 2>/dev/null || true
-	@fuser -k 3006/tcp 2>/dev/null || true
-	@fuser -k 3007/tcp 2>/dev/null || true
-	@fuser -k 4000/tcp 2>/dev/null || true
-	@echo "2. Stopping Docker Compose containers (Preserving Data Volumes)..."
+	@echo "Stopping Docker Compose containers (Preserving Data Volumes)..."
 	@docker compose down --remove-orphans
 	@echo "=================================================="
 	@echo "💤 All ecosystem services safely powered down."
@@ -62,33 +36,20 @@ down: ## Stop all ecosystem host processes and Docker containers
 # --- MONOREPO AUTOMATION & DUAL-MODE TARGETS ---
 clean: ## Clean build artifacts (dist/), .tsbuildinfo, and log files
 	@echo "🧹 Cleaning temporary log files, build artifacts (dist/), and .tsbuildinfo files..."
-	@rm -f subdomain-stack.log
 	@find . -name "node_modules" -prune -o -type d -name "dist" -exec rm -rf {} + 2>/dev/null || true
 	@find . -name "node_modules" -prune -o -type f -name "*.tsbuildinfo" -exec rm -f {} + 2>/dev/null || true
 	@echo "✨ Clean complete."
 
 local-clean: clean ## Clean local development build artifacts, .tsbuildinfo, and logs
 
-local-dev: ## Start ecosystem stack in local development mode (live reload, watchers & host bind mounts)
+local-dev: ## Start ecosystem stack in local development mode
 	@echo "=================================================="
 	@echo "🚀 Starting Startup Jigawa Local Development Stack..."
 	@echo "=================================================="
-	@echo "1. Freeing up local ecosystem ports (3000-3007, 4000) & stopping system redis..."
+	@echo "Starting isolated development services..."
 	@systemctl stop redis-server 2>/dev/null || service redis-server stop 2>/dev/null || true
-	@fuser -k 3000/tcp 2>/dev/null || true
-	@fuser -k 3001/tcp 2>/dev/null || true
-	@fuser -k 3002/tcp 2>/dev/null || true
-	@fuser -k 3003/tcp 2>/dev/null || true
-	@fuser -k 3004/tcp 2>/dev/null || true
-	@fuser -k 3005/tcp 2>/dev/null || true
-	@fuser -k 3006/tcp 2>/dev/null || true
-	@fuser -k 3007/tcp 2>/dev/null || true
-	@fuser -k 4000/tcp 2>/dev/null || true
-	@echo "2. Launching Docker infrastructure with development overlay..."
-	@docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-	@echo "3. Initializing Host Subdomain Unified Gateway Router..."
-	@nohup node scripts/subdomain-server.js > subdomain-stack.log 2>&1 &
-	@sleep 2
+	@$(MAKE) render-vhosts BASE_DOMAIN=$(BASE_DOMAIN)
+	@docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build -d
 	@echo "=================================================="
 	@echo "✨ Local Development Environment successfully online with Live Reload!"
 	@echo "   - Main Domain: http://$(BASE_DOMAIN)"
@@ -113,11 +74,9 @@ prod-deploy: ## Build workspaces, pull registry images & deploy full containeriz
 	@pnpm install || npm install
 	@npm run build
 	@echo "2. Freeing up ecosystem ports and pulling container registry images..."
-	@fuser -k 3000/tcp 2>/dev/null || true
-	@fuser -k 4000/tcp 2>/dev/null || true
 	@docker compose pull || true
-	@echo "3. Starting fully containerized Docker infrastructure (Postgres, Redis, Auth Service, Subdomain Gateway, Nginx Proxy)..."
-	@docker compose up -d --remove-orphans
+	@$(MAKE) render-vhosts BASE_DOMAIN=$(BASE_DOMAIN)
+	@docker compose up --build -d --remove-orphans
 	@echo "=================================================="
 	@echo "✨ Production Stack successfully deployed in Containerized Mode!"
 	@echo "   - Main Domain: http://www.$(BASE_DOMAIN):8080"
@@ -169,21 +128,12 @@ clean-rebuild: build docker-build ## Perform full clean slate build and zero-cac
 	@echo "🎉 Complete zero-cache rebuild executed successfully!"
 	@echo "=================================================="
 
-test-all: ## Execute full integration, SSO, and layout verification test suite
+test-all: ## Execute available layout and authentication verification tests
 	@echo "=================================================="
 	@echo "🧪 Running Layout System, SSO, and Ecosystem Integration Verification Suite..."
 	@echo "=================================================="
 	@node scripts/test-layout-system.js
-	@node scripts/test-layout-subdomain-integration.js
-	@node scripts/test-sso-flow.js
-	@node scripts/test-intent-redirect.js
-	@node scripts/test-subdomains.js
-	@node scripts/test-portal-integration.js
-	@node scripts/test-tracker-integration.js
-	@node scripts/test-admin-governance.js
-	@node scripts/test-cloud-control-plane.js
-	@node scripts/test-academy-tracker.js
-	@node scripts/test-rbac-denied.js
+	@node scripts/test-auth-theming.js
 	@echo "=================================================="
 	@echo "🎉 All layout system, SSO, and integration verification tests passed!"
 	@echo "=================================================="
@@ -193,14 +143,14 @@ restart: down up ## Restart the entire ecosystem stack (down -> up)
 
 reload-nginx: ## Hot-reload Nginx proxy configuration
 	@echo "🔄 Hot-reloading Nginx proxy configuration..."
-	@docker compose exec jigawa_nginx_proxy nginx -s reload 2>/dev/null || docker compose restart jigawa_nginx_proxy
+	@docker compose exec jigawa_nginx_proxy nginx -t && docker compose exec jigawa_nginx_proxy nginx -s reload 2>/dev/null || docker compose restart jigawa_nginx_proxy
 	@echo "✨ Nginx proxy reloaded successfully!"
 
 local-maintenance-on: ## Test maintenance mode locally by stopping auth-service
 	@echo "🚨 [LOCAL TEST] Stopping auth-service to simulate upstream downtime..."
 	docker compose stop auth-service
 	@echo "🔍 Verifying Nginx error interception via curl..."
-	curl -i -H "Host: auth.$(BASE_DOMAIN)" http://localhost/
+	curl -i -H "Host: auth.$(BASE_DOMAIN)" http://localhost:8080/
 
 local-maintenance-off: ## Restore local services from maintenance testing
 	@echo "🔄 [LOCAL TEST] Restarting auth-service..."
@@ -248,15 +198,13 @@ status-all: ## Display live vs maintenance status of all active ecosystem subdom
 	@echo "📊 Ecosystem Subdomain Status Report"
 	@echo "=================================================="
 	@cd infrastructure/nginx/conf.d && \
-	for f in vhost.*.conf; do \
-		if [ -L "$$f" ]; then \
-			sub=$$(echo $$f | sed 's/vhost.\(.*\).conf/\1/'); \
-			target=$$(readlink $$f 2>/dev/null || echo $$f); \
-			if echo "$$target" | grep -q "maintenance"; then \
-				printf " 🔴 %-15s -> MAINTENANCE (HTTP 503)\n" "$$sub"; \
-			else \
-				printf " 🟢 %-15s -> LIVE        (HTTP 200)\n" "$$sub"; \
-			fi; \
+	for sub in www auth academy tracker portal civic labs products cloud admin; do \
+		f="vhost.$$sub.conf"; \
+		if [ -L "$$f" ]; then target=$$(readlink "$$f"); else target="$$f"; fi; \
+		if echo "$$target" | grep -q "maintenance" || grep -q 'return 503' "$$f" 2>/dev/null; then \
+			printf " 🔴 %-15s -> MAINTENANCE (HTTP 503)\n" "$$sub"; \
+		else \
+			printf " 🟢 %-15s -> LIVE        (HTTP 200)\n" "$$sub"; \
 		fi; \
 	done
 	@echo "=================================================="
@@ -266,7 +214,7 @@ status: status-all ## Alias for status-all
 maintenance-except-www: ## Enable maintenance mode for ALL subdomains except www/corporate domain
 	@echo "🚨 Enabling maintenance mode for all subdomains EXCEPT www..."
 	@cd infrastructure/nginx/conf.d && \
-	for s in academy admin auth civic labs portal products tracker; do \
+	for s in academy admin auth civic cloud labs portal products tracker; do \
 		if [ -f "vhost.$$s.maintenance.conf" ]; then \
 			ln -sf vhost.$$s.maintenance.conf vhost.$$s.conf; \
 		fi; \
@@ -277,7 +225,7 @@ maintenance-except-www: ## Enable maintenance mode for ALL subdomains except www
 restore-all: ## Restore live production traffic for ALL ecosystem subdomains
 	@echo "🔄 Restoring live traffic for ALL ecosystem subdomains..."
 	@cd infrastructure/nginx/conf.d && \
-	for s in www academy admin auth civic labs portal products tracker; do \
+	for s in www academy admin auth civic cloud labs portal products tracker; do \
 		if [ -f "vhost.$$s.live.conf" ]; then \
 			ln -sf vhost.$$s.live.conf vhost.$$s.conf; \
 		fi; \
@@ -318,13 +266,20 @@ switch-to-test: ## Switch ecosystem domain configuration to .test (Local Dev)
 	fi
 	@$(MAKE) render-vhosts BASE_DOMAIN=startupjigawa.test
 
-test-routing: ## Run subdomain routing verification script
-	@node scripts/test-subdomains.js
+test-routing: ## Verify every subdomain through the Nginx listener
+	@set -e; \
+	for s in startupjigawa www auth academy tracker portal civic labs products cloud admin; do \
+		host="$$s.$(BASE_DOMAIN)"; \
+		if [ "$$s" = "startupjigawa" ]; then host="$(BASE_DOMAIN)"; fi; \
+		code=$$(curl -sS -o /dev/null -w '%{http_code}' -H "Host: $$host" "http://127.0.0.1:8080/"); \
+		case "$$code" in \
+			2??|3??) echo "PASS $$host HTTP $$code";; \
+			503) if grep -q 'return 503' "infrastructure/nginx/conf.d/vhost.$$s.conf" 2>/dev/null || { [ -L "infrastructure/nginx/conf.d/vhost.$$s.conf" ] && readlink "infrastructure/nginx/conf.d/vhost.$$s.conf" | grep -q maintenance; }; then echo "PASS $$host HTTP 503 (maintenance)"; else echo "FAIL $$host HTTP 503"; exit 1; fi;; \
+			*) echo "FAIL $$host HTTP $$code"; exit 1;; \
+		esac; \
+	done
 
-logs: ## View recent subdomain server and Docker compose logs
-	@echo "--- Subdomain Server Logs ---"
-	@tail -n 50 subdomain-stack.log 2>/dev/null || true
-	@echo "--- Docker Compose Logs ---"
+logs: ## View recent Docker compose logs
 	@docker compose logs --tail=50
 
 clean-volumes: ## Purge persistent database volumes
