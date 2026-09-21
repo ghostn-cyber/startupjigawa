@@ -15,5 +15,11 @@ server {
         root /usr/share/nginx/html;
     }
 
+    location = /assets/logo.jpeg {
+        alias /usr/share/nginx/html/logo.jpeg;
+        access_log off;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
     error_page 503 /maintenance.html;
 }

@@ -35,7 +35,7 @@ function send(res, status, body, contentType = 'text/html; charset=utf-8') {
 function serveAsset(req, res) {
   const asset = req.url === '/assets/variables.css'
     ? '../../../packages/ui-components/variables.css'
-    : (req.url === '/assets/logo.jpeg' ? '../../../infrastructure/nginx/html/logo.jpeg' : null);
+    : (req.url === '/assets/logo.jpeg' ? '../../../packages/ui-components/logo.jpeg' : null);
   if (!asset) return false;
   const assetPath = path.resolve(__dirname, asset);
   if (!fs.existsSync(assetPath)) return false;
