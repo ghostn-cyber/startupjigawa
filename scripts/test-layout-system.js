@@ -36,7 +36,7 @@ runTest('Header renders 2-layer desktop architecture: Layer 1 top bar with stand
 
   assert(html.includes('sj-header-top-bar'), 'Renders Layer 1 Utility & Brand Bar');
   assert(html.includes('sj-header-nav-bar'), 'Renders Layer 2 Navigation Hub Tier');
-  assert(html.includes('/assets/logo.png'), 'Includes brand logo image');
+  assert(html.includes('http://startupjigawa.test/assets/logo.jpeg'), 'Includes canonical absolute brand logo image');
   assert(html.includes('sj-brand-title'), 'Includes brand title text lockup');
 });
 
