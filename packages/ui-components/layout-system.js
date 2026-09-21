@@ -294,7 +294,7 @@ function renderUnifiedHeader(options = {}) {
         
         <!-- Left Side: High-Visibility 1:1 Square Brand Logo Lockup -->
         <a href="${corporateUrl}" class="sj-brand-logo-link" aria-label="Startup Jigawa Corporate Home">
-          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='/assets/logo.png';" />
+          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='/assets/logo.jpeg';" />
           <div class="sj-brand-badge-fallback" style="display:none;">SJ</div>
           <div class="sj-brand-logo-text">
             <span class="sj-brand-title">Startup Jigawa</span>
@@ -341,7 +341,7 @@ function renderUnifiedHeader(options = {}) {
     <div id="sj-mobile-drawer" class="sj-mobile-drawer fixed inset-y-0 right-0 w-full max-w-[320px] bg-slate-950/95 backdrop-blur-xl border-l border-slate-800 p-6 z-50 shadow-2xl transition-transform duration-300 ease-out" aria-hidden="true">
       <div class="sj-mobile-drawer-header">
         <a href="${corporateUrl}" class="sj-mobile-drawer-logo-link" aria-label="Startup Jigawa Corporate Home">
-          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='/assets/logo.png';" />
+          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='/assets/logo.jpeg';" />
           <span class="sj-mobile-drawer-title">Startup Jigawa</span>
         </a>
         <button id="sj-mobile-close" class="sj-mobile-close-btn min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Close mobile menu">&times;</button>
@@ -387,7 +387,7 @@ function renderUnifiedFooter(options = {}) {
         <!-- Column 1: Identity & Office Address -->
         <div class="sj-footer-col">
           <div class="sj-footer-brand">
-            <img src="${logoUrl}" alt="Startup Jigawa Logo" class="sj-footer-logo-img" onerror="this.onerror=null; this.src='/assets/logo.png';" />
+            <img src="${logoUrl}" alt="Startup Jigawa Logo" class="sj-footer-logo-img" onerror="this.onerror=null; this.src='/assets/logo.jpeg';" />
             <span class="sj-footer-logo-badge" style="display:none;">SJ</span>
             <div class="sj-brand-logo-text">
               <span class="sj-footer-brand-title">Startup Jigawa Ltd</span>
@@ -490,6 +490,7 @@ function getHeaderFooterScripts() {
 
           document.documentElement.setAttribute('data-theme', resolved);
           document.documentElement.setAttribute('data-theme-preference', theme);
+          document.documentElement.classList.toggle('dark', resolved === 'dark');
           if (document.body) {
             document.body.setAttribute('data-theme', resolved);
             document.body.setAttribute('data-theme-preference', theme);
@@ -515,6 +516,7 @@ function getHeaderFooterScripts() {
           }
           document.documentElement.setAttribute('data-theme', resolved);
           document.documentElement.setAttribute('data-theme-preference', saved);
+          document.documentElement.classList.toggle('dark', resolved === 'dark');
           if (document.body) {
             document.body.setAttribute('data-theme', resolved);
             document.body.setAttribute('data-theme-preference', saved);
@@ -659,6 +661,7 @@ function renderAccessDeniedHTML(options = {}) {
       }
       document.documentElement.setAttribute('data-theme', resolved);
       document.documentElement.setAttribute('data-theme-preference', theme || 'system');
+      document.documentElement.classList.toggle('dark', resolved === 'dark');
     } catch (e) {}
   })();`;
 
@@ -687,8 +690,8 @@ function renderAccessDeniedHTML(options = {}) {
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg-canvas: #0f172a;
-      --surface-card: #1e293b;
+      --bg-canvas: #0B0F19;
+      --surface-card: #111827;
       --surface-border: #334155;
       --text-primary: #f8fafc;
       --text-secondary: #94a3b8;
@@ -696,11 +699,11 @@ function renderAccessDeniedHTML(options = {}) {
       --accent-amber-bg: rgba(245, 158, 11, 0.1);
       --accent-amber-border: rgba(245, 158, 11, 0.35);
       --accent-red: #ef4444;
-      --accent-blue: #3b82f6;
+      --accent-blue: #008751;
     }
     [data-theme="light"] {
-      --bg-canvas: #f8fafc;
-      --surface-card: #ffffff;
+      --bg-canvas: #FFFFFF;
+      --surface-card: #FFFFFF;
       --surface-border: #e2e8f0;
       --text-primary: #0f172a;
       --text-secondary: #64748b;
@@ -830,9 +833,9 @@ function renderAccessDeniedHTML(options = {}) {
       text-transform: lowercase;
     }
     .sj-badge-current {
-      background: rgba(59, 130, 246, 0.15);
-      border: 1px solid rgba(59, 130, 246, 0.4);
-      color: #60a5fa;
+      background: rgba(0, 135, 81, 0.15);
+      border: 1px solid rgba(0, 135, 81, 0.4);
+      color: #008751;
     }
     .sj-badge-required {
       background: rgba(245, 158, 11, 0.15);
@@ -840,9 +843,9 @@ function renderAccessDeniedHTML(options = {}) {
       color: #fbbf24;
     }
     .sj-badge-none {
-      background: rgba(148, 163, 184, 0.15);
-      border: 1px solid rgba(148, 163, 184, 0.3);
-      color: #94a3b8;
+      background: rgba(0, 135, 81, 0.08);
+      border: 1px solid rgba(0, 135, 81, 0.25);
+      color: #008751;
     }
 
     .cta-group {
@@ -864,12 +867,12 @@ function renderAccessDeniedHTML(options = {}) {
       cursor: pointer;
     }
     .btn-primary-action {
-      background: #2563eb;
+      background: #008751;
       color: #ffffff;
-      border: 1px solid #3b82f6;
+      border: 1px solid #008751;
     }
     .btn-primary-action:hover {
-      background: #1d4ed8;
+      background: #046A38;
     }
     .btn-secondary-action {
       background: rgba(245, 158, 11, 0.1);

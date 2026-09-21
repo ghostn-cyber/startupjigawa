@@ -13,6 +13,7 @@ const FOUC_HEAD_SCRIPT = `(function() {
     }
     document.documentElement.setAttribute('data-theme', resolved);
     document.documentElement.setAttribute('data-theme-preference', theme || 'system');
+    document.documentElement.classList.toggle('dark', resolved === 'dark');
   } catch (e) {}
 })();`;
 
@@ -52,6 +53,7 @@ function applyTheme(theme) {
 
     document.documentElement.setAttribute('data-theme', resolvedTheme);
     document.documentElement.setAttribute('data-theme-preference', theme);
+    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
     if (document.body) {
       document.body.setAttribute('data-theme', resolvedTheme);
       document.body.setAttribute('data-theme-preference', theme);
