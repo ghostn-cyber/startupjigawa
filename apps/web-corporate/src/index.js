@@ -85,7 +85,7 @@ function renderCorporateGatewayPage(options = {}) {
         <span>🟢 RC 7256149 • Head Office: Dutse, Jigawa State</span>
       </div>
       <h1 class="hero-headline">
-        Startup Jigawa Ltd — <span class="gradient-text-highlight">Corporate Gateway</span>
+        Startup Jigawa Ltd — <span class="hero-accent-text">Corporate Gateway</span>
       </h1>
       <div class="hero-subtitle-tag">
         Enterprise Digital Infrastructure & Innovation Ecosystem

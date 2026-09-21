@@ -33,11 +33,13 @@ function send(res, status, body, contentType = 'text/html; charset=utf-8') {
 }
 
 function serveAsset(req, res) {
-  const asset = req.url === '/assets/variables.css' ? '../../../packages/ui-components/variables.css' : null;
+  const asset = req.url === '/assets/variables.css'
+    ? '../../../packages/ui-components/variables.css'
+    : (req.url === '/assets/logo.jpeg' ? '../../../infrastructure/nginx/html/logo.jpeg' : null);
   if (!asset) return false;
   const assetPath = path.resolve(__dirname, asset);
   if (!fs.existsSync(assetPath)) return false;
-  send(res, 200, fs.readFileSync(assetPath), 'text/css; charset=utf-8');
+  send(res, 200, fs.readFileSync(assetPath), req.url.endsWith('.css') ? 'text/css; charset=utf-8' : 'image/jpeg');
   return true;
 }
 

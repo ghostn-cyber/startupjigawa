@@ -6,6 +6,13 @@
  * 3-Column Corporate Mega-Dropdown, Slide-Over Mobile Drawer, and 4-Column Footer.
  */
 
+function getCanonicalLogoUrl(baseDomain, configuredLogoUrl) {
+  if (configuredLogoUrl) return configuredLogoUrl;
+  const protocol = (typeof process !== 'undefined' && process.env && process.env.ASSET_PROTOCOL)
+    || (baseDomain.endsWith('.test') ? 'http' : 'https');
+  return `${protocol}://${baseDomain}/assets/logo.jpeg`;
+}
+
 function getSubdomainNavProfiles(baseDomain, corporateUrl) {
   return {
     corporate: [
@@ -62,7 +69,8 @@ function renderUnifiedHeader(options = {}) {
 
   const user = options.user || null;
   const currentUrl = options.currentUrl || `http://${cleanSub}.${baseDomain}/`;
-  const logoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url)) || '/assets/logo.jpeg';
+  const configuredLogoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url));
+  const logoUrl = getCanonicalLogoUrl(baseDomain, configuredLogoUrl);
 
   const corporateUrl = `http://www.${baseDomain}`;
   const authUrl = `http://auth.${baseDomain}/login?returnTo=${encodeURIComponent(currentUrl)}`;
@@ -294,7 +302,7 @@ function renderUnifiedHeader(options = {}) {
         
         <!-- Left Side: High-Visibility 1:1 Square Brand Logo Lockup -->
         <a href="${corporateUrl}" class="sj-brand-logo-link" aria-label="Startup Jigawa Corporate Home">
-          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='/assets/logo.jpeg';" />
+          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='${logoUrl}';" />
           <div class="sj-brand-badge-fallback" style="display:none;">SJ</div>
           <div class="sj-brand-logo-text">
             <span class="sj-brand-title">Startup Jigawa</span>
@@ -341,7 +349,7 @@ function renderUnifiedHeader(options = {}) {
     <div id="sj-mobile-drawer" class="sj-mobile-drawer fixed inset-y-0 right-0 w-full max-w-[320px] bg-slate-950/95 backdrop-blur-xl border-l border-slate-800 p-6 z-50 shadow-2xl transition-transform duration-300 ease-out" aria-hidden="true">
       <div class="sj-mobile-drawer-header">
         <a href="${corporateUrl}" class="sj-mobile-drawer-logo-link" aria-label="Startup Jigawa Corporate Home">
-          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='/assets/logo.jpeg';" />
+          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='${logoUrl}';" />
           <span class="sj-mobile-drawer-title">Startup Jigawa</span>
         </a>
         <button id="sj-mobile-close" class="sj-mobile-close-btn min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Close mobile menu">&times;</button>
@@ -377,7 +385,8 @@ function renderUnifiedHeader(options = {}) {
 function renderUnifiedFooter(options = {}) {
   const baseDomain = options.baseDomain || 'startupjigawa.test';
   const corporateUrl = `http://www.${baseDomain}`;
-  const logoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url)) || '/assets/logo.jpeg';
+  const configuredLogoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url));
+  const logoUrl = getCanonicalLogoUrl(baseDomain, configuredLogoUrl);
 
   return `
   <footer class="sj-unified-footer border-t border-slate-800/80 bg-slate-950 w-full max-w-full overflow-x-hidden">
@@ -387,7 +396,7 @@ function renderUnifiedFooter(options = {}) {
         <!-- Column 1: Identity & Office Address -->
         <div class="sj-footer-col">
           <div class="sj-footer-brand">
-            <img src="${logoUrl}" alt="Startup Jigawa Logo" class="sj-footer-logo-img" onerror="this.onerror=null; this.src='/assets/logo.jpeg';" />
+            <img src="${logoUrl}" alt="Startup Jigawa Logo" class="sj-footer-logo-img" onerror="this.onerror=null; this.src='${logoUrl}';" />
             <span class="sj-footer-logo-badge" style="display:none;">SJ</span>
             <div class="sj-brand-logo-text">
               <span class="sj-footer-brand-title">Startup Jigawa Ltd</span>
@@ -647,7 +656,8 @@ function renderAccessDeniedHTML(options = {}) {
     ? options.requiredRoles
     : (options.requiredRoles ? [options.requiredRoles] : ['partner', 'mda_official', 'system_admin']);
   const currentUrl = options.currentUrl || `http://${activeSubdomain}.${baseDomain}/`;
-  const logoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url)) || '/assets/logo.jpeg';
+  const configuredLogoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url));
+  const logoUrl = getCanonicalLogoUrl(baseDomain, configuredLogoUrl);
   const customMessage = options.message || 'Your authenticated identity lacks the necessary role permissions required to access this protected subdomain resource.';
 
   const FOUC_HEAD_SCRIPT = `(function() {
@@ -746,7 +756,7 @@ function renderAccessDeniedHTML(options = {}) {
       left: 0;
       right: 0;
       height: 4px;
-      background: linear-gradient(90deg, #f59e0b, #ef4444);
+      background: var(--accent-amber);
     }
     .denied-header {
       text-align: center;
