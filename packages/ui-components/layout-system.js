@@ -16,15 +16,14 @@ function getCanonicalLogoUrl(baseDomain, configuredLogoUrl) {
 function getSubdomainNavProfiles(baseDomain, corporateUrl) {
   return {
     corporate: [
-      { name: 'Corporate', slug: 'www', url: corporateUrl, isMega: true },
-      { name: 'Auth SSO', slug: 'auth', url: `http://auth.${baseDomain}` },
-      { name: 'Academy', slug: 'academy', url: `http://academy.${baseDomain}` },
-      { name: 'Tracker', slug: 'tracker', url: `http://tracker.${baseDomain}` },
-      { name: 'Partner Portal', slug: 'portal', url: `http://portal.${baseDomain}` },
-      { name: 'Civic Tech', slug: 'civic', url: `http://civic.${baseDomain}` },
-      { name: 'Climate Labs', slug: 'labs', url: `http://labs.${baseDomain}` },
-      { name: 'Products', slug: 'products', url: `http://products.${baseDomain}` },
-      { name: 'Admin ERP', slug: 'admin', url: `http://admin.${baseDomain}` }
+      { name: 'About', slug: 'www', url: `${corporateUrl}#about`, isMega: true },
+      { name: 'What We Do', slug: 'what-we-do', url: `${corporateUrl}#what-we-do` },
+      { name: 'Programs', slug: 'programs', url: `${corporateUrl}#programs` },
+      { name: 'Innovation Labs', slug: 'labs', url: `${corporateUrl}#labs` },
+      { name: 'Impact', slug: 'impact', url: `${corporateUrl}#impact` },
+      { name: 'News', slug: 'news', url: `${corporateUrl}#news` },
+      { name: 'Contact', slug: 'contact', url: `${corporateUrl}#contact` },
+      { name: 'Ecosystem Portals', slug: 'portals', url: `http://portal.${baseDomain}`, isPortals: true }
     ],
     tracker: [
       { name: 'Overview', slug: 'tracker', url: `http://tracker.${baseDomain}/` },
@@ -115,7 +114,8 @@ function renderUnifiedHeader(options = {}) {
 
   const navItemsHTML = navLinks.map((link, idx) => {
     const isCurrentPage = currentUrl.endsWith(link.url) || currentUrl === link.url;
-    const isActive = isCurrentPage || cleanSub === link.slug || (link.slug === 'www' && (cleanSub === 'www' || cleanSub === '')) || (profileKey !== 'corporate' && idx === 0);
+    const isPortalsActive = link.isPortals && (cleanSub === 'portals' || cleanSub === 'auth' || cleanSub === 'civic' || cleanSub === 'products' || cleanSub === 'portal');
+    const isActive = isCurrentPage || cleanSub === link.slug || isPortalsActive || (link.slug === 'www' && (cleanSub === 'www' || cleanSub === '')) || (profileKey !== 'corporate' && idx === 0);
     const activeClass = isActive ? ' active' : '';
     const extraClass = link.isBackHome ? ' back-home-link' : '';
 
@@ -134,7 +134,9 @@ function renderUnifiedHeader(options = {}) {
               <!-- Column 1: Institutional Foundation -->
               <div class="mega-column">
                 <div class="mega-column-header">
-                  <div class="mega-column-icon text-blue">🏛️</div>
+                  <div class="mega-column-icon text-blue">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M5 21V10h14v11M3 10l9-7 9 7M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
+                  </div>
                   <div class="mega-column-title">Institutional Foundation</div>
                 </div>
                 <ul class="mega-link-list">
@@ -168,7 +170,9 @@ function renderUnifiedHeader(options = {}) {
               <!-- Column 2: Governance & Structure -->
               <div class="mega-column">
                 <div class="mega-column-header">
-                  <div class="mega-column-icon text-emerald">⚖️</div>
+                  <div class="mega-column-icon text-emerald">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10zM9 12l2 2 4-4"/></svg>
+                  </div>
                   <div class="mega-column-title">Governance & Structure</div>
                 </div>
                 <ul class="mega-link-list">
@@ -202,7 +206,9 @@ function renderUnifiedHeader(options = {}) {
               <!-- Column 3: Strategy & Future Outlook -->
               <div class="mega-column">
                 <div class="mega-column-header">
-                  <div class="mega-column-icon text-amber">🚀</div>
+                  <div class="mega-column-icon text-amber">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09zM12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2zM9 12H4s.55-3.03 2-4.5c1.45-1.47 4.5-2 4.5-2"/></svg>
+                  </div>
                   <div class="mega-column-title">Strategy & Future Outlook</div>
                 </div>
                 <ul class="mega-link-list">
@@ -238,7 +244,9 @@ function renderUnifiedHeader(options = {}) {
             <!-- Pinned Footer Bar Inside Dropdown -->
             <div class="mega-dropdown-footer">
               <div class="mega-footer-info">
-                <span class="mega-footer-shield">🛡️</span>
+                <span class="mega-footer-shield">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                </span>
                 <span>Institutional Governance, CAC Compliance & Policy Documents</span>
               </div>
               <a href="http://admin.${baseDomain}" class="mega-footer-action-btn">
@@ -252,36 +260,100 @@ function renderUnifiedHeader(options = {}) {
       `;
     }
 
+    if (link.isPortals) {
+      return `
+        <div class="nav-item-mega-wrapper nav-item-portals-wrapper" id="portals-dropdown-wrapper">
+          <a href="${link.url}" class="nav-link nav-link-mega${activeClass}" aria-expanded="false" id="portals-dropdown-trigger">
+            <span>${link.name}</span>
+            <svg class="chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </a>
+          
+          <!-- Ecosystem Portals Dropdown Panel -->
+          <div class="mega-dropdown-panel portals-dropdown-panel" id="portals-dropdown-panel" role="menu" aria-label="Startup Jigawa Digital Portals">
+            <div class="portals-dropdown-grid">
+              <a href="http://academy.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Digital Skills Academy</span>
+                <span class="mega-link-sub">Certifications, 3MTT bootcamps & software tracks</span>
+              </a>
+              <a href="http://tracker.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Beneficiary Tracker & M&E</span>
+                <span class="mega-link-sub">Real-time KPI auditing across all 27 LGAs</span>
+              </a>
+              <a href="http://portal.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Partner & Startup Portal</span>
+                <span class="mega-link-sub">Founder onboarding, investor due-diligence</span>
+              </a>
+              <a href="http://civic.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Civic Tech & Open Gov</span>
+                <span class="mega-link-sub">Public contracting transparency & citizen tools</span>
+              </a>
+              <a href="http://labs.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Climate & AgriTech Labs</span>
+                <span class="mega-link-sub">Sahelian climate resilience & smart farming</span>
+              </a>
+              <a href="http://products.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Product Directory</span>
+                <span class="mega-link-sub">Showcase of incubated Jigawa startups</span>
+              </a>
+              <a href="http://admin.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">Admin ERP & Compliance</span>
+                <span class="mega-link-sub">Internal state governance & system logs</span>
+              </a>
+              <a href="http://auth.${baseDomain}" class="mega-link">
+                <span class="mega-link-heading">SSO Identity Service</span>
+                <span class="mega-link-sub">Single sign-on unified authentication</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     return `<a href="${link.url}" class="nav-link${activeClass}${extraClass}">${link.name}</a>`;
   }).join('');
 
   const mobileNavItemsHTML = profileKey === 'corporate' ? `
           <a href="${corporateUrl}" class="sj-mobile-nav-item ${activeSubdomain === 'www' ? 'active' : ''}">
-            <span>Corporate Gateway</span>
+            <span>Home</span>
           </a>
           
           <!-- Collapsible Corporate Directory Accordion -->
           <div class="sj-mobile-accordion">
             <button id="sj-mobile-accordion-toggle" class="sj-mobile-accordion-btn" aria-expanded="false">
-              <span>Corporate Directory</span>
+              <span>About Startup Jigawa</span>
               <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
             </button>
             <div id="sj-mobile-accordion-content" class="sj-mobile-accordion-content" hidden>
-              <a href="${corporateUrl}#about" class="sj-mobile-sub-item">About Startup Jigawa</a>
+              <a href="${corporateUrl}#about" class="sj-mobile-sub-item">Institutional Foundation</a>
               <a href="${corporateUrl}#structure" class="sj-mobile-sub-item">Governance & Structure</a>
               <a href="${corporateUrl}#strategy" class="sj-mobile-sub-item">Strategic Roadmap</a>
               <a href="http://admin.${baseDomain}" class="sj-mobile-sub-item highlight">Due-Diligence Vault &rarr;</a>
             </div>
           </div>
 
-          <a href="http://auth.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'auth' ? 'active' : ''}">Auth SSO IdP</a>
-          <a href="http://academy.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'academy' ? 'active' : ''}">Digital Skills Academy</a>
-          <a href="http://tracker.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'tracker' ? 'active' : ''}">Beneficiary Tracker</a>
-          <a href="http://portal.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'portal' ? 'active' : ''}">Partner Onboarding Portal</a>
-          <a href="http://civic.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'civic' ? 'active' : ''}">Civic Tech & Open Gov</a>
-          <a href="http://labs.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'labs' ? 'active' : ''}">Climate Resilience Labs</a>
-          <a href="http://products.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'products' ? 'active' : ''}">Product Directory</a>
-          <a href="http://admin.${baseDomain}" class="sj-mobile-nav-item ${activeSubdomain === 'admin' ? 'active' : ''}">Admin ERP & Compliance</a>
+          <a href="${corporateUrl}#what-we-do" class="sj-mobile-nav-item">What We Do</a>
+          <a href="${corporateUrl}#programs" class="sj-mobile-nav-item">Programs</a>
+          <a href="${corporateUrl}#labs" class="sj-mobile-nav-item">Innovation Labs</a>
+          <a href="${corporateUrl}#impact" class="sj-mobile-nav-item">Impact</a>
+          <a href="${corporateUrl}#news" class="sj-mobile-nav-item">News</a>
+          <a href="${corporateUrl}#contact" class="sj-mobile-nav-item">Contact</a>
+
+          <!-- Collapsible Ecosystem Portals Accordion -->
+          <div class="sj-mobile-accordion" style="margin-top: 8px;">
+            <button id="sj-mobile-portals-toggle" class="sj-mobile-accordion-btn" aria-expanded="false">
+              <span>Ecosystem Portals</span>
+              <svg class="chevron-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </button>
+            <div id="sj-mobile-portals-content" class="sj-mobile-accordion-content" hidden>
+              <a href="http://academy.${baseDomain}" class="sj-mobile-sub-item">Digital Skills Academy</a>
+              <a href="http://tracker.${baseDomain}" class="sj-mobile-sub-item">Beneficiary Tracker</a>
+              <a href="http://portal.${baseDomain}" class="sj-mobile-sub-item">Partner Onboarding Portal</a>
+              <a href="http://civic.${baseDomain}" class="sj-mobile-sub-item">Civic Tech & Open Gov</a>
+              <a href="http://labs.${baseDomain}" class="sj-mobile-sub-item">Climate Resilience Labs</a>
+              <a href="http://products.${baseDomain}" class="sj-mobile-sub-item">Product Directory</a>
+              <a href="http://admin.${baseDomain}" class="sj-mobile-sub-item highlight">Admin ERP & Compliance</a>
+            </div>
+          </div>
   ` : navLinks.map((link, idx) => {
     const isCurrentPage = currentUrl === link.url;
     const isActive = isCurrentPage || cleanSub === link.slug || idx === 0;
@@ -294,35 +366,45 @@ function renderUnifiedHeader(options = {}) {
   }).join('');
 
   return `
-  <header class="sj-unified-header bg-slate-950/85 backdrop-blur-md border-b border-slate-800/80 sticky top-0 z-50 w-full max-w-full overflow-x-hidden">
+  <header class="sj-unified-header sticky top-0 z-50 w-full max-w-full">
     
-    <!-- Layer 1: Utility & Brand Bar -->
+    <!-- Layer 1: Institutional Credibility Bar -->
     <div class="sj-header-top-bar">
-      <div class="sj-header-container">
+      <div class="sj-header-container sj-top-bar-container">
+        <div class="sj-top-bar-left">
+          <span class="sj-status-dot"></span>
+          <span class="sj-top-bar-text">Startup Jigawa Ltd (RC 7256149) · Digital Innovation Center</span>
+        </div>
+        <div class="sj-top-bar-right">
+          <span class="sj-top-bar-item">Dutse Headquarters</span>
+          <span class="sj-top-bar-divider">·</span>
+          <a href="mailto:info@startupjigawa.com" class="sj-top-bar-link">info@startupjigawa.com</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Layer 2: Main Brand & Navigation Hub -->
+    <div class="sj-header-nav-bar sj-desktop-nav-tier">
+      <div class="sj-header-container sj-nav-container">
         
-        <!-- Left Side: High-Visibility 1:1 Square Brand Logo Lockup -->
+        <!-- Left Side: Properly Positioned Brand Logo Lockup -->
         <a href="${corporateUrl}" class="sj-brand-logo-link" aria-label="Startup Jigawa Corporate Home">
           <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='${logoUrl}';" />
           <div class="sj-brand-badge-fallback" style="display:none;">SJ</div>
           <div class="sj-brand-logo-text">
             <span class="sj-brand-title">Startup Jigawa</span>
-            <span class="sj-brand-pill">RC 7256149</span>
+            <span class="sj-brand-subtitle">Digital Innovation Center</span>
           </div>
         </a>
 
-        <!-- Right Side: Desktop Controls & Mobile Hamburger -->
+        <!-- Center: Primary Desktop Navigation Hub -->
+        <nav class="sj-desktop-nav" aria-label="Ecosystem Main Navigation">
+          ${navItemsHTML}
+        </nav>
+
+        <!-- Right Side: Auth Action & Mobile Hamburger -->
         <div class="sj-header-actions">
           ${desktopAuthHTML}
-
-          <div class="theme-select-wrap">
-            <label for="theme-selector" class="sr-only">Theme Mode</label>
-            <select id="theme-selector" onchange="applyTheme(this.value)" class="sj-theme-select">
-              <option value="system">🖥️ System</option>
-              <option value="light">☀️ Light</option>
-              <option value="dark">🌙 Dark</option>
-              <option value="high-contrast">⚡ High-Contrast</option>
-            </select>
-          </div>
 
           <!-- Mobile Touch-Optimized Hamburger Button (44px x 44px min target) -->
           <button id="sj-mobile-toggle" class="sj-mobile-menu-btn md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Toggle Mobile Navigation" aria-expanded="false">
@@ -333,24 +415,18 @@ function renderUnifiedHeader(options = {}) {
       </div>
     </div>
 
-    <!-- Layer 2: Desktop Navigation Hub -->
-    <div class="sj-header-nav-bar sj-desktop-nav-tier">
-      <div class="sj-header-container">
-        <nav class="sj-desktop-nav" aria-label="Ecosystem Main Navigation">
-          ${navItemsHTML}
-        </nav>
-      </div>
-    </div>
-
     <!-- Mobile Slide-Over Backdrop Overlay -->
     <div id="sj-mobile-overlay" class="sj-mobile-overlay bg-black/70 backdrop-blur-md" aria-hidden="true"></div>
 
     <!-- Mobile Slide-Over Drawer Panel (Max-W 320px) -->
-    <div id="sj-mobile-drawer" class="sj-mobile-drawer fixed inset-y-0 right-0 w-full max-w-[320px] bg-slate-950/95 backdrop-blur-xl border-l border-slate-800 p-6 z-50 shadow-2xl transition-transform duration-300 ease-out" aria-hidden="true">
+    <div id="sj-mobile-drawer" class="sj-mobile-drawer" aria-hidden="true">
       <div class="sj-mobile-drawer-header">
         <a href="${corporateUrl}" class="sj-mobile-drawer-logo-link" aria-label="Startup Jigawa Corporate Home">
           <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='${logoUrl}';" />
-          <span class="sj-mobile-drawer-title">Startup Jigawa</span>
+          <div class="sj-brand-logo-text">
+            <span class="sj-mobile-drawer-title">Startup Jigawa</span>
+            <span class="sj-mobile-drawer-sub">Digital Innovation Center</span>
+          </div>
         </a>
         <button id="sj-mobile-close" class="sj-mobile-close-btn min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Close mobile menu">&times;</button>
       </div>
@@ -361,18 +437,9 @@ function renderUnifiedHeader(options = {}) {
         </nav>
       </div>
 
-      <!-- Mobile Drawer Bottom Anchor: Theme Switcher & Auth Controls -->
+      <!-- Mobile Drawer Bottom Anchor: Auth Controls -->
       <div class="sj-mobile-drawer-footer">
         <div class="sj-mobile-footer-wrap">
-          <div class="theme-select-wrap mobile-theme-wrap">
-            <label for="mobile-theme-selector" class="sr-only">Theme Mode</label>
-            <select id="mobile-theme-selector" onchange="applyTheme(this.value)" class="sj-theme-select full-width">
-              <option value="system">🖥️ System Mode</option>
-              <option value="light">☀️ Light Mode</option>
-              <option value="dark">🌙 Dark Mode</option>
-              <option value="high-contrast">⚡ High-Contrast</option>
-            </select>
-          </div>
           ${mobileAuthHTML}
         </div>
       </div>
@@ -389,7 +456,7 @@ function renderUnifiedFooter(options = {}) {
   const logoUrl = getCanonicalLogoUrl(baseDomain, configuredLogoUrl);
 
   return `
-  <footer class="sj-unified-footer border-t border-slate-800/80 bg-slate-950 w-full max-w-full overflow-x-hidden">
+  <footer id="contact" class="sj-unified-footer border-t border-slate-800/80 bg-slate-950 w-full max-w-full overflow-x-hidden">
     <div class="sj-footer-container">
       <div class="sj-footer-grid">
         
@@ -642,6 +709,55 @@ function getHeaderFooterScripts() {
             accordionContent.hidden = isOpen;
           });
         }
+
+        // Mobile Portals Accordion Interactions
+        var portalsToggle = document.getElementById('sj-mobile-portals-toggle');
+        var portalsContent = document.getElementById('sj-mobile-portals-content');
+
+        if (portalsToggle && portalsContent) {
+          portalsToggle.addEventListener('click', function() {
+            var isOpen = portalsToggle.getAttribute('aria-expanded') === 'true';
+            portalsToggle.setAttribute('aria-expanded', !isOpen);
+            portalsToggle.classList.toggle('open', !isOpen);
+            portalsContent.hidden = isOpen;
+          });
+        }
+
+        // Portals Dropdown Interactions
+        var portalsWrapper = document.getElementById('portals-dropdown-wrapper');
+        var portalsTrigger = document.getElementById('portals-dropdown-trigger');
+        var portalsPanel = document.getElementById('portals-dropdown-panel');
+
+        if (portalsWrapper && portalsTrigger && portalsPanel) {
+          var portalsHoverTimeout = null;
+
+          function showPortals() {
+            clearTimeout(portalsHoverTimeout);
+            portalsPanel.classList.add('open');
+            portalsTrigger.setAttribute('aria-expanded', 'true');
+          }
+
+          function hidePortals() {
+            portalsHoverTimeout = setTimeout(function() {
+              portalsPanel.classList.remove('open');
+              portalsTrigger.setAttribute('aria-expanded', 'false');
+            }, 150);
+          }
+
+          portalsWrapper.addEventListener('mouseenter', showPortals);
+          portalsWrapper.addEventListener('mouseleave', hidePortals);
+
+          portalsTrigger.addEventListener('click', function(e) {
+            e.preventDefault();
+            var isOpen = portalsPanel.classList.contains('open');
+            if (isOpen) {
+              portalsPanel.classList.remove('open');
+              portalsTrigger.setAttribute('aria-expanded', 'false');
+            } else {
+              showPortals();
+            }
+          });
+        }
       });
     })();
   </script>
@@ -709,7 +825,7 @@ function renderAccessDeniedHTML(options = {}) {
       --accent-amber-bg: rgba(245, 158, 11, 0.1);
       --accent-amber-border: rgba(245, 158, 11, 0.35);
       --accent-red: #ef4444;
-      --accent-blue: #008751;
+      --accent-blue: #265728;
     }
     [data-theme="light"] {
       --bg-canvas: #FFFFFF;
@@ -843,9 +959,9 @@ function renderAccessDeniedHTML(options = {}) {
       text-transform: lowercase;
     }
     .sj-badge-current {
-      background: rgba(0, 135, 81, 0.15);
-      border: 1px solid rgba(0, 135, 81, 0.4);
-      color: #008751;
+      background: rgba(38, 87, 40, 0.15);
+      border: 1px solid rgba(38, 87, 40, 0.4);
+      color: #265728;
     }
     .sj-badge-required {
       background: rgba(245, 158, 11, 0.15);
@@ -853,9 +969,9 @@ function renderAccessDeniedHTML(options = {}) {
       color: #fbbf24;
     }
     .sj-badge-none {
-      background: rgba(0, 135, 81, 0.08);
-      border: 1px solid rgba(0, 135, 81, 0.25);
-      color: #008751;
+      background: rgba(38, 87, 40, 0.08);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+      color: #265728;
     }
 
     .cta-group {
@@ -877,9 +993,9 @@ function renderAccessDeniedHTML(options = {}) {
       cursor: pointer;
     }
     .btn-primary-action {
-      background: #008751;
+      background: #265728;
       color: #ffffff;
-      border: 1px solid #008751;
+      border: 1px solid #265728;
     }
     .btn-primary-action:hover {
       background: #046A38;

@@ -7,3 +7,4 @@ subdomain-stack.log
 .DS_Store
 .cache/
 pnpm-debug.log*
+preview.html
