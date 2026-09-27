@@ -28,27 +28,45 @@ router.delete('/api/v1/sessions/:id', revokeSession);
 router.delete('/api/v1/sessions', revokeAllSessions);
 router.get('/api/v1/dashboard/audit-logs/export', exportAuditLogs);
 
+function getAppIcon(subdomain: string): string {
+  if (subdomain && subdomain.startsWith('academy')) {
+    return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+      <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+    </svg>`;
+  }
+  if (subdomain && subdomain.startsWith('tracker')) {
+    return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <line x1="18" y1="20" x2="18" y2="10"></line>
+      <line x1="12" y1="20" x2="12" y2="4"></line>
+      <line x1="6" y1="20" x2="6" y2="14"></line>
+    </svg>`;
+  }
+  return `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+  </svg>`;
+}
+
 function formatSessionsHTML(sessions: any[]): string {
   return sessions.map(sess => {
-    const isAcademy = sess.subdomain && sess.subdomain.startsWith('academy');
-    const isTracker = sess.subdomain && sess.subdomain.startsWith('tracker');
-    const icon = isAcademy ? '🎓' : isTracker ? '📊' : '🔐';
-    const badge = sess.isCurrent ? '<span class="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 font-bold">This Device</span>' : '';
+    const iconSVG = getAppIcon(sess.subdomain || '');
+    const badge = sess.isCurrent ? '<span class="sj-current-device-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg> This Device</span>' : '';
 
-    return '<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center p-4 rounded-2xl border card-surface hover:border-blue-500/30 transition-all gap-3 touch-manipulation">' +
-      '<div class="flex items-center gap-3 w-full sm:w-auto">' +
-        '<div class="w-10 h-10 rounded-xl bg-blue-500/10 text-blue-500 flex items-center justify-center font-bold text-base border border-blue-500/20 flex-shrink-0">' + icon + '</div>' +
-        '<div class="min-w-0 flex-1">' +
-          '<div class="flex items-center gap-2 flex-wrap">' +
-            '<span class="font-extrabold text-xs text-primary truncate">' + (sess.deviceInfo || 'Web Client') + '</span>' + badge +
+    return '<div class="sj-session-item">' +
+      '<div class="sj-session-meta">' +
+        '<div class="sj-session-icon">' + iconSVG + '</div>' +
+        '<div>' +
+          '<div class="sj-session-device-row">' +
+            '<span class="sj-session-device">' + (sess.deviceInfo || 'Web Client') + '</span>' + badge +
           '</div>' +
-          '<div class="text-[11px] text-secondary flex flex-wrap items-center gap-x-3 gap-y-1 mt-0.5">' +
-            '<span>Subdomain: <strong class="font-mono text-primary">' + (sess.subdomain || 'auth.startupjigawa.test') + '</strong></span>' +
-            '<span>IP: <strong class="font-mono text-primary">' + (sess.ipAddress || '127.0.0.1') + '</strong></span>' +
+          '<div class="sj-session-details">' +
+            '<span>Realm: <strong>' + (sess.subdomain || 'auth.startupjigawa.test') + '</strong></span>' +
+            '<span>IP: <strong>' + (sess.ipAddress || '127.0.0.1') + '</strong></span>' +
           '</div>' +
         '</div>' +
       '</div>' +
-      '<button onclick="revokeSingleSession(\'' + sess.id + '\', this)" class="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl border card-surface text-red-500 hover:bg-red-500/10 text-xs font-bold transition-all active:scale-[0.98] flex items-center justify-center">' +
+      '<button onclick="revokeSingleSession(\'' + sess.id + '\', this)" class="sj-btn-revoke">' +
         'Revoke Session' +
       '</button>' +
     '</div>';
@@ -58,21 +76,21 @@ function formatSessionsHTML(sessions: any[]): string {
 function formatAppsHTML(apps: any[]): string {
   return apps.map(app => {
     const scopesHTML = (app.scopes || []).map((sc: string) =>
-      '<span class="text-[9px] px-1.5 py-0.5 rounded card-surface font-mono text-secondary border">' + sc + '</span>'
+      '<span class="sj-scope-tag">' + sc + '</span>'
     ).join('');
 
-    return '<div class="p-4 rounded-2xl border card-surface flex flex-col justify-between space-y-3 shadow-sm hover:shadow transition-all active:scale-[0.99] touch-manipulation">' +
+    return '<div class="sj-app-card">' +
       '<div>' +
-        '<div class="flex justify-between items-center mb-1">' +
-          '<span class="text-[10px] font-bold px-2 py-0.5 rounded accent-glow">' + app.badge + '</span>' +
-          '<span class="text-[10px] text-emerald-500 font-semibold">' + app.status + '</span>' +
+        '<div class="sj-app-top">' +
+          '<span class="sj-app-badge">' + app.badge + '</span>' +
+          '<span class="sj-app-status">' + app.status + '</span>' +
         '</div>' +
-        '<h4 class="font-bold text-xs text-primary mt-2">' + app.name + '</h4>' +
-        '<p class="text-[11px] font-mono text-secondary">' + app.domain + '</p>' +
+        '<h4 class="sj-app-name">' + app.name + '</h4>' +
+        '<p class="sj-app-domain">' + app.domain + '</p>' +
       '</div>' +
-      '<div class="pt-2 border-t border-[var(--surface-border)]">' +
-        '<span class="text-[10px] text-secondary block mb-1">Granted Scopes:</span>' +
-        '<div class="flex flex-wrap gap-1">' + scopesHTML + '</div>' +
+      '<div class="sj-app-bottom">' +
+        '<span class="sj-app-scopes-label">Granted RBAC Scopes:</span>' +
+        '<div class="sj-scopes-wrap">' + scopesHTML + '</div>' +
       '</div>' +
     '</div>';
   }).join('');
@@ -81,14 +99,14 @@ function formatAppsHTML(apps: any[]): string {
 function formatAuditLogsHTML(logs: any[]): string {
   return logs.map(log => {
     const isFailed = log.action && log.action.includes('FAILED');
-    const actionClass = isFailed ? 'text-red-500' : 'text-blue-500';
+    const actionClass = isFailed ? 'sj-log-failed' : 'sj-log-success';
     const dateStr = new Date(log.createdAt).toLocaleString();
 
-    return '<tr class="hover:bg-slate-800/30">' +
-      '<td class="py-3 px-3 font-mono font-bold ' + actionClass + '">' + log.action + '</td>' +
-      '<td class="py-3 px-3 font-mono text-primary">' + (log.resource || 'auth-portal') + '</td>' +
-      '<td class="py-3 px-3 font-mono text-secondary">' + (log.ipAddress || '127.0.0.1') + '</td>' +
-      '<td class="py-3 px-3 text-secondary whitespace-nowrap">' + dateStr + '</td>' +
+    return '<tr>' +
+      '<td class="' + actionClass + '">' + log.action + '</td>' +
+      '<td class="sj-log-resource">' + (log.resource || 'auth-portal') + '</td>' +
+      '<td class="sj-log-ip">' + (log.ipAddress || '127.0.0.1') + '</td>' +
+      '<td class="sj-log-date">' + dateStr + '</td>' +
     '</tr>';
   }).join('');
 }
@@ -122,162 +140,592 @@ function renderDashboardHTML(data: any): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>User Auth Control Panel — Startup Jigawa IdP</title>
+  <title>Security & Identity Dashboard — Startup Jigawa IdP</title>
+  <meta name="description" content="Central Identity and Token Management Dashboard for Startup Jigawa applications.">
   <script>${FOUC_HEAD_SCRIPT || ''}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/variables.css">
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { box-sizing: border-box; }
-    body { background-color: var(--bg-canvas, #0f172a); color: var(--text-primary, #f8fafc); font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-    input, select, textarea { font-size: 16px !important; }
-    .card-surface { background-color: var(--surface-card, #1e293b); border-color: var(--surface-border, #334155); }
-    .text-primary { color: var(--text-primary, #f8fafc); }
-    .text-secondary { color: var(--text-secondary, #94a3b8); }
-    .accent-btn { background-color: var(--accent-primary, #2563eb); }
-    .accent-glow { background-color: var(--accent-glow, rgba(37,99,235,0.15)); color: var(--accent-primary, #2563eb); }
-    .touch-target { min-height: 48px; touch-action: manipulation; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas, #0B0F19);
+      color: var(--text-primary, #f8fafc);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+
+    .sj-dash-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 32px 24px 80px;
+      flex-grow: 1;
+    }
+
+    /* Top Grid */
+    .sj-top-grid {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 24px;
+      margin-bottom: 28px;
+    }
+
+    .sj-dash-card {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 18px;
+      padding: 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    /* Security Hygiene Card */
+    .sj-hygiene-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+    .sj-hygiene-title {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .sj-hygiene-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      background: var(--green-tint, rgba(38, 87, 40, 0.15));
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+    }
+    .sj-hygiene-stat {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+      font-family: 'Manrope', sans-serif;
+      margin: 8px 0;
+    }
+    .sj-hygiene-track {
+      width: 100%;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-bottom: 16px;
+    }
+    .sj-hygiene-fill {
+      height: 100%;
+      border-radius: 9999px;
+      background: linear-gradient(90deg, #265728 0%, #34a853 100%);
+      transition: width 0.5s ease;
+    }
+    .sj-hygiene-list {
+      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      padding-top: 12px;
+      font-size: 0.75rem;
+    }
+    .sj-hygiene-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 6px 0;
+    }
+    .sj-val-green { color: var(--sj-primary, #265728); font-weight: 700; }
+    .sj-val-amber { color: #f59e0b; font-weight: 700; }
+
+    /* Profile Subject Card */
+    .sj-profile-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 12px;
+    }
+    .sj-user-id-tag {
+      font-family: monospace;
+      font-size: 0.6875rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .sj-profile-name {
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+      margin-top: 2px;
+    }
+    .sj-profile-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: var(--green-tint, rgba(38, 87, 40, 0.12));
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+    }
+    .sj-profile-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .sj-profile-attr {
+      padding: 12px 14px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
+    }
+    .sj-attr-label {
+      font-size: 0.6875rem;
+      color: var(--text-secondary, #94a3b8);
+      margin-bottom: 4px;
+      display: block;
+    }
+    .sj-attr-val {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+      font-family: monospace;
+    }
+    .sj-profile-footer {
+      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+
+    /* Section Headers */
+    .sj-dash-section {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 18px;
+      padding: 24px;
+      margin-bottom: 28px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+    .sj-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .sj-section-header h3 {
+      font-size: 1.125rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-section-header p {
+      font-size: 0.75rem;
+      color: var(--text-secondary, #94a3b8);
+      margin-top: 2px;
+    }
+
+    /* Kill switch button */
+    .sj-btn-killswitch {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: rgba(239, 68, 68, 0.15);
+      color: #ef4444;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      font-weight: 700;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sj-btn-killswitch:hover {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    /* Session Items */
+    .sj-session-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
+      margin-bottom: 10px;
+      transition: border-color 0.2s ease;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .sj-session-item:hover {
+      border-color: rgba(38, 87, 40, 0.3);
+    }
+    .sj-session-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .sj-session-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: var(--green-tint, rgba(38, 87, 40, 0.12));
+      color: var(--sj-primary, #265728);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .sj-session-device-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 2px;
+    }
+    .sj-session-device {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-current-device-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: rgba(38, 87, 40, 0.15);
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.3);
+    }
+    .sj-session-details {
+      font-size: 0.6875rem;
+      color: var(--text-secondary, #94a3b8);
+      display: flex;
+      gap: 12px;
+    }
+    .sj-session-details strong {
+      color: var(--text-primary, #ffffff);
+      font-family: monospace;
+    }
+    .sj-btn-revoke {
+      padding: 7px 14px;
+      border-radius: 8px;
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      background: rgba(239, 68, 68, 0.08);
+      color: #ef4444;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .sj-btn-revoke:hover {
+      background: #ef4444;
+      color: #ffffff;
+    }
+
+    /* Connected Apps Grid */
+    .sj-apps-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    .sj-app-card {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .sj-app-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+    .sj-app-badge {
+      font-size: 0.625rem;
+      font-weight: 700;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--green-tint, rgba(38, 87, 40, 0.12));
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.2);
+    }
+    .sj-app-status {
+      font-size: 0.625rem;
+      font-weight: 700;
+      color: #34a853;
+    }
+    .sj-app-name {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-app-domain {
+      font-family: monospace;
+      font-size: 0.6875rem;
+      color: var(--text-secondary, #94a3b8);
+      margin-top: 2px;
+    }
+    .sj-app-bottom {
+      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
+      padding-top: 8px;
+    }
+    .sj-app-scopes-label {
+      font-size: 0.625rem;
+      color: var(--text-secondary, #94a3b8);
+      display: block;
+      margin-bottom: 4px;
+    }
+    .sj-scopes-wrap {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .sj-scope-tag {
+      font-family: monospace;
+      font-size: 0.5625rem;
+      padding: 1px 4px;
+      border-radius: 3px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary, #94a3b8);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+    }
+
+    /* Audit Table */
+    .sj-btn-export {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.15));
+      background: transparent;
+      color: var(--text-primary, #ffffff);
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .sj-btn-export:hover {
+      background: var(--surface-hover, rgba(255, 255, 255, 0.05));
+      border-color: var(--sj-primary, #265728);
+    }
+    .sj-table-wrap {
+      overflow-x: auto;
+    }
+    .sj-audit-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      text-align: left;
+    }
+    .sj-audit-table th {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      color: var(--text-secondary, #94a3b8);
+      text-transform: uppercase;
+      font-size: 0.625rem;
+      letter-spacing: 0.05em;
+    }
+    .sj-audit-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.04));
+    }
+    .sj-log-success { color: var(--sj-primary, #265728); font-family: monospace; font-weight: 700; }
+    .sj-log-failed { color: #ef4444; font-family: monospace; font-weight: 700; }
+    .sj-log-resource { font-family: monospace; color: var(--text-primary, #ffffff); }
+    .sj-log-ip { font-family: monospace; color: var(--text-secondary, #94a3b8); }
+    .sj-log-date { color: var(--text-secondary, #94a3b8); white-space: nowrap; }
+
+    @media (max-width: 900px) {
+      .sj-top-grid { grid-template-columns: 1fr; }
+      .sj-apps-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .sj-apps-grid { grid-template-columns: 1fr; }
+      .sj-profile-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-0 transition-colors duration-200">
+<body>
   
   ${headerHTML}
 
-  <main class="max-w-6xl mx-auto w-full my-6 flex-1 space-y-6 px-4 sm:px-6">
+  <main class="sj-dash-container">
     
     <!-- Top Stats / Profile Cards Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="sj-top-grid">
       
       <!-- Security Hygiene Score Card -->
-      <div class="card-surface border p-5 sm:p-6 rounded-3xl shadow-sm flex flex-col justify-between">
+      <div class="sj-dash-card">
         <div>
-          <div class="flex justify-between items-center mb-2">
-            <h3 class="text-xs font-extrabold uppercase tracking-wider text-secondary">Security Hygiene</h3>
-            <span class="text-[11px] px-2.5 py-0.5 rounded-full font-bold bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">
+          <div class="sj-hygiene-header">
+            <span class="sj-hygiene-title">Security Hygiene</span>
+            <span class="sj-hygiene-badge">
               ${hygieneScore >= 80 ? 'Optimal Integrity' : 'Action Recommended'}
             </span>
           </div>
-          <div class="flex items-baseline gap-2 my-2">
-            <span class="text-4xl font-extrabold text-primary">${hygieneScore}%</span>
-            <span class="text-xs text-secondary font-medium">SLA Security Rating</span>
-          </div>
-          <div class="w-full bg-slate-700 h-3 rounded-full overflow-hidden mt-3">
-            <div class="bg-blue-600 h-full rounded-full transition-all duration-500" style="width: ${hygieneScore}%"></div>
+          <div class="sj-hygiene-stat">${hygieneScore}%</div>
+          <div class="sj-hygiene-track">
+            <div class="sj-hygiene-fill" style="width: ${hygieneScore}%;"></div>
           </div>
         </div>
 
-        <div class="mt-4 pt-4 border-t border-[var(--surface-border)] space-y-2 text-xs">
-          <div class="flex justify-between items-center">
-            <span class="text-secondary">2FA Authentication</span>
-            <span class="font-bold ${is2fa ? 'text-emerald-500' : 'text-amber-500'}">
-              ${is2fa ? '✓ Active' : '⚡ 2FA Recommended'}
+        <div class="sj-hygiene-list">
+          <div class="sj-hygiene-item">
+            <span style="color: var(--text-secondary);">2FA Authentication</span>
+            <span class="${is2fa ? 'sj-val-green' : 'sj-val-amber'}">
+              ${is2fa ? 'Active' : 'Recommended'}
             </span>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-secondary">Phone Verification</span>
-            <span class="font-bold ${user.isPhoneVerified ? 'text-emerald-500' : 'text-amber-500'}">
-              ${user.isPhoneVerified ? '✓ Verified' : 'Unverified'}
+          <div class="sj-hygiene-item">
+            <span style="color: var(--text-secondary);">Phone Verification</span>
+            <span class="${user.isPhoneVerified ? 'sj-val-green' : 'sj-val-amber'}">
+              ${user.isPhoneVerified ? 'Verified' : 'Unverified'}
             </span>
           </div>
-          <div class="flex justify-between items-center">
-            <span class="text-secondary">SIWES Trainee Status</span>
-            <span class="font-bold ${isSiwes ? 'text-emerald-500' : 'text-blue-500'}">
-              ${isSiwes ? '✓ Approved Trainee' : 'Active Student'}
+          <div class="sj-hygiene-item">
+            <span style="color: var(--text-secondary);">SIWES Trainee Status</span>
+            <span class="${isSiwes ? 'sj-val-green' : 'sj-val-green'}">
+              ${isSiwes ? 'Approved Trainee' : 'Active Student'}
             </span>
           </div>
         </div>
       </div>
 
       <!-- Identity Subject Profile Card -->
-      <div class="card-surface border p-5 sm:p-6 rounded-3xl shadow-sm md:col-span-2 flex flex-col justify-between">
+      <div class="sj-dash-card">
         <div>
-          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-2">
+          <div class="sj-profile-top">
             <div>
-              <span class="text-[11px] text-secondary font-mono">User ID: ${user.id}</span>
-              <h2 class="text-xl sm:text-2xl font-extrabold text-primary mt-0.5">${user.firstName} ${user.lastName}</h2>
+              <span class="sj-user-id-tag">User ID: ${user.id}</span>
+              <h2 class="sj-profile-name">${user.firstName} ${user.lastName}</h2>
             </div>
-            <span class="text-xs px-3 py-1 rounded-full font-bold accent-glow">Central IdP Subject</span>
+            <span class="sj-profile-badge">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+              <span>Central IdP Subject</span>
+            </span>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-xs">
-            <div class="p-3.5 rounded-2xl border card-surface">
-              <span class="text-secondary block mb-1">Primary Email</span>
-              <span class="font-bold text-primary font-mono truncate block">${user.email}</span>
+          <div class="sj-profile-grid">
+            <div class="sj-profile-attr">
+              <span class="sj-attr-label">Primary Email</span>
+              <span class="sj-attr-val">${user.email}</span>
             </div>
-            <div class="p-3.5 rounded-2xl border card-surface">
-              <span class="text-secondary block mb-1">Phone Number (NIN Link)</span>
-              <span class="font-bold text-primary font-mono block">${user.phoneNumber || '+2348012345678'}</span>
+            <div class="sj-profile-attr">
+              <span class="sj-attr-label">Phone Number (NIN Link)</span>
+              <span class="sj-attr-val">${user.phoneNumber || '+2348012345678'}</span>
             </div>
-            <div class="p-3.5 rounded-2xl border card-surface">
-              <span class="text-secondary block mb-1">SIWES Matriculation ID</span>
-              <span class="font-bold text-primary font-mono block">${meta.matriculationNumber || 'UG/19/CS/1001'}</span>
+            <div class="sj-profile-attr">
+              <span class="sj-attr-label">SIWES Matriculation ID</span>
+              <span class="sj-attr-val">${meta.matriculationNumber || 'UG/19/CS/1001'}</span>
             </div>
-            <div class="p-3.5 rounded-2xl border card-surface">
-              <span class="text-secondary block mb-1">Primary Realm</span>
-              <span class="font-bold text-primary font-mono block">auth.startupjigawa.test</span>
+            <div class="sj-profile-attr">
+              <span class="sj-attr-label">Primary Realm</span>
+              <span class="sj-attr-val">auth.startupjigawa.test</span>
             </div>
           </div>
         </div>
 
-        <div class="mt-4 pt-4 border-t border-[var(--surface-border)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
-          <span class="text-secondary">Signatures: RS256 JWT & SAML 2.0 Assertions</span>
-          <span class="font-mono text-emerald-500 font-bold">● Active Session</span>
+        <div class="sj-profile-footer">
+          <span>Signatures: RS256 JWT & SAML 2.0 Assertions</span>
+          <span style="color: var(--sj-primary); font-weight: 700; display: inline-flex; align-items: center; gap: 4px;">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            Active Session
+          </span>
         </div>
       </div>
 
     </div>
 
     <!-- Active Session Ring (Kill Switch Section) -->
-    <div class="card-surface border p-5 sm:p-6 rounded-3xl shadow-sm">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+    <div class="sj-dash-section">
+      <div class="sj-section-header">
         <div>
-          <h3 class="text-base font-extrabold text-primary">Active Session Ring (The Kill Switch)</h3>
-          <p class="text-xs text-secondary mt-0.5">Manage active token assertions across Jigawa microservices subdomains.</p>
+          <h3>Active Session Ring (The Kill Switch)</h3>
+          <p>Manage active token assertions across Jigawa microservices subdomains.</p>
         </div>
-        <button onclick="triggerKillSwitch(this)" class="w-full sm:w-auto min-h-[48px] px-5 py-3 rounded-2xl bg-red-600 text-white font-bold text-xs shadow-md hover:bg-red-700 transition-all active:scale-[0.98] touch-target flex items-center justify-center gap-2">
-          <span>⚡ Revoke All Sessions (Kill Switch)</span>
+        <button onclick="triggerKillSwitch(this)" class="sj-btn-killswitch">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+          </svg>
+          <span>Revoke All Sessions (Kill Switch)</span>
         </button>
       </div>
 
-      <div class="space-y-3">
+      <div>
         ${sessionsHTML}
       </div>
     </div>
 
     <!-- Connected Ecosystem Grid -->
-    <div class="card-surface border p-5 sm:p-6 rounded-3xl shadow-sm">
-      <div class="mb-4">
-        <h3 class="text-base font-extrabold text-primary">Connected Ecosystem Grid</h3>
-        <p class="text-xs text-secondary mt-0.5">Authorized Startup Jigawa monorepo microservices and granted RBAC scopes.</p>
+    <div class="sj-dash-section">
+      <div class="sj-section-header">
+        <div>
+          <h3>Connected Ecosystem Grid</h3>
+          <p>Authorized Startup Jigawa monorepo microservices and granted RBAC scopes.</p>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="sj-apps-grid">
         ${appsHTML}
       </div>
     </div>
 
     <!-- Immutable Security Audit Trail Table -->
-    <div class="card-surface border p-5 sm:p-6 rounded-3xl shadow-sm">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 gap-3">
+    <div class="sj-dash-section">
+      <div class="sj-section-header">
         <div>
-          <h3 class="text-base font-extrabold text-primary">Immutable Security Audit Trail</h3>
-          <p class="text-xs text-secondary mt-0.5">Compliance log of identity authorizations, logins, and key events.</p>
+          <h3>Immutable Security Audit Trail</h3>
+          <p>Compliance log of identity authorizations, logins, and token revocations.</p>
         </div>
-        <a href="/api/v1/dashboard/audit-logs/export" class="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl border card-surface font-bold text-xs text-primary hover:bg-slate-800 transition-all active:scale-[0.98] touch-target flex items-center justify-center gap-2">
-          <span>📥 Download CSV Audit Log</span>
+        <a href="/api/v1/dashboard/audit-logs/export" class="sj-btn-export">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Download CSV Audit Log</span>
         </a>
       </div>
 
-      <div class="overflow-x-auto -mx-5 sm:mx-0 px-5 sm:px-0">
-        <table class="w-full text-left text-xs border-collapse min-w-[500px]">
+      <div class="sj-table-wrap">
+        <table class="sj-audit-table">
           <thead>
-            <tr class="border-b border-[var(--surface-border)] text-secondary uppercase tracking-wider text-[10px]">
-              <th class="py-3 px-3">Event Action</th>
-              <th class="py-3 px-3">Resource / Target</th>
-              <th class="py-3 px-3">IP Address</th>
-              <th class="py-3 px-3">Timestamp</th>
+            <tr>
+              <th>Event Action</th>
+              <th>Resource / Target</th>
+              <th>IP Address</th>
+              <th>Timestamp</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-[var(--surface-border)]">
+          <tbody>
             ${auditLogsHTML}
           </tbody>
         </table>
@@ -325,7 +773,7 @@ function renderDashboardHTML(data: any): string {
         alert('Failed to execute Kill Switch');
         if (btnEl) {
           btnEl.disabled = false;
-          btnEl.innerText = '⚡ Revoke All Sessions (Kill Switch)';
+          btnEl.innerText = 'Revoke All Sessions (Kill Switch)';
         }
       }
     }
