@@ -75,6 +75,8 @@ jobs:
             echo "Executing production deployment via Makefile..."
             make switch-to-com
             make prod-deploy
+            make restore-all
+            docker compose ps
             
             echo "Cleaning up old unused images..."
             docker image prune -f

@@ -76,6 +76,7 @@ prod-deploy: ## Build workspaces, pull registry images & deploy full containeriz
 	@echo "2. Freeing up ecosystem ports and pulling container registry images..."
 	@docker compose pull || true
 	@$(MAKE) render-vhosts BASE_DOMAIN=$(BASE_DOMAIN)
+	@$(MAKE) restore-all
 	@docker compose up --build -d --remove-orphans
 	@echo "=================================================="
 	@echo "✨ Production Stack successfully deployed in Containerized Mode!"

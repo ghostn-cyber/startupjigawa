@@ -78,15 +78,10 @@ services:
 
   www_service:
     <<: *app-service
-    image: startupjigawa/www:latest
-    container_name: www_service
     environment:
       APP_KIND: www
       PORT: 3001
-      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
-      NODE_ENV: production
-    expose:
-      - '3001'
+    expose: ['3001']
 
   academy_service:
     <<: *app-service
