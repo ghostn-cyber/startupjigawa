@@ -1,6 +1,7 @@
 /**
  * Public Institutional Landing Page View — Partner & Pilot Portal
  * portal.startupjigawa.test
+ * Redesigned with Institutional Design System & Zero Emojis
  */
 
 let uiComponents;
@@ -35,8 +36,8 @@ function renderPartnerPortalLanding({ config, user, currentUrl, baseDomain = 'st
       title: '3MTT Jigawa Talent Deployment',
       partner: 'Federal Ministry of Comms & Digital Economy',
       status: 'Active Cohort',
-      badgeClass: 'bg-emerald-500/10 text-emerald-600 border-emerald-500/20',
-      icon: '⚡',
+      badgeClass: 'sj-badge-emerald',
+      iconSvg: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon></svg>`,
       metrics: '3,000+ Fellows Placed in State MDAs',
       description: 'Structured internship and technical placement track linking 3MTT fellows with state infrastructure projects.'
     },
@@ -44,8 +45,8 @@ function renderPartnerPortalLanding({ config, user, currentUrl, baseDomain = 'st
       title: 'NITDA IT Innovation Hubs',
       partner: 'National Information Tech Development Agency',
       status: 'Scaling Phase',
-      badgeClass: 'bg-blue-500/10 text-blue-600 border-blue-500/20',
-      icon: '📡',
+      badgeClass: 'sj-badge-blue',
+      iconSvg: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="2"></circle><path d="M16.24 7.76a6 6 0 0 1 0 8.49m-8.48-.01a6 6 0 0 1 0-8.49m11.31-2.82a10 10 0 0 1 0 14.14m-14.14 0a10 10 0 0 1 0-14.14"></path></svg>`,
       metrics: '5 Hubs Operational Across Senatorial Districts',
       description: 'Co-location, gigabit fiber broadband, and hardware lab infrastructure for tech startups and enumerators.'
     },
@@ -53,8 +54,8 @@ function renderPartnerPortalLanding({ config, user, currentUrl, baseDomain = 'st
       title: 'JICA Smart Agriculture & Telemetry',
       partner: 'Japan International Cooperation Agency',
       status: 'Pilot Live',
-      badgeClass: 'bg-purple-500/10 text-purple-600 border-purple-500/20',
-      icon: '🌾',
+      badgeClass: 'sj-badge-purple',
+      iconSvg: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 20h10M10 20c0-4 2-7 5-8-3-1-5-4-5-8-2 2-3 5-3 8 0 4 2 7 3 8z"></path></svg>`,
       metrics: '12 Irrigation Clusters Sensor-Equipped',
       description: 'IoT climate sensors and satellite telemetry monitoring soil hydration in Hadejia-Jam\'are river basin.'
     },
@@ -62,8 +63,8 @@ function renderPartnerPortalLanding({ config, user, currentUrl, baseDomain = 'st
       title: 'OGP Open Governance & Fiscal Audit',
       partner: 'Open Government Partnership Secretariat',
       status: 'Verified Audit',
-      badgeClass: 'bg-amber-500/10 text-amber-600 border-amber-500/20',
-      icon: '⚖️',
+      badgeClass: 'sj-badge-gold',
+      iconSvg: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>`,
       metrics: '100% Verifiable Public Grant Logs',
       description: 'Transparent due-diligence and institutional MOU compliance tracking for development grants.'
     }
@@ -73,8 +74,9 @@ function renderPartnerPortalLanding({ config, user, currentUrl, baseDomain = 'st
     { name: 'Ministry of Agriculture & Natural Resources', acronym: 'MANR', projects: 8, status: 'Active MoU' },
     { name: 'Ministry of Health', acronym: 'MOH', projects: 5, status: 'Active MoU' },
     { name: 'Ministry of Education, Science & Tech', acronym: 'MOEST', projects: 12, status: 'Active MoU' },
-    { name: 'Jigawa Internal Revenue Service', acronym: 'JIRS', projects: 4, status: 'Active MoU' },
-    { name: 'Ministry of Works & Housing', acronym: 'MOWH', projects: 6, status: 'Active MoU' }
+    { name: 'Ministry of Budget & Economic Planning', acronym: 'MOBEP', projects: 6, status: 'Active MoU' },
+    { name: 'Jigawa State Board of Internal Revenue', acronym: 'JSBIR', projects: 4, status: 'Active MoU' },
+    { name: 'Jigawa Invest & Investment Promotion Agency', acronym: 'InvestJigawa', projects: 9, status: 'Active MoU' }
   ];
 
   return `<!DOCTYPE html>
@@ -83,160 +85,508 @@ function renderPartnerPortalLanding({ config, user, currentUrl, baseDomain = 'st
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Partner & Institutional Gateway — Startup Jigawa</title>
+  <meta name="description" content="The official institutional collaboration gateway connecting State MDAs, federal programs, and international development partners with Startup Jigawa.">
   <script>${FOUC_HEAD_SCRIPT || ''}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/variables.css">
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { box-sizing: border-box; }
-    body { background-color: var(--bg-canvas); color: var(--text-primary); font-family: system-ui, -apple-system, sans-serif; -webkit-tap-highlight-color: transparent; }
-    .card-surface { background-color: var(--surface-card); border-color: var(--surface-border); }
-    .text-primary { color: var(--text-primary); }
-    .text-secondary { color: var(--text-secondary); }
-    .accent-btn { background-color: var(--accent-primary); color: #ffffff; }
-    .accent-glow { background-color: var(--accent-glow); color: var(--accent-primary); }
-    .touch-target { min-height: 48px; touch-action: manipulation; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas, #0B0F19);
+      color: var(--text-primary, #f8fafc);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+
+    .sj-portal-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 40px 24px 80px;
+      flex-grow: 1;
+    }
+
+    /* Hero Banner */
+    .sj-portal-hero {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 20px;
+      padding: 48px 36px;
+      text-align: center;
+      margin-bottom: 48px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      position: relative;
+    }
+    .sj-portal-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: var(--green-tint, rgba(38, 87, 40, 0.12));
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+      margin-bottom: 20px;
+    }
+    .sj-portal-hero h1 {
+      font-size: 2.35rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+      line-height: 1.25;
+      max-width: 860px;
+      margin: 0 auto 16px;
+      letter-spacing: -0.02em;
+    }
+    .sj-portal-hero p {
+      font-size: 1rem;
+      color: var(--text-secondary, #94a3b8);
+      max-width: 700px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .sj-cta-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 40px;
+    }
+    .sj-btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: var(--sj-primary, #265728);
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.875rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 10px rgba(38, 87, 40, 0.3);
+    }
+    .sj-btn-primary:hover {
+      background-color: #1e4520;
+      transform: translateY(-1px);
+    }
+    .sj-btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background-color: transparent;
+      color: var(--text-primary, #ffffff);
+      padding: 12px 24px;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-decoration: none;
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.15));
+      transition: all 0.2s ease;
+    }
+    .sj-btn-secondary:hover {
+      background-color: var(--surface-hover, rgba(255, 255, 255, 0.05));
+      border-color: var(--sj-primary, #265728);
+    }
+
+    /* Metrics Grid */
+    .sj-metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      padding-top: 32px;
+      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+    }
+    .sj-metric-card {
+      text-align: center;
+    }
+    .sj-metric-val {
+      font-size: 1.85rem;
+      font-weight: 800;
+      font-family: 'Manrope', sans-serif;
+      margin-bottom: 4px;
+    }
+    .sj-metric-val.green { color: var(--sj-primary, #265728); }
+    .sj-metric-val.blue { color: #38bdf8; }
+    .sj-metric-val.gold { color: #d97706; }
+    .sj-metric-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary, #94a3b8);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    /* Section Styles */
+    .sj-section-block {
+      margin-bottom: 56px;
+    }
+    .sj-section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 24px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .sj-section-head h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+      margin-bottom: 4px;
+    }
+    .sj-section-head p {
+      font-size: 0.8125rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .sj-section-link {
+      color: var(--sj-primary, #265728);
+      font-size: 0.8125rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .sj-section-link:hover { text-decoration: underline; }
+
+    /* Pilot Cards Grid */
+    .sj-pilots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 24px;
+    }
+    .sj-pilot-card {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: all 0.2s ease;
+    }
+    .sj-pilot-card:hover {
+      border-color: rgba(38, 87, 40, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+    .sj-pilot-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .sj-pilot-icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: var(--green-tint, rgba(38, 87, 40, 0.12));
+      color: var(--sj-primary, #265728);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(38, 87, 40, 0.2);
+    }
+    .sj-pilot-badge {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 9999px;
+      border: 1px solid transparent;
+    }
+    .sj-badge-emerald { background: rgba(38, 87, 40, 0.15); color: #34a853; border-color: rgba(52, 168, 83, 0.3); }
+    .sj-badge-blue { background: rgba(56, 189, 248, 0.12); color: #38bdf8; border-color: rgba(56, 189, 248, 0.25); }
+    .sj-badge-purple { background: rgba(168, 85, 247, 0.12); color: #c084fc; border-color: rgba(168, 85, 247, 0.25); }
+    .sj-badge-gold { background: rgba(217, 119, 6, 0.12); color: #fbbf24; border-color: rgba(217, 119, 6, 0.25); }
+
+    .sj-pilot-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+      margin-bottom: 4px;
+    }
+    .sj-pilot-partner {
+      font-size: 0.75rem;
+      color: var(--sj-primary, #265728);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .sj-pilot-desc {
+      font-size: 0.8125rem;
+      color: var(--text-secondary, #94a3b8);
+      line-height: 1.5;
+    }
+    .sj-pilot-footer {
+      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      padding-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+    .sj-pilot-metrics {
+      color: var(--text-secondary, #94a3b8);
+      font-weight: 600;
+      font-family: monospace;
+    }
+
+    /* Alliances Grid */
+    .sj-alliances-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+    }
+    .sj-alliance-card {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 14px;
+      padding: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .sj-mda-acronym {
+      font-family: monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--sj-primary, #265728);
+      margin-bottom: 2px;
+    }
+    .sj-mda-name {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+      margin-bottom: 2px;
+    }
+    .sj-mda-projects {
+      font-size: 0.6875rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .sj-mda-status {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: var(--green-tint, rgba(38, 87, 40, 0.12));
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+      white-space: nowrap;
+    }
+
+    /* Vault Callout Banner */
+    .sj-vault-callout {
+      background: linear-gradient(135deg, rgba(38, 87, 40, 0.15) 0%, rgba(10, 46, 18, 0.08) 100%);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+      border-radius: 20px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    }
+    .sj-vault-callout h2 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+      margin-bottom: 8px;
+    }
+    .sj-vault-callout p {
+      font-size: 0.875rem;
+      color: var(--text-secondary, #94a3b8);
+      max-width: 620px;
+      margin: 0 auto 24px;
+      line-height: 1.55;
+    }
+
+    @media (max-width: 1024px) {
+      .sj-alliances-grid { grid-template-columns: repeat(2, 1fr); }
+      .sj-pilots-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .sj-portal-hero { padding: 32px 20px; }
+      .sj-portal-hero h1 { font-size: 1.75rem; }
+      .sj-metrics-grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+      .sj-alliances-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
+<body>
 
   ${headerHTML}
 
-  <!-- Hero Section -->
-  <header class="relative border-b border-[var(--surface-border)] bg-gradient-to-b from-amber-500/5 via-transparent to-transparent py-16 sm:py-24 px-4 sm:px-6 overflow-hidden">
-    <div class="max-w-6xl mx-auto text-center space-y-6">
-      
-      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-500/10 text-amber-600 text-xs font-bold border border-amber-500/20 shadow-sm">
-        <span>🏛️ Institutional Collaboration & State Alliances Portal</span>
+  <main class="sj-portal-container">
+    
+    <!-- Hero Section -->
+    <div class="sj-portal-hero">
+      <div class="sj-portal-badge">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <line x1="3" y1="21" x2="21" y2="21"></line>
+          <line x1="6" y1="18" x2="6" y2="9"></line>
+          <line x1="10" y1="18" x2="10" y2="9"></line>
+          <line x1="14" y1="18" x2="14" y2="9"></line>
+          <line x1="18" y1="18" x2="18" y2="9"></line>
+          <polygon points="12 2 20 7 4 7 12 2"></polygon>
+        </svg>
+        Institutional Collaboration & State Alliances Portal
       </div>
 
-      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-primary max-w-4xl mx-auto leading-tight">
-        Accelerating Digital Growth & Public Innovation Across Jigawa State
-      </h1>
+      <h1>Accelerating Digital Transformation & Public Innovation Across Jigawa State</h1>
 
-      <p class="text-sm sm:text-base text-secondary max-w-2xl mx-auto leading-relaxed">
+      <p>
         The official institutional collaboration gateway connecting State Ministries, Departments, and Agencies (MDAs), federal technology programs, and international development partners with Startup Jigawa Ltd (RC 7256149).
       </p>
 
-      <div class="flex flex-wrap items-center justify-center gap-4 pt-4">
+      <div class="sj-cta-group">
         ${user ? `
-          <a href="/dashboard" class="px-8 py-4 rounded-xl accent-btn font-bold text-sm shadow-xl hover:opacity-95 transition-all active:scale-[0.98] touch-target flex items-center gap-2 decoration-none">
-            <span>Enter Institutional Vault Dashboard →</span>
+          <a href="/dashboard" class="sj-btn-primary">
+            <span>Enter Institutional Vault Dashboard</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
           </a>
         ` : `
-          <a href="/dashboard" class="px-8 py-4 rounded-xl accent-btn font-bold text-sm shadow-xl hover:opacity-95 transition-all active:scale-[0.98] touch-target flex items-center gap-2 decoration-none">
-            <span>Access Institutional Vault (SSO) →</span>
+          <a href="/dashboard" class="sj-btn-primary">
+            <span>Access Institutional Vault (SSO)</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
           </a>
-          <a href="http://auth.${baseDomain}/login?type=enterprise" class="px-6 py-4 rounded-xl card-surface border text-primary font-bold text-sm shadow-sm hover:border-amber-500 transition-all touch-target flex items-center gap-2 decoration-none">
+          <a href="http://auth.${baseDomain}/login?type=enterprise" class="sj-btn-secondary">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+              <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+            </svg>
             <span>MDA Official SAML Login</span>
           </a>
         `}
       </div>
 
       <!-- Public Key Metrics Grid -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto pt-10">
-        <div class="card-surface border p-4 rounded-2xl text-center">
-          <div class="text-2xl font-black text-amber-500">18</div>
-          <div class="text-xs font-medium text-secondary mt-0.5">Connected MDAs</div>
+      <div class="sj-metrics-grid">
+        <div class="sj-metric-card">
+          <div class="sj-metric-val green">18</div>
+          <div class="sj-metric-label">Connected MDAs</div>
         </div>
-        <div class="card-surface border p-4 rounded-2xl text-center">
-          <div class="text-2xl font-black text-blue-500">3MTT & NITDA</div>
-          <div class="text-xs font-medium text-secondary mt-0.5">Federal Alliances</div>
+        <div class="sj-metric-card">
+          <div class="sj-metric-val blue">3MTT & NITDA</div>
+          <div class="sj-metric-label">Federal Alliances</div>
         </div>
-        <div class="card-surface border p-4 rounded-2xl text-center">
-          <div class="text-2xl font-black text-purple-500">JICA & World Bank</div>
-          <div class="text-xs font-medium text-secondary mt-0.5">Global Partners</div>
+        <div class="sj-metric-card">
+          <div class="sj-metric-val gold">JICA & World Bank</div>
+          <div class="sj-metric-label">Global Partners</div>
         </div>
-        <div class="card-surface border p-4 rounded-2xl text-center">
-          <div class="text-2xl font-black text-emerald-500">24</div>
-          <div class="text-xs font-medium text-secondary mt-0.5">Active Initiatives</div>
+        <div class="sj-metric-card">
+          <div class="sj-metric-val green">24</div>
+          <div class="sj-metric-label">Active Initiatives</div>
         </div>
       </div>
-
     </div>
-  </header>
 
-  <!-- Main Content Body -->
-  <main class="max-w-6xl mx-auto w-full py-12 px-4 sm:px-6 space-y-16">
-    
     <!-- Active Pilot Programs Section -->
-    <section class="space-y-6">
-      <div class="flex flex-col sm:flex-row justify-between items-start sm:items-end gap-2 border-b border-[var(--surface-border)] pb-4">
+    <div class="sj-section-block">
+      <div class="sj-section-head">
         <div>
-          <h2 class="text-2xl font-black tracking-tight text-primary">Active Pilot Programs & Trackers</h2>
-          <p class="text-xs text-secondary mt-1">Joint technology deployments across Jigawa State's 27 Local Government Areas.</p>
+          <h2>Active Pilot Programs & Trackers</h2>
+          <p>Joint technology deployments across Jigawa State's 27 Local Government Areas.</p>
         </div>
-        <a href="/dashboard" class="text-xs font-bold text-amber-600 hover:underline">View Restricted Vault Files &rarr;</a>
+        <a href="/dashboard" class="sj-section-link">
+          <span>View Restricted Vault Files</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div class="sj-pilots-grid">
         ${pilotPrograms.map(p => `
-          <div class="card-surface border p-6 rounded-3xl space-y-4 hover:border-amber-500/50 transition-all shadow-sm">
-            <div class="flex justify-between items-start">
-              <div class="w-12 h-12 rounded-2xl accent-glow flex items-center justify-center text-xl font-bold">
-                ${p.icon}
-              </div>
-              <span class="px-3 py-1 text-xs font-mono font-bold rounded-full border ${p.badgeClass}">
-                ${p.status}
-              </span>
-            </div>
-            
+          <div class="sj-pilot-card">
             <div>
-              <h3 class="text-lg font-extrabold text-primary">${p.title}</h3>
-              <div class="text-xs font-medium text-amber-600 mt-0.5">${p.partner}</div>
-              <p class="text-xs text-secondary mt-2 leading-relaxed">${p.description}</p>
+              <div class="sj-pilot-top">
+                <div class="sj-pilot-icon-box">
+                  ${p.iconSvg}
+                </div>
+                <span class="sj-pilot-badge ${p.badgeClass}">
+                  ${p.status}
+                </span>
+              </div>
+              
+              <div style="margin-top: 14px;">
+                <h3 class="sj-pilot-title">${p.title}</h3>
+                <div class="sj-pilot-partner">${p.partner}</div>
+                <p class="sj-pilot-desc">${p.description}</p>
+              </div>
             </div>
 
-            <div class="pt-3 border-t border-[var(--surface-border)] flex items-center justify-between text-xs">
-              <span class="font-mono text-secondary">${p.metrics}</span>
-              <a href="/dashboard" class="font-bold text-primary hover:text-amber-500">Access MoU &rarr;</a>
+            <div class="sj-pilot-footer">
+              <span class="sj-pilot-metrics">${p.metrics}</span>
+              <a href="/dashboard" class="sj-section-link">
+                <span>Access MoU</span>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
             </div>
           </div>
         `).join('')}
       </div>
-    </section>
+    </div>
 
     <!-- State MDA Strategic Alliances Grid -->
-    <section class="space-y-6">
-      <div class="border-b border-[var(--surface-border)] pb-4">
-        <h2 class="text-2xl font-black tracking-tight text-primary">State MDA Strategic Alliances</h2>
-        <p class="text-xs text-secondary mt-1">Inter-governmental collaboration framework with Jigawa State Ministries.</p>
+    <div class="sj-section-block">
+      <div class="sj-section-head">
+        <div>
+          <h2>State MDA Strategic Alliances</h2>
+          <p>Inter-governmental collaboration framework with Jigawa State Ministries.</p>
+        </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div class="sj-alliances-grid">
         ${mdaAlliances.map(m => `
-          <div class="card-surface border p-5 rounded-2xl flex items-center justify-between">
-            <div class="space-y-1">
-              <div class="text-xs font-bold text-amber-500 font-mono">${m.acronym}</div>
-              <div class="text-sm font-extrabold text-primary">${m.name}</div>
-              <div class="text-[11px] text-secondary">${m.projects} Active Tech Projects</div>
+          <div class="sj-alliance-card">
+            <div>
+              <div class="sj-mda-acronym">${m.acronym}</div>
+              <div class="sj-mda-name">${m.name}</div>
+              <div class="sj-mda-projects">${m.projects} Active Tech Projects</div>
             </div>
-            <span class="px-2.5 py-1 text-[10px] font-mono font-bold rounded bg-emerald-500/10 text-emerald-600 border border-emerald-500/20">
+            <span class="sj-mda-status">
               ${m.status}
             </span>
           </div>
         `).join('')}
       </div>
-    </section>
+    </div>
 
     <!-- Governance & Secure SSO Vault Callout -->
-    <section class="card-surface border p-8 sm:p-12 rounded-3xl text-center space-y-6 relative overflow-hidden bg-gradient-to-r from-amber-500/5 via-slate-900/10 to-amber-500/5">
-      <div class="max-w-2xl mx-auto space-y-4">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-600 text-xs font-bold border border-amber-500/20">
-          <span>🔒 Institutional Document Vault & Audit Telemetry</span>
-        </div>
-        <h2 class="text-2xl sm:text-4xl font-extrabold tracking-tight text-primary">
-          Protected Vault for State Officials & Authorized Partners
-        </h2>
-        <p class="text-xs sm:text-sm text-secondary leading-relaxed">
-          Access confidential MOUs, technical audit logs, equipment inventory, and streaming pilot datasets protected by Single Sign-On (SSO) and object-level Access Control Lists (ACLs).
-        </p>
-        <div class="pt-4">
-          <a href="/dashboard" class="px-8 py-4 rounded-xl accent-btn font-bold text-sm shadow-lg hover:opacity-95 transition-all inline-flex items-center gap-2 decoration-none">
-            <span>Enter Institutional Vault Workspace (SSO) →</span>
-          </a>
-        </div>
+    <div class="sj-vault-callout">
+      <div class="sj-portal-badge" style="margin-bottom: 12px;">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+        Institutional Document Vault & Audit Telemetry
       </div>
-    </section>
+      <h2>Protected Vault for State Officials & Authorized Partners</h2>
+      <p>
+        Access confidential MOUs, technical audit logs, equipment inventory, and streaming pilot datasets protected by Single Sign-On (SSO) and object-level Access Control Lists (ACLs).
+      </p>
+      <div>
+        <a href="/dashboard" class="sj-btn-primary">
+          <span>Enter Institutional Vault Workspace (SSO)</span>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M5 12h14M12 5l7 7-7 7"/>
+          </svg>
+        </a>
+      </div>
+    </div>
 
   </main>
 

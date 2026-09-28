@@ -1,5 +1,6 @@
 /**
  * Cloud Control Operations Dashboard View (`cloud.startupjigawa.test/dashboard`)
+ * Redesigned with Institutional Design System & Zero Emojis
  */
 
 let uiComponents;
@@ -38,106 +39,346 @@ function renderCloudDashboard({ config, user, currentUrl, baseDomain, services =
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Cloud Control Operations — Startup Jigawa</title>
+  <meta name="description" content="Infrastructure management plane, container telemetry, and upstream reverse proxy router control.">
   <script>${FOUC_HEAD_SCRIPT || ''}</script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/variables.css">
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { box-sizing: border-box; }
-    body { background-color: var(--bg-canvas); color: var(--text-primary); font-family: system-ui, -apple-system, sans-serif; }
-    .card-surface { background-color: var(--surface-card); border-color: var(--surface-border); }
-    .text-primary { color: var(--text-primary); }
-    .text-secondary { color: var(--text-secondary); }
-    .accent-bg { background-color: #0284c7; }
-    .accent-glow { background-color: rgba(2, 132, 199, 0.15); color: #0284c7; }
-    .glassmorphic { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-canvas, #0B0F19);
+      color: var(--text-primary, #f8fafc);
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
+
+    .sj-cloud-container {
+      max-width: 1240px;
+      margin: 0 auto;
+      width: 100%;
+      padding: 32px 24px 80px;
+      flex-grow: 1;
+    }
+
+    /* Executive Header */
+    .sj-exec-header {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 16px;
+      padding: 24px 28px;
+      margin-bottom: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+    .sj-exec-title-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+      flex-wrap: wrap;
+    }
+    .sj-exec-title-row h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-role-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 10px;
+      border-radius: 9999px;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      background: var(--green-tint, rgba(38, 87, 40, 0.15));
+      color: var(--sj-primary, #265728);
+      border: 1px solid rgba(38, 87, 40, 0.25);
+    }
+    .sj-exec-meta {
+      font-size: 0.8125rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+    .sj-exec-meta strong {
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-btn-reload {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 10px;
+      background-color: var(--sj-primary, #265728);
+      color: #ffffff;
+      font-weight: 700;
+      font-size: 0.8125rem;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(38, 87, 40, 0.3);
+      transition: all 0.2s ease;
+    }
+    .sj-btn-reload:hover {
+      background-color: #1e4520;
+      transform: translateY(-1px);
+    }
+
+    /* Live Resource Utilization Gauges */
+    .sj-gauges-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+    .sj-gauge-card {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+    .sj-gauge-label {
+      font-size: 0.75rem;
+      color: var(--text-secondary, #94a3b8);
+      font-weight: 600;
+    }
+    .sj-gauge-val {
+      font-size: 1.65rem;
+      font-weight: 800;
+      font-family: 'Manrope', sans-serif;
+      color: var(--sj-primary, #265728);
+      margin: 6px 0 2px;
+    }
+    .sj-gauge-track {
+      width: 100%;
+      height: 6px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 9999px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+    .sj-gauge-fill {
+      height: 100%;
+      background: var(--sj-primary, #265728);
+      border-radius: 9999px;
+      transition: width 0.4s ease;
+    }
+    .sj-gauge-sub {
+      font-size: 0.6875rem;
+      font-family: monospace;
+      color: var(--text-secondary, #94a3b8);
+      margin-top: 6px;
+    }
+
+    /* Section Styles */
+    .sj-section-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .sj-section-top h2 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-section-top span {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary, #94a3b8);
+    }
+
+    /* Services Grid */
+    .sj-nodes-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    .sj-node-card {
+      background: var(--surface-card, #111827);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      border-radius: 14px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 14px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      transition: border-color 0.2s ease;
+    }
+    .sj-node-card:hover {
+      border-color: rgba(38, 87, 40, 0.35);
+    }
+    .sj-node-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .sj-node-id {
+      font-family: monospace;
+      font-size: 0.6875rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-secondary, #94a3b8);
+      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+    }
+    .sj-node-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.6875rem;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 9999px;
+    }
+    .sj-status-online {
+      background: rgba(38, 87, 40, 0.15);
+      color: #34a853;
+      border: 1px solid rgba(52, 168, 83, 0.3);
+    }
+    .sj-status-warning {
+      background: rgba(245, 158, 11, 0.15);
+      color: #f59e0b;
+      border: 1px solid rgba(245, 158, 11, 0.3);
+    }
+    .sj-node-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-primary, #ffffff);
+      margin-bottom: 8px;
+    }
+    .sj-node-specs {
+      font-family: monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary, #94a3b8);
+      line-height: 1.6;
+    }
+    .sj-node-specs strong {
+      color: var(--text-primary, #ffffff);
+    }
+    .sj-node-footer {
+      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
+      padding-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 1024px) {
+      .sj-gauges-grid { grid-template-columns: repeat(2, 1fr); }
+      .sj-nodes-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .sj-gauges-grid { grid-template-columns: 1fr; }
+      .sj-nodes-grid { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
+<body>
   
   ${headerHTML}
 
-  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-grow">
+  <main class="sj-cloud-container">
     
     <!-- Control Header Bar -->
-    <div class="card-surface border p-6 rounded-3xl shadow-sm mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+    <div class="sj-exec-header">
       <div>
-        <div class="flex items-center gap-3 mb-1">
-          <h1 class="text-2xl font-black tracking-tight text-primary">SJ Cloud Operations Plane</h1>
-          <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-sky-100 text-sky-800 border border-sky-200">
-            ${primaryRole}
+        <div class="sj-exec-title-row">
+          <h1>SJ Cloud Operations Plane</h1>
+          <span class="sj-role-badge">
+            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+            <span>${primaryRole}</span>
           </span>
         </div>
-        <p class="text-xs text-secondary">
-          Authenticated as <span class="font-bold text-primary">${user?.email || user?.sub || 'Infra Engineer'}</span> • Environment: <span class="font-bold text-sky-500">Startup Jigawa Local Monorepo</span>
+        <p class="sj-exec-meta">
+          Authenticated: <strong>${user?.email || user?.sub || 'Infra Engineer'}</strong> • Monorepo Gateway Mesh
         </p>
       </div>
 
-      <div class="flex gap-3">
-        <button onclick="triggerReload()" class="px-4 py-2.5 rounded-xl accent-bg text-white font-bold text-xs shadow hover:opacity-95 transition-all">
-          ⚡ Reload Upstream Router
+      <div>
+        <button onclick="triggerReload()" class="sj-btn-reload">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+          </svg>
+          <span>Reload Upstream Router</span>
         </button>
       </div>
     </div>
 
     <!-- Live Resource Utilization Gauges -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-      <div class="card-surface border p-5 rounded-2xl shadow-sm">
-        <div class="text-xs text-secondary font-semibold">CPU Utilization</div>
-        <div class="text-2xl font-black text-sky-500 mt-1">${system.cpuUsagePercent}%</div>
-        <div class="w-full bg-slate-200 dark:bg-slate-800 h-1.5 rounded-full mt-2 overflow-hidden">
-          <div class="bg-sky-500 h-full" style="width: ${system.cpuUsagePercent}%"></div>
+    <div class="sj-gauges-grid">
+      <div class="sj-gauge-card">
+        <div class="sj-gauge-label">CPU Utilization</div>
+        <div class="sj-gauge-val">${system.cpuUsagePercent}%</div>
+        <div class="sj-gauge-track">
+          <div class="sj-gauge-fill" style="width: ${system.cpuUsagePercent}%;"></div>
         </div>
       </div>
 
-      <div class="card-surface border p-5 rounded-2xl shadow-sm">
-        <div class="text-xs text-secondary font-semibold">RAM Usage</div>
-        <div class="text-2xl font-black text-sky-500 mt-1">${system.memoryUsedMB} MB</div>
-        <div class="text-[11px] text-secondary mt-1 font-mono">${system.memoryUsagePercent}% of ${system.memoryTotalMB} MB</div>
+      <div class="sj-gauge-card">
+        <div class="sj-gauge-label">RAM Usage</div>
+        <div class="sj-gauge-val">${system.memoryUsedMB} MB</div>
+        <div class="sj-gauge-sub">${system.memoryUsagePercent}% of ${system.memoryTotalMB} MB</div>
       </div>
 
-      <div class="card-surface border p-5 rounded-2xl shadow-sm">
-        <div class="text-xs text-secondary font-semibold">Disk Allocation</div>
-        <div class="text-2xl font-black text-sky-500 mt-1">${system.diskUsedGB} GB</div>
-        <div class="text-[11px] text-secondary mt-1 font-mono">${system.diskUsagePercent}% of ${system.diskTotalGB} GB</div>
+      <div class="sj-gauge-card">
+        <div class="sj-gauge-label">Disk Allocation</div>
+        <div class="sj-gauge-val">${system.diskUsedGB} GB</div>
+        <div class="sj-gauge-sub">${system.diskUsagePercent}% of ${system.diskTotalGB} GB</div>
       </div>
 
-      <div class="card-surface border p-5 rounded-2xl shadow-sm">
-        <div class="text-xs text-secondary font-semibold">Active Connections</div>
-        <div class="text-2xl font-black text-sky-500 mt-1">${system.activeConnections}</div>
-        <div class="text-[11px] text-emerald-600 font-bold mt-1">● Mesh Healthy</div>
+      <div class="sj-gauge-card">
+        <div class="sj-gauge-label">Active Connections</div>
+        <div class="sj-gauge-val">${system.activeConnections}</div>
+        <div class="sj-gauge-sub" style="color: #34a853; font-weight: 700;">Mesh Healthy</div>
       </div>
     </div>
 
     <!-- Monorepo Service Health & Routing Grid -->
-    <div class="space-y-6">
-      <div class="flex justify-between items-center">
-        <h2 class="text-xl font-bold text-primary">Microservice Infrastructure Grid</h2>
-        <span class="text-xs font-mono text-secondary">Auto-pinging every 5s</span>
+    <div>
+      <div class="sj-section-top">
+        <h2>Microservice Infrastructure Grid</h2>
+        <span>Auto-ping active every 5s</span>
       </div>
 
-      <div class="grid lg:grid-cols-3 gap-6">
+      <div class="sj-nodes-grid">
         ${services.map(srv => `
-          <div class="card-surface border rounded-2xl p-5 shadow-sm flex flex-col justify-between">
+          <div class="sj-node-card">
             <div>
-              <div class="flex justify-between items-center mb-3">
-                <span class="text-xs font-mono font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800 border border-sky-200">
-                  ${srv.id}
-                </span>
-                <span class="text-xs font-extrabold px-2.5 py-0.5 rounded ${srv.status === 'ONLINE' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-                  ● ${srv.status}
+              <div class="sj-node-top">
+                <span class="sj-node-id">${srv.id}</span>
+                <span class="sj-node-status ${srv.status === 'ONLINE' ? 'sj-status-online' : 'sj-status-warning'}">
+                  <svg width="6" height="6" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                  <span>${srv.status}</span>
                 </span>
               </div>
-              <h3 class="text-base font-bold text-primary mb-1">${srv.name}</h3>
-              <div class="text-xs text-secondary space-y-1 mb-4 font-mono">
-                <div>Port: <strong class="text-primary">${srv.port}</strong></div>
-                <div>Version: <strong class="text-sky-600">${srv.version}</strong></div>
-                <div>Latency: <strong class="text-emerald-500">${srv.latencyMs} ms</strong></div>
+              <h3 class="sj-node-title">${srv.name}</h3>
+              <div class="sj-node-specs">
+                <div>Port: <strong>${srv.port}</strong></div>
+                <div>Version: <strong style="color: #38bdf8;">${srv.version}</strong></div>
+                <div>Latency: <strong style="color: var(--sj-primary);">${srv.latencyMs} ms</strong></div>
               </div>
             </div>
 
-            <div class="pt-3 border-t border-[var(--surface-border)] flex justify-between items-center text-xs">
-              <span class="text-secondary">Uptime Rate</span>
-              <span class="font-bold text-emerald-600">${srv.uptimePercent}%</span>
+            <div class="sj-node-footer">
+              <span style="color: var(--text-secondary);">Uptime Rate</span>
+              <span style="font-weight: 700; color: var(--sj-primary);">${srv.uptimePercent}%</span>
             </div>
           </div>
         `).join('')}
