@@ -1,6 +1,5 @@
 /**
  * Executive Governance Dashboard View (`admin.startupjigawa.test/dashboard`)
- * Redesigned with Institutional Design System & Zero Emojis
  */
 
 let uiComponents;
@@ -39,380 +38,89 @@ function renderAdminDashboard({ config, user, currentUrl, baseDomain, users = []
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Executive Governance Dashboard — Startup Jigawa</title>
-  <meta name="description" content="State-level executive governance, RBAC role overrides, and real-time feature flag control center.">
   <script>${FOUC_HEAD_SCRIPT || ''}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/variables.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--bg-canvas, #0B0F19);
-      color: var(--text-primary, #f8fafc);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
-
-    .sj-admin-container {
-      max-width: 1240px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 32px 24px 80px;
-      flex-grow: 1;
-    }
-
-    /* Executive Header Bar */
-    .sj-exec-header {
-      background: var(--surface-card, #111827);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      border-radius: 16px;
-      padding: 24px 28px;
-      margin-bottom: 28px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 16px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    }
-    .sj-exec-title-row {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 4px;
-      flex-wrap: wrap;
-    }
-    .sj-exec-title-row h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-primary, #ffffff);
-    }
-    .sj-role-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      padding: 3px 10px;
-      border-radius: 9999px;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.25);
-    }
-    .sj-exec-user-meta {
-      font-size: 0.8125rem;
-      color: var(--text-secondary, #94a3b8);
-    }
-    .sj-exec-user-meta strong {
-      color: var(--text-primary, #ffffff);
-    }
-    .sj-status-pill {
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 8px 14px;
-      border-radius: 10px;
-      background: rgba(38, 87, 40, 0.12);
-      color: var(--sj-primary, #265728);
-      border: 1px solid rgba(38, 87, 40, 0.25);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    /* Section Cards */
-    .sj-admin-section {
-      background: var(--surface-card, #111827);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      border-radius: 18px;
-      padding: 24px;
-      margin-bottom: 28px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-    }
-    .sj-section-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-      gap: 12px;
-    }
-    .sj-section-top h2 {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-primary, #ffffff);
-      margin-bottom: 2px;
-    }
-    .sj-section-top p {
-      font-size: 0.75rem;
-      color: var(--text-secondary, #94a3b8);
-    }
-    .sj-count-tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 9999px;
-      background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.25);
-    }
-    .sj-count-tag.green {
-      background: var(--green-tint, rgba(38, 87, 40, 0.12));
-      color: var(--sj-primary, #265728);
-      border-color: rgba(38, 87, 40, 0.25);
-    }
-
-    /* Table */
-    .sj-table-wrap {
-      overflow-x: auto;
-    }
-    .sj-table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-      font-size: 0.8125rem;
-    }
-    .sj-table th {
-      padding: 12px 14px;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      color: var(--text-secondary, #94a3b8);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-    }
-    .sj-table td {
-      padding: 14px;
-      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.04));
-      vertical-align: middle;
-    }
-    .sj-user-name {
-      font-weight: 700;
-      color: var(--text-primary, #ffffff);
-    }
-    .sj-user-email {
-      font-family: monospace;
-      font-size: 0.6875rem;
-      color: var(--text-secondary, #94a3b8);
-    }
-    .sj-role-chip {
-      font-family: monospace;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      padding: 2px 8px;
-      border-radius: 6px;
-    }
-    .sj-role-elevated {
-      background: rgba(239, 68, 68, 0.15);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-    .sj-role-standard {
-      background: rgba(255, 255, 255, 0.05);
-      color: var(--text-secondary, #94a3b8);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.1));
-    }
-    .sj-elevated-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      color: #34a853;
-    }
-    .sj-btn-override {
-      padding: 6px 12px;
-      border-radius: 8px;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      background: rgba(239, 68, 68, 0.08);
-      color: #ef4444;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .sj-btn-override:hover {
-      background: #ef4444;
-      color: #ffffff;
-    }
-
-    /* Feature Flags Grid */
-    .sj-flags-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-    }
-    .sj-flag-card {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
-      border-radius: 12px;
-      padding: 16px 18px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-    }
-    .sj-flag-key {
-      font-family: monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: #38bdf8;
-      margin-bottom: 2px;
-    }
-    .sj-flag-desc {
-      font-size: 0.75rem;
-      color: var(--text-secondary, #94a3b8);
-      line-height: 1.4;
-    }
-    .sj-flag-env {
-      font-family: monospace;
-      font-size: 0.625rem;
-      color: var(--text-secondary, #94a3b8);
-      margin-top: 4px;
-    }
-    .sj-btn-toggle {
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 0.6875rem;
-      font-weight: 800;
-      border: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      letter-spacing: 0.04em;
-      white-space: nowrap;
-    }
-    .sj-toggle-enabled {
-      background: var(--sj-primary, #265728);
-      color: #ffffff;
-    }
-    .sj-toggle-enabled:hover {
-      background: #1e4520;
-    }
-    .sj-toggle-disabled {
-      background: rgba(255, 255, 255, 0.08);
-      color: var(--text-secondary, #94a3b8);
-    }
-    .sj-toggle-disabled:hover {
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    /* Consolidated Audit Stream */
-    .sj-audit-item {
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      font-size: 0.75rem;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-    .sj-audit-action-chip {
-      font-family: monospace;
-      font-weight: 700;
-      padding: 2px 6px;
-      border-radius: 4px;
-      background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.25);
-    }
-    .sj-audit-meta {
-      font-size: 0.6875rem;
-      color: var(--text-secondary, #94a3b8);
-      margin-top: 4px;
-    }
-
-    @media (max-width: 900px) {
-      .sj-flags-grid { grid-template-columns: 1fr; }
-    }
+    * { box-sizing: border-box; }
+    body { background-color: var(--bg-canvas); color: var(--text-primary); font-family: system-ui, -apple-system, sans-serif; }
+    .card-surface { background-color: var(--surface-card); border-color: var(--surface-border); }
+    .text-primary { color: var(--text-primary); }
+    .text-secondary { color: var(--text-secondary); }
+    .accent-bg { background-color: #ef4444; }
+    .accent-glow { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
   
   ${headerHTML}
 
-  <main class="sj-admin-container">
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8 flex-grow">
     
     <!-- Control Header Bar -->
-    <div class="sj-exec-header">
+    <div class="card-surface border p-6 rounded-3xl shadow-sm mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
       <div>
-        <div class="sj-exec-title-row">
-          <h1>Executive Governance Command</h1>
-          <span class="sj-role-badge">
-            <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-            <span>${primaryRole}</span>
+        <div class="flex items-center gap-3 mb-1">
+          <h1 class="text-2xl font-black tracking-tight text-primary">Executive Governance Command</h1>
+          <span class="text-xs px-2.5 py-0.5 rounded-full font-bold bg-rose-100 text-rose-800 border border-rose-200">
+            ${primaryRole}
           </span>
         </div>
-        <p class="sj-exec-user-meta">
-          Authenticated Administrator: <strong>${user?.email || user?.sub || 'System Admin'}</strong> • Clearance: <span style="color: #ef4444; font-weight: 700;">Tier 5 Executive</span>
+        <p class="text-xs text-secondary">
+          Authenticated Administrator: <span class="font-bold text-primary">${user?.email || user?.sub || 'System Admin'}</span> • Clearance: <span class="font-bold text-rose-500">Tier 5 Executive</span>
         </p>
       </div>
 
-      <div>
-        <span class="sj-status-pill">
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-          <span>RBAC Zero-Trust Enforced</span>
+      <div class="flex gap-3">
+        <span class="text-xs font-extrabold px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 flex items-center gap-2">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+          RBAC Policy Enforced
         </span>
       </div>
     </div>
 
     <!-- Section 1: User Directory & Global Role Overrides -->
-    <section class="sj-admin-section">
-      <div class="sj-section-top">
+    <section class="card-surface border rounded-3xl p-6 sm:p-8 shadow-sm mb-8">
+      <div class="flex justify-between items-center mb-6">
         <div>
-          <h2>Global User Directory & Role Manager</h2>
-          <p>Inspect ecosystem identity accounts and grant privilege role overrides.</p>
+          <h2 class="text-xl font-bold text-primary">Global User Directory & Role Manager</h2>
+          <p class="text-xs text-secondary mt-0.5">Inspect ecosystem identity accounts and grant privilege role overrides.</p>
         </div>
-        <span class="sj-count-tag">
+        <span class="text-xs font-bold text-rose-600 px-3 py-1 rounded-full bg-rose-50 dark:bg-rose-950/30 border border-rose-200">
           ${users.length} Active Accounts
         </span>
       </div>
 
-      <div class="sj-table-wrap">
-        <table class="sj-table">
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
           <thead>
-            <tr>
-              <th>User Identity</th>
-              <th>Department / Org</th>
-              <th>Active Role Claim</th>
-              <th>Status</th>
-              <th style="text-align: right;">Quick Elevation Action</th>
+            <tr class="border-b border-[var(--surface-border)] text-xs text-secondary font-bold uppercase tracking-wider">
+              <th class="py-3 px-4">User Identity</th>
+              <th class="py-3 px-4">Department / Org</th>
+              <th class="py-3 px-4">Active Role Claim</th>
+              <th class="py-3 px-4">Elevated</th>
+              <th class="py-3 px-4 text-right">Quick Elevation Action</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody class="divide-y divide-[var(--surface-border)] text-xs">
             ${users.map(u => `
-              <tr>
-                <td>
-                  <div class="sj-user-name">${u.fullName}</div>
-                  <div class="sj-user-email">${u.email}</div>
+              <tr class="hover:bg-slate-500/5 transition-colors">
+                <td class="py-3.5 px-4">
+                  <div class="font-bold text-primary">${u.fullName}</div>
+                  <div class="text-secondary font-mono text-[11px]">${u.email}</div>
                 </td>
-                <td style="color: var(--text-secondary);">${u.department}</td>
-                <td>
-                  <span class="sj-role-chip ${u.isElevated ? 'sj-role-elevated' : 'sj-role-standard'}">
+                <td class="py-3.5 px-4 text-secondary">${u.department}</td>
+                <td class="py-3.5 px-4">
+                  <span class="font-bold px-2.5 py-0.5 rounded-full ${u.isElevated ? 'bg-rose-100 text-rose-800' : 'bg-slate-100 text-slate-800'}">
                     ${u.role}
                   </span>
                 </td>
-                <td>
-                  ${u.isElevated ? `
-                    <span class="sj-elevated-pill">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
-                      <span>Elevated</span>
-                    </span>
-                  ` : '<span style="color: var(--text-secondary);">Standard</span>'}
+                <td class="py-3.5 px-4">
+                  ${u.isElevated ? '✅ Elevated' : 'Standard'}
                 </td>
-                <td style="text-align: right;">
-                  <button onclick="overrideRole('${u.id}', '${u.role === 'system_admin' ? 'governance_officer' : 'system_admin'}')" class="sj-btn-override">
-                    <span>Set ${u.role === 'system_admin' ? 'Governance' : 'Admin'}</span>
-                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                <td class="py-3.5 px-4 text-right">
+                  <button onclick="overrideRole('${u.id}', '${u.role === 'system_admin' ? 'governance_officer' : 'system_admin'}')" class="px-3 py-1.5 rounded-lg border card-surface font-bold text-rose-500 hover:bg-rose-50 transition-all text-[11px]">
+                    Set ${u.role === 'system_admin' ? 'Governance' : 'Admin'} →
                   </button>
                 </td>
               </tr>
@@ -423,26 +131,26 @@ function renderAdminDashboard({ config, user, currentUrl, baseDomain, users = []
     </section>
 
     <!-- Section 2: Global Feature Flags Matrix -->
-    <section class="sj-admin-section">
-      <div class="sj-section-top">
+    <section class="card-surface border rounded-3xl p-6 sm:p-8 shadow-sm mb-8">
+      <div class="flex justify-between items-center mb-6">
         <div>
-          <h2>System Feature Flag Controls</h2>
-          <p>Toggle live features across monorepo subdomains without deployment restarts.</p>
+          <h2 class="text-xl font-bold text-primary">System Feature Flag Controls</h2>
+          <p class="text-xs text-secondary mt-0.5">Toggle live features across monorepo subdomains without deployment restarts.</p>
         </div>
-        <span class="sj-count-tag green">
+        <span class="text-xs font-bold text-emerald-600 px-3 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200">
           ${flags.filter(f => f.isEnabled).length} Enabled
         </span>
       </div>
 
-      <div class="sj-flags-grid">
+      <div class="grid md:grid-cols-2 gap-4">
         ${flags.map(flag => `
-          <div class="sj-flag-card">
+          <div class="card-surface border rounded-2xl p-5 shadow-sm flex items-center justify-between">
             <div>
-              <div class="sj-flag-key">${flag.key}</div>
-              <div class="sj-flag-desc">${flag.description}</div>
-              <div class="sj-flag-env">Env: ${flag.environment}</div>
+              <div class="text-xs font-mono font-bold text-sky-500 mb-1">${flag.key}</div>
+              <div class="text-xs text-secondary leading-snug">${flag.description}</div>
+              <div class="text-[10px] text-secondary mt-2 font-mono">Env: ${flag.environment}</div>
             </div>
-            <button onclick="toggleFlag('${flag.key}', ${!flag.isEnabled})" class="sj-btn-toggle ${flag.isEnabled ? 'sj-toggle-enabled' : 'sj-toggle-disabled'}">
+            <button onclick="toggleFlag('${flag.key}', ${!flag.isEnabled})" class="px-4 py-2 rounded-xl text-xs font-extrabold shadow-sm transition-all ${flag.isEnabled ? 'bg-emerald-500 text-white hover:bg-emerald-600' : 'bg-slate-200 dark:bg-slate-800 text-secondary hover:bg-slate-300'}">
               ${flag.isEnabled ? 'ENABLED' : 'DISABLED'}
             </button>
           </div>
@@ -451,33 +159,31 @@ function renderAdminDashboard({ config, user, currentUrl, baseDomain, users = []
     </section>
 
     <!-- Section 3: Consolidated System Audit Logs -->
-    <section class="sj-admin-section">
-      <div class="sj-section-top">
+    <section class="card-surface border rounded-3xl p-6 sm:p-8 shadow-sm">
+      <div class="flex justify-between items-center mb-6">
         <div>
-          <h2>Consolidated System Audit Stream</h2>
-          <p>Aggregated audit events from auth, portal, cloud, academy, and tracker subdomains.</p>
+          <h2 class="text-xl font-bold text-primary">Consolidated System Audit Stream</h2>
+          <p class="text-xs text-secondary mt-0.5">Aggregated audit events from auth, portal, cloud, academy, and tracker subdomains.</p>
         </div>
-        <span style="font-family: monospace; font-size: 0.75rem; color: var(--text-secondary);">
-          Real-time Telemetry Active
-        </span>
+        <span class="text-xs font-mono text-secondary">Real-time Telemetry</span>
       </div>
 
-      <div>
+      <div class="space-y-3">
         ${auditLogs.map(log => `
-          <div class="sj-audit-item">
+          <div class="p-4 rounded-2xl border card-surface flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 text-xs">
             <div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <span class="sj-audit-action-chip">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="font-mono font-extrabold text-rose-500 px-2 py-0.5 rounded bg-rose-50 dark:bg-rose-950/30 border border-rose-200">
                   ${log.action}
                 </span>
-                <span style="font-weight: 700; color: var(--text-primary);">${log.actorEmail}</span>
+                <span class="font-bold text-primary">${log.actorEmail}</span>
               </div>
-              <div class="sj-audit-meta">
-                Target: <span style="font-family: monospace; color: var(--text-primary); font-weight: 600;">${log.resource}</span> • ${log.details || ''}
+              <div class="text-secondary mt-1">
+                Resource: <span class="font-mono text-primary font-semibold">${log.resource}</span> • ${log.details || ''}
               </div>
             </div>
-            <div style="text-align: right; font-family: monospace; font-size: 0.6875rem; color: var(--text-secondary);">
-              <div>Realm: <strong style="color: #38bdf8;">${log.subdomain}</strong></div>
+            <div class="text-right font-mono text-[11px] text-secondary">
+              <div>Subdomain: <strong class="text-sky-500">${log.subdomain}</strong></div>
               <div>IP: ${log.ipAddress || '127.0.0.1'}</div>
             </div>
           </div>
@@ -499,10 +205,10 @@ function renderAdminDashboard({ config, user, currentUrl, baseDomain, users = []
           body: JSON.stringify({ userId, newRole, reason: 'Dashboard elevation' })
         });
         const data = await res.json();
-        alert('Role override dispatched: ' + (data.newRole || newRole));
+        alert('Role override disptached: ' + data.newRole);
         window.location.reload();
       } catch (e) {
-        alert('Role override dispatched.');
+        alert('Role override disptached.');
       }
     }
 

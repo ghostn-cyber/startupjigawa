@@ -1,6 +1,5 @@
 /**
  * Beneficiary Tracker Public Landing View (`tracker.startupjigawa.test`)
- * Redesigned with Institutional Design System & Zero Emojis
  */
 
 let uiComponents;
@@ -18,21 +17,12 @@ const { FOUC_HEAD_SCRIPT, renderUnifiedHeader, renderUnifiedFooter, getHeaderFoo
 
 function getRagBadge(ragStatus) {
   if (ragStatus === 'GREEN') {
-    return `<span class="sj-rag-badge sj-rag-green">
-      <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-      <span>On Track</span>
-    </span>`;
+    return `<span class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">🟢 On Track</span>`;
   }
   if (ragStatus === 'AMBER') {
-    return `<span class="sj-rag-badge sj-rag-amber">
-      <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-      <span>At Risk</span>
-    </span>`;
+    return `<span class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30">🟡 At Risk</span>`;
   }
-  return `<span class="sj-rag-badge sj-rag-red">
-    <svg width="8" height="8" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
-    <span>Delayed</span>
-  </span>`;
+  return `<span class="text-xs font-extrabold px-2.5 py-0.5 rounded bg-red-500/15 text-red-600 dark:text-red-400 border border-red-500/30">🔴 Delayed</span>`;
 }
 
 function renderTrackerLanding({ config, user, currentUrl, baseDomain, projects = [] }) {
@@ -56,623 +46,185 @@ function renderTrackerLanding({ config, user, currentUrl, baseDomain, projects =
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Beneficiary Tracker & M&E Engine — Startup Jigawa</title>
   <script>${FOUC_HEAD_SCRIPT || ''}</script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/variables.css">
+  <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background-color: var(--bg-canvas, #0B0F19);
-      color: var(--text-primary, #f8fafc);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-    h1, h2, h3, h4 { font-family: 'Manrope', sans-serif; }
-
-    .sj-tracker-container {
-      max-width: 1280px;
-      margin: 0 auto;
-      width: 100%;
-      padding: 40px 24px 80px;
-      flex-grow: 1;
-    }
-
-    /* Hero Banner */
-    .sj-tracker-hero {
-      background: var(--surface-card, #111827);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      border-radius: 20px;
-      padding: 48px 36px;
-      text-align: center;
-      margin-bottom: 40px;
-      position: relative;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    }
-    .sj-tracker-hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      border-radius: 9999px;
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      background: var(--green-tint, rgba(38, 87, 40, 0.12));
-      color: var(--sj-primary, #265728);
-      border: 1px solid rgba(38, 87, 40, 0.25);
-      margin-bottom: 16px;
-    }
-    .sj-tracker-hero h1 {
-      font-size: 2.25rem;
-      font-weight: 800;
-      color: var(--text-primary, #ffffff);
-      line-height: 1.2;
-      max-width: 820px;
-      margin: 0 auto 16px;
-      letter-spacing: -0.02em;
-    }
-    .sj-tracker-hero p {
-      font-size: 1rem;
-      color: var(--text-secondary, #94a3b8);
-      max-width: 680px;
-      margin: 0 auto 32px;
-      line-height: 1.6;
-    }
-
-    .sj-tracker-hero-ctas {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 12px;
-    }
-    .sj-tracker-btn-primary {
-      background: var(--sj-primary, #265728);
-      color: #ffffff;
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 10px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-      box-shadow: 0 2px 8px rgba(38, 87, 40, 0.3);
-    }
-    .sj-tracker-btn-primary:hover {
-      background: var(--sj-primary-hover, #1d4520);
-      transform: translateY(-1px);
-    }
-    .sj-tracker-btn-outline {
-      background: var(--surface-card, #111827);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.15));
-      color: var(--text-primary, #f8fafc);
-      font-size: 0.875rem;
-      font-weight: 600;
-      padding: 12px 24px;
-      border-radius: 10px;
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s ease;
-    }
-    .sj-tracker-btn-outline:hover {
-      background: rgba(255, 255, 255, 0.05);
-      border-color: var(--text-secondary);
-    }
-
-    /* Macro Impact Metric Cards */
-    .sj-macro-metrics-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-top: 36px;
-      padding-top: 32px;
-      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-    }
-    .sj-macro-card {
-      background: var(--surface-card-alt, #0d1322);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      border-radius: 14px;
-      padding: 20px;
-      text-align: left;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      position: relative;
-    }
-    .sj-macro-card:hover {
-      border-color: var(--sj-primary, #265728);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-    .sj-macro-val {
-      font-family: 'Manrope', sans-serif;
-      font-size: 1.85rem;
-      font-weight: 800;
-      color: var(--text-primary, #ffffff);
-      line-height: 1.1;
-      margin-bottom: 6px;
-    }
-    .sj-macro-label {
-      font-size: 0.8125rem;
-      color: var(--text-secondary, #94a3b8);
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .sj-macro-action {
-      font-size: 0.7rem;
-      color: var(--sj-primary, #265728);
-      font-weight: 600;
-    }
-
-    /* Projects Catalog */
-    .sj-pilots-section {
-      margin-top: 48px;
-    }
-    .sj-pilots-header {
-      margin-bottom: 24px;
-    }
-    .sj-pilots-title {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: var(--text-primary);
-      margin-bottom: 6px;
-    }
-    .sj-pilots-desc {
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-    }
-
-    .sj-pilots-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-    .sj-pilot-card {
-      background: var(--surface-card, #111827);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      border-radius: 16px;
-      padding: 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: all 0.2s ease;
-    }
-    .sj-pilot-card:hover {
-      border-color: rgba(38, 87, 40, 0.4);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-    .sj-pilot-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-    }
-    .sj-pilot-code {
-      font-family: monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 6px;
-      background: var(--surface-card-alt, #0d1322);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.1));
-      color: var(--text-primary);
-    }
-    .sj-pilot-card h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 8px;
-      line-height: 1.35;
-    }
-    .sj-pilot-card p {
-      font-size: 0.8125rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-      margin-bottom: 20px;
-    }
-
-    .sj-progress-track {
-      width: 100%;
-      height: 6px;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-    .sj-progress-bar {
-      height: 100%;
-      border-radius: 9999px;
-      background: var(--sj-primary, #265728);
-      transition: width 0.3s ease;
-    }
-    .sj-pilot-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-      padding-top: 12px;
-      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
-    }
-    .sj-pilot-meta strong {
-      color: var(--text-primary);
-    }
-
-    /* RAG Status Badges */
-    .sj-rag-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      padding: 3px 8px;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
-    }
-    .sj-rag-green {
-      background: rgba(16, 185, 129, 0.12);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.3);
-    }
-    .sj-rag-amber {
-      background: rgba(245, 158, 11, 0.12);
-      color: #f59e0b;
-      border: 1px solid rgba(245, 158, 11, 0.3);
-    }
-    .sj-rag-red {
-      background: rgba(239, 68, 68, 0.12);
-      color: #ef4444;
-      border: 1px solid rgba(239, 68, 68, 0.3);
-    }
-
-    /* Telemetry Modal */
-    .sj-modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.75);
-      backdrop-filter: blur(8px);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-    }
-    .sj-modal-overlay.hidden { display: none; }
-    .sj-modal-panel {
-      background: var(--surface-card, #111827);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.12));
-      border-radius: 20px;
-      max-width: 720px;
-      width: 100%;
-      padding: 28px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-    }
-    .sj-modal-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      padding-bottom: 16px;
-      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-    }
-    .sj-modal-compliance {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      font-size: 0.6875rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-      background: rgba(16, 185, 129, 0.12);
-      color: #10b981;
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      margin-bottom: 6px;
-    }
-    .sj-modal-title {
-      font-size: 1.25rem;
-      font-weight: 800;
-      color: var(--text-primary);
-    }
-    .sj-modal-close {
-      background: transparent;
-      border: none;
-      color: var(--text-secondary);
-      font-size: 1.25rem;
-      cursor: pointer;
-      padding: 4px;
-      line-height: 1;
-    }
-    .sj-modal-close:hover { color: var(--text-primary); }
-
-    .sj-modal-body {
-      padding: 20px 0;
-      overflow-y: auto;
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
-    }
-    .sj-modal-section-title {
-      font-size: 0.875rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 12px;
-    }
-    .sj-cluster-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-    }
-    .sj-cluster-item {
-      padding: 12px;
-      border-radius: 10px;
-      background: var(--surface-card-alt, #0d1322);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
-    }
-    .sj-cluster-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-    .sj-cluster-track {
-      width: 100%;
-      height: 4px;
-      border-radius: 9999px;
-      background: rgba(255, 255, 255, 0.08);
-      overflow: hidden;
-    }
-    .sj-cluster-bar {
-      height: 100%;
-      border-radius: 9999px;
-      background: var(--sj-primary, #265728);
-    }
-
-    .sj-sector-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .sj-sector-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 10px 14px;
-      border-radius: 10px;
-      background: var(--surface-card-alt, #0d1322);
-      border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.06));
-      font-size: 0.8125rem;
-    }
-    .sj-sector-left {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      color: var(--text-primary);
-      font-weight: 500;
-    }
-    .sj-sector-val {
-      font-family: monospace;
-      font-weight: 700;
-      color: var(--sj-primary, #265728);
-    }
-
-    .sj-modal-footer {
-      padding-top: 16px;
-      border-top: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.75rem;
-      color: var(--text-secondary);
-    }
-
-    @media (max-width: 992px) {
-      .sj-macro-metrics-grid { grid-template-columns: repeat(2, 1fr); }
-      .sj-pilots-grid { grid-template-columns: 1fr 1fr; }
-    }
-    @media (max-width: 640px) {
-      .sj-tracker-hero { padding: 32px 18px; }
-      .sj-tracker-hero h1 { font-size: 1.65rem; }
-      .sj-macro-metrics-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
-      .sj-pilots-grid { grid-template-columns: 1fr; }
-      .sj-cluster-grid { grid-template-columns: 1fr; }
-    }
+    * { box-sizing: border-box; }
+    body { background-color: var(--bg-canvas); color: var(--text-primary); font-family: system-ui, -apple-system, sans-serif; }
+    .card-surface { background-color: var(--surface-card); border-color: var(--surface-border); }
+    .text-primary { color: var(--text-primary); }
+    .text-secondary { color: var(--text-secondary); }
+    .accent-bg { background-color: #8b5cf6; }
+    .accent-glow { background-color: rgba(139, 92, 246, 0.15); color: #8b5cf6; }
   </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col justify-between transition-colors duration-200">
   
   ${headerHTML}
 
-  <main class="sj-tracker-container">
+  <main class="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-10 flex-grow">
     
     <!-- Hero Banner -->
-    <section class="sj-tracker-hero">
-      <div class="sj-tracker-hero-badge">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
-        <span>Jigawa State M&amp;E Transparency Engine</span>
+    <div class="card-surface border p-8 sm:p-12 rounded-3xl shadow-xl mb-10 text-center relative overflow-hidden">
+      <div class="inline-block mb-3 px-4 py-1.5 rounded-full text-xs font-extrabold tracking-wide accent-glow border border-purple-500/20">
+        Jigawa State Monitoring & Evaluation Transparency Engine
       </div>
-      <h1>Real-Time Impact Tracking Across 27 Local Government Areas</h1>
-      <p>
+      <h1 class="text-3xl sm:text-5xl font-black tracking-tight text-primary max-w-3xl mx-auto leading-tight">
+        Real-Time Impact Tracking Across 27 Local Government Areas
+      </h1>
+      <p class="text-sm sm:text-base text-secondary mt-4 max-w-2xl mx-auto">
         Immutable tracking of digital skills beneficiaries, tech venture pilots, grant disbursements, and RAG status indicators for state executive oversight.
       </p>
 
-      <div class="sj-tracker-hero-ctas">
+      <div class="mt-8 flex flex-wrap justify-center gap-4">
         ${user ? `
-          <a href="/dashboard" class="sj-tracker-btn-primary">
-            <span>Go to Executive M&amp;E Dashboard</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <a href="/dashboard" class="px-6 py-3.5 rounded-xl accent-bg text-white font-extrabold text-sm shadow-lg hover:opacity-95 transition-all">
+            Go to Executive M&E Dashboard →
           </a>
         ` : `
-          <a href="http://auth.${baseDomain}/login?returnTo=${encodeURIComponent('http://tracker.' + baseDomain + '/dashboard')}" class="sj-tracker-btn-primary">
-            <span>Access Stakeholder Vault (SSO Login)</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          <a href="http://auth.${baseDomain}/login?returnTo=${encodeURIComponent('http://tracker.' + baseDomain + '/dashboard')}" class="px-6 py-3.5 rounded-xl accent-bg text-white font-extrabold text-sm shadow-lg hover:opacity-95 transition-all">
+            Access Stakeholder Vault (SSO Login)
           </a>
-          <a href="#pilots" class="sj-tracker-btn-outline">
-            <span>Explore Active State Pilots</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M6 9l6 6 6-6"/></svg>
+          <a href="#pilots" class="px-6 py-3.5 rounded-xl card-surface border text-primary font-bold text-sm hover:bg-slate-100 dark:hover:bg-slate-800 transition-all">
+            Explore Active State Pilots
           </a>
         `}
-      </div>
-
-      <!-- Macro Impact Metrics -->
-      <div class="sj-macro-metrics-grid">
-        <button type="button" onclick="openPublicTelemetryModal('lga')" class="sj-macro-card">
-          <div class="sj-macro-val">50,420</div>
-          <div class="sj-macro-label">
+       <!-- Macro Impact Metrics (Interactive Drill-Down Cards) -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-12 pt-8 border-t border-[var(--surface-border)]">
+        <button onclick="openPublicTelemetryModal('lga')" class="p-4 rounded-xl card-surface border hover:border-purple-500 transition-all text-left group cursor-pointer focus:outline-none">
+          <div class="text-2xl sm:text-3xl font-black text-purple-500 group-hover:scale-105 transition-transform">50,420</div>
+          <div class="text-xs text-secondary mt-1 font-semibold flex items-center justify-between">
             <span>Tracked Beneficiaries</span>
-            <span class="sj-macro-action">Faceted View &rarr;</span>
+            <span class="text-[10px] text-purple-400 group-hover:underline">Faceted View ↗</span>
           </div>
         </button>
-        <button type="button" onclick="openPublicTelemetryModal('lga')" class="sj-macro-card">
-          <div class="sj-macro-val">27 LGAs</div>
-          <div class="sj-macro-label">
+        <button onclick="openPublicTelemetryModal('lga')" class="p-4 rounded-xl card-surface border hover:border-purple-500 transition-all text-left group cursor-pointer focus:outline-none">
+          <div class="text-2xl sm:text-3xl font-black text-purple-500 group-hover:scale-105 transition-transform">27 LGAs</div>
+          <div class="text-xs text-secondary mt-1 font-semibold flex items-center justify-between">
             <span>Statewide Coverage</span>
-            <span class="sj-macro-action">LGA Chart &rarr;</span>
+            <span class="text-[10px] text-purple-400 group-hover:underline">LGA Chart ↗</span>
           </div>
         </button>
-        <button type="button" onclick="openPublicTelemetryModal('placements')" class="sj-macro-card">
-          <div class="sj-macro-val">18,910</div>
-          <div class="sj-macro-label">
+        <button onclick="openPublicTelemetryModal('placements')" class="p-4 rounded-xl card-surface border hover:border-purple-500 transition-all text-left group cursor-pointer focus:outline-none">
+          <div class="text-2xl sm:text-3xl font-black text-purple-500 group-hover:scale-105 transition-transform">18,910</div>
+          <div class="text-xs text-secondary mt-1 font-semibold flex items-center justify-between">
             <span>Verified Placements</span>
-            <span class="sj-macro-action">Outcomes &rarr;</span>
+            <span class="text-[10px] text-purple-400 group-hover:underline">Outcomes ↗</span>
           </div>
         </button>
-        <button type="button" onclick="openPublicTelemetryModal('sectors')" class="sj-macro-card">
-          <div class="sj-macro-val">100%</div>
-          <div class="sj-macro-label">
+        <button onclick="openPublicTelemetryModal('sectors')" class="p-4 rounded-xl card-surface border hover:border-purple-500 transition-all text-left group cursor-pointer focus:outline-none">
+          <div class="text-2xl sm:text-3xl font-black text-purple-500 group-hover:scale-105 transition-transform">100%</div>
+          <div class="text-xs text-secondary mt-1 font-semibold flex items-center justify-between">
             <span>Data Audit Score</span>
-            <span class="sj-macro-action">Audit Log &rarr;</span>
+            <span class="text-[10px] text-purple-400 group-hover:underline">Audit Log ↗</span>
           </div>
         </button>
       </div>
     </section>
 
     <!-- Pilot Projects Catalog -->
-    <section id="pilots" class="sj-pilots-section">
-      <div class="sj-pilots-header">
-        <h2 class="sj-pilots-title">State Venture &amp; Pilot Project Portfolio</h2>
-        <p class="sj-pilots-desc">Real-time status updates and milestone progression across active state investments.</p>
+    <section id="pilots" class="max-w-6xl mx-auto px-4 py-8">
+      <div class="flex justify-between items-end mb-6">
+        <div>
+          <h2 class="text-xl font-bold text-primary">State Venture & Pilot Project Portfolio</h2>
+          <p class="text-xs text-secondary mt-1">Real-time status updates and milestone progression across active state investments.</p>
+        </div>
       </div>
 
-      <div class="sj-pilots-grid">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         ${projects.map(proj => `
-          <div class="sj-pilot-card">
+          <div class="card-surface border rounded-2xl p-6 shadow-sm flex flex-col justify-between hover:shadow-md transition-all">
             <div>
-              <div class="sj-pilot-top">
-                <span class="sj-pilot-code">${proj.code}</span>
+              <div class="flex justify-between items-center mb-3">
+                <span class="text-[11px] font-extrabold px-2.5 py-1 rounded font-mono bg-purple-100 text-purple-800 border border-purple-200">
+                  ${proj.code}
+                </span>
                 ${getRagBadge(proj.ragStatus)}
               </div>
-              <h3>${proj.title}</h3>
-              <p>${proj.description}</p>
+              <h3 class="text-base font-bold text-primary mb-2">${proj.title}</h3>
+              <p class="text-xs text-secondary leading-relaxed mb-4">${proj.description}</p>
             </div>
 
             <div>
-              <div class="sj-progress-track">
-                <div class="sj-progress-bar" style="width: ${proj.progressPercent}%"></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-800 h-2 rounded-full overflow-hidden mb-4">
+                <div class="bg-purple-500 h-full" style="width: ${proj.progressPercent}%"></div>
               </div>
-              <div class="sj-pilot-meta">
-                <span>LGA: <strong>${proj.lga}</strong></span>
-                <span>Progress: <strong>${proj.progressPercent}%</strong></span>
+              <div class="flex justify-between items-center text-xs text-secondary pt-3 border-t border-[var(--surface-border)]">
+                <span>LGA: <strong class="text-purple-600">${proj.lga}</strong></span>
+                <span>Progress: <strong class="text-primary">${proj.progressPercent}%</strong></span>
               </div>
             </div>
           </div>
         `).join('')}
       </div>
     </section>
-
   </main>
 
   <!-- Public Aggregated Telemetry Modal (Zero PII — NDPR/NDPA Compliant) -->
-  <div id="public-telemetry-modal" class="sj-modal-overlay hidden" aria-hidden="true" role="dialog">
-    <div class="sj-modal-panel">
-      <div class="sj-modal-header">
+  <div id="public-telemetry-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="card-surface border rounded-2xl max-w-3xl w-full p-6 shadow-2xl relative overflow-hidden max-h-[90vh] flex flex-col">
+      <div class="flex justify-between items-center pb-4 border-b border-[var(--surface-border)]">
         <div>
-          <span class="sj-modal-compliance">
-            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
-            <span>NDPR / NDPA Compliant — Zero PII Exposed</span>
+          <span class="text-[10px] font-extrabold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+            ✓ NDPR / NDPA Compliant — Zero PII Exposed
           </span>
-          <h3 class="sj-modal-title">Statewide Beneficiary &amp; Sector Breakdown</h3>
+          <h3 class="text-lg font-bold text-primary mt-1">Statewide Beneficiary & Sector Breakdown</h3>
         </div>
-        <button type="button" onclick="closePublicTelemetryModal()" class="sj-modal-close" aria-label="Close dialog">&times;</button>
+        <button onclick="closePublicTelemetryModal()" class="text-secondary hover:text-primary text-xl font-bold p-1">✕</button>
       </div>
 
-      <div class="sj-modal-body">
+      <div class="py-4 space-y-6 overflow-y-auto flex-1 text-xs">
         <!-- LGA Distribution -->
         <div>
-          <h4 class="sj-modal-section-title">Geographic Beneficiary Distribution (27 LGAs)</h4>
-          <div class="sj-cluster-grid">
-            <div class="sj-cluster-item">
-              <div class="sj-cluster-row"><span>Dutse Cluster</span><span>8,450 (16.7%)</span></div>
-              <div class="sj-cluster-track"><div class="sj-cluster-bar" style="width: 16.7%"></div></div>
+          <h4 class="font-bold text-primary text-sm mb-3">Geographic Beneficiary Distribution (27 LGAs)</h4>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)]">
+              <div class="flex justify-between font-bold mb-1"><span>Dutse Cluster</span><span>8,450 (16.7%)</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full"><div class="bg-purple-500 h-full rounded-full" style="width: 16.7%"></div></div>
             </div>
-            <div class="sj-cluster-item">
-              <div class="sj-cluster-row"><span>Hadejia Cluster</span><span>7,210 (14.3%)</span></div>
-              <div class="sj-cluster-track"><div class="sj-cluster-bar" style="width: 14.3%"></div></div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)]">
+              <div class="flex justify-between font-bold mb-1"><span>Hadejia Cluster</span><span>7,210 (14.3%)</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full"><div class="bg-purple-500 h-full rounded-full" style="width: 14.3%"></div></div>
             </div>
-            <div class="sj-cluster-item">
-              <div class="sj-cluster-row"><span>Gumel Cluster</span><span>6,100 (12.1%)</span></div>
-              <div class="sj-cluster-track"><div class="sj-cluster-bar" style="width: 12.1%"></div></div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)]">
+              <div class="flex justify-between font-bold mb-1"><span>Gumel Cluster</span><span>6,100 (12.1%)</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full"><div class="bg-purple-500 h-full rounded-full" style="width: 12.1%"></div></div>
             </div>
-            <div class="sj-cluster-item">
-              <div class="sj-cluster-row"><span>Birnin Kudu Cluster</span><span>5,900 (11.7%)</span></div>
-              <div class="sj-cluster-track"><div class="sj-cluster-bar" style="width: 11.7%"></div></div>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)]">
+              <div class="flex justify-between font-bold mb-1"><span>Birnin Kudu Cluster</span><span>5,900 (11.7%)</span></div>
+              <div class="w-full bg-slate-200 dark:bg-slate-700 h-2 rounded-full"><div class="bg-purple-500 h-full rounded-full" style="width: 11.7%"></div></div>
             </div>
           </div>
         </div>
 
         <!-- Sector Breakdown -->
         <div>
-          <h4 class="sj-modal-section-title">Venture &amp; Program Sector Distribution</h4>
-          <div class="sj-sector-list">
-            <div class="sj-sector-row">
-              <div class="sj-sector-left">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 10 10c0 5.52-4.48 10-10 10S2 17.52 2 12A10 10 0 0 1 12 2z"/><path d="M12 6v6l4 2"/></svg>
-                <span>AgriTech &amp; Solar Water Security</span>
-              </div>
-              <span class="sj-sector-val">20,168 (40%)</span>
+          <h4 class="font-bold text-primary text-sm mb-3">Venture & Program Sector Distribution</h4>
+          <div class="space-y-2">
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)] flex justify-between items-center">
+              <span>🌾 AgriTech & Solar Water Security</span>
+              <span class="font-mono font-bold text-purple-600">20,168 (40%)</span>
             </div>
-            <div class="sj-sector-row">
-              <div class="sj-sector-left">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-                <span>Digital Skills &amp; Tech Talent Pipeline</span>
-              </div>
-              <span class="sj-sector-val">17,647 (35%)</span>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)] flex justify-between items-center">
+              <span>💻 Digital Skills & Tech Talent Pipeline</span>
+              <span class="font-mono font-bold text-purple-600">17,647 (35%)</span>
             </div>
-            <div class="sj-sector-row">
-              <div class="sj-sector-left">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18M5 21V10h14v11M3 10l9-7 9 7M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4"/></svg>
-                <span>GovTech &amp; Inter-MDA SSO Integration</span>
-              </div>
-              <span class="sj-sector-val">7,563 (15%)</span>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)] flex justify-between items-center">
+              <span>🏛️ GovTech & Inter-MDA SSO Integration</span>
+              <span class="font-mono font-bold text-purple-600">7,563 (15%)</span>
             </div>
-            <div class="sj-sector-row">
-              <div class="sj-sector-left">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                <span>Climate Resilience &amp; Flood Warning Grid</span>
-              </div>
-              <span class="sj-sector-val">5,042 (10%)</span>
+            <div class="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/60 border border-[var(--surface-border)] flex justify-between items-center">
+              <span>🌊 Climate Resilience & Flood Warning Grid</span>
+              <span class="font-mono font-bold text-purple-600">5,042 (10%)</span>
             </div>
           </div>
         </div>
       </div>
 
-      <div class="sj-modal-footer">
-        <span>To view individual records &amp; audit hashes, access the <strong>Stakeholder Vault</strong>.</span>
-        <a href="http://auth.${baseDomain}/login?returnTo=${encodeURIComponent('http://tracker.' + baseDomain + '/dashboard')}" class="sj-tracker-btn-primary" style="padding: 6px 14px; font-size: 0.75rem;">
-          <span>Vault SSO Login &rarr;</span>
+      <div class="pt-4 border-t border-[var(--surface-border)] flex justify-between items-center text-xs text-secondary">
+        <span>To view individual records & audit hashes, access the <strong class="text-primary">Stakeholder Vault</strong>.</span>
+        <a href="http://auth.${baseDomain}/login?returnTo=${encodeURIComponent('http://tracker.' + baseDomain + '/dashboard')}" class="px-4 py-2 rounded-lg accent-bg text-white font-bold text-xs hover:opacity-90 transition-all">
+          Vault SSO Login →
         </a>
       </div>
     </div>
@@ -681,21 +233,12 @@ function renderTrackerLanding({ config, user, currentUrl, baseDomain, projects =
   <script>
     function openPublicTelemetryModal(view) {
       const modal = document.getElementById('public-telemetry-modal');
-      if (modal) {
-        modal.classList.remove('hidden');
-        modal.setAttribute('aria-hidden', 'false');
-      }
+      if (modal) modal.classList.remove('hidden');
     }
     function closePublicTelemetryModal() {
       const modal = document.getElementById('public-telemetry-modal');
-      if (modal) {
-        modal.classList.add('hidden');
-        modal.setAttribute('aria-hidden', 'true');
-      }
+      if (modal) modal.classList.add('hidden');
     }
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') closePublicTelemetryModal();
-    });
   </script>
 
   ${footerHTML}
