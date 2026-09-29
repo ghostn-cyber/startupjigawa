@@ -15,14 +15,6 @@ const renderers = {
   admin: () => require('../../../apps/admin-portal/src/index.js').renderAdminLanding
 };
 
-const apiHandlers = {
-  academy: () => require('../../../apps/academy/src/index.js').handleAcademyApi,
-  tracker: () => require('../../../apps/tracker/src/index.js').handleTrackerApi,
-  portal: () => require('../../../apps/partner-portal/src/index.js').handlePartnerPortalApi,
-  cloud: () => require('../../../apps/cloud-control/src/index.js').handleCloudApi,
-  admin: () => require('../../../apps/admin-portal/src/index.js').handleAdminApi
-};
-
 function fallbackPage() {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><title>${appKind} | Startup Jigawa</title></head><body><main><h1>${appKind} service</h1><p>Startup Jigawa service is online.</p></main></body></html>`;
 }
@@ -50,12 +42,6 @@ function serveAsset(req, res) {
 async function handle(req, res) {
   if (req.url === '/health') return send(res, 200, JSON.stringify({ status: 'ok', service: appKind }), 'application/json');
   if (serveAsset(req, res)) return;
-
-  const apiFactory = apiHandlers[appKind];
-  if (req.url.startsWith('/api/') && apiFactory) {
-    const handled = await apiFactory()(req, res, null, `${appKind}-${Date.now()}`);
-    if (handled) return;
-  }
 
   const renderer = renderers[appKind];
   if (renderer) {

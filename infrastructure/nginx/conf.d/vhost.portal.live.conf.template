@@ -2,6 +2,10 @@ server {
     listen 80;
     server_name portal.${BASE_DOMAIN};
 
+    location ^~ /api/ {
+        proxy_pass http://api-service:4100;
+    }
+
     location / {
         proxy_pass http://portal_service:3004;
     }

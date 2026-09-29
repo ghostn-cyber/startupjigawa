@@ -146,7 +146,7 @@ export function issueTokens(clientId: string, userId: string, scope: string) {
 
   const idToken = {
     sub: userId,
-    iss: 'https://auth.startupjigawa.com',
+    iss: process.env.AUTH_ISSUER || `https://auth.${process.env.BASE_DOMAIN || 'startupjigawa.com'}`,
     aud: clientId,
     exp: Math.floor((now + accessTokenLifetimeMs) / 1000),
     iat: Math.floor(now / 1000),

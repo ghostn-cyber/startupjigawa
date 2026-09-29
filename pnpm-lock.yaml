@@ -14,6 +14,15 @@ importers:
 
   apps/admin-portal:
     dependencies:
+      '@startupjigawa/ui-components':
+        specifier: workspace:*
+        version: link:../../packages/ui-components
+
+  apps/api-service:
+    dependencies:
+      '@startupjigawa/auth-client':
+        specifier: workspace:*
+        version: link:../../packages/auth-client
       '@startupjigawa/database':
         specifier: workspace:*
         version: link:../../packages/database
@@ -73,21 +82,12 @@ importers:
 
   apps/cloud-control:
     dependencies:
-      '@startupjigawa/database':
-        specifier: workspace:*
-        version: link:../../packages/database
       '@startupjigawa/ui-components':
         specifier: workspace:*
         version: link:../../packages/ui-components
 
   apps/partner-portal:
     dependencies:
-      '@startupjigawa/auth-client':
-        specifier: workspace:*
-        version: link:../../packages/auth-client
-      '@startupjigawa/database':
-        specifier: workspace:*
-        version: link:../../packages/database
       '@startupjigawa/ui-components':
         specifier: workspace:*
         version: link:../../packages/ui-components

@@ -12,15 +12,17 @@ export type SamlAssertionProfile = {
   audience: string;
 };
 
+const authIssuer = process.env.AUTH_ISSUER || `https://auth.${process.env.BASE_DOMAIN || 'startupjigawa.com'}`;
+
 export const samlPartnerConfigs = [
   {
     entityId: 'https://mda.jigawa.gov.ng',
-    acsUrl: 'https://auth.startupjigawa.com/saml/v2/acs',
+    acsUrl: `${authIssuer}/saml/v2/acs`,
     roles: ['admin', 'mda_partner', 'public']
   },
   {
     entityId: 'https://portal.nitda.gov.ng',
-    acsUrl: 'https://auth.startupjigawa.com/saml/v2/acs',
+    acsUrl: `${authIssuer}/saml/v2/acs`,
     roles: ['admin', 'trainer', 'public']
   }
 ];
@@ -61,7 +63,7 @@ export function validateSamlAssertion(assertion: string): SamlAssertionProfile |
 
   const issuer = extractXmlValue(assertion, 'Issuer') ?? 'government-partner';
   const subject = extractXmlValue(assertion, 'NameID') ?? 'external-user';
-  const audience = extractXmlValue(assertion, 'Audience') ?? 'https://auth.startupjigawa.com';
+  const audience = extractXmlValue(assertion, 'Audience') ?? (process.env.AUTH_ISSUER || `https://auth.${process.env.BASE_DOMAIN || 'startupjigawa.com'}`);
   const roleNames = extractAttributeValues(assertion)['Role'] ?? 'public';
   const mappedRoles = Array.isArray(roleNames) ? roleNames : [roleNames];
 

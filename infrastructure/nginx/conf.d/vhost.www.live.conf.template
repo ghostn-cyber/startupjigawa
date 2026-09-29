@@ -3,6 +3,10 @@ server {
     listen 80;
     server_name ${BASE_DOMAIN} www.${BASE_DOMAIN};
 
+    location ^~ /api/ {
+        proxy_pass http://api-service:4100;
+    }
+
     location / {
         proxy_pass http://www_service:3001;
     }

@@ -15,7 +15,7 @@ BASE_DOMAIN="${BASE_DOMAIN:-startupjigawa.test}"
 HOSTS_FILE="/etc/hosts"
 
 # Microservice subdomain prefixes matrix
-PREFIXES=("" "www" "auth" "academy" "tracker" "portal" "civic" "labs" "products" "admin")
+PREFIXES=("" "www" "api" "auth" "academy" "tracker" "portal" "civic" "labs" "products" "admin")
 
 DOMAINS=()
 for prefix in "${PREFIXES[@]}"; do

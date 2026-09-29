@@ -7,7 +7,6 @@
     "test": "node ../../scripts/test-cloud-control-plane.js"
   },
   "dependencies": {
-    "@startupjigawa/ui-components": "workspace:*",
-    "@startupjigawa/database": "workspace:*"
+    "@startupjigawa/ui-components": "workspace:*"
   }
 }

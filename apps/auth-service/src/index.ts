@@ -28,11 +28,15 @@ const allowedOrigins = [
   'http://portal.test',
   'http://civic.test',
   'http://auth.startupjigawa.test',
+  'http://api.startupjigawa.test',
+  'http://api.startupjigawa.test',
   'http://academy.startupjigawa.test',
   'http://tracker.startupjigawa.test',
   'http://portal.startupjigawa.test',
   'http://civic.startupjigawa.test',
   'https://auth.startupjigawa.com',
+  'https://api.startupjigawa.com',
+  'https://api.startupjigawa.com',
   'https://academy.startupjigawa.com',
   'https://tracker.startupjigawa.com',
   'https://portal.startupjigawa.com',
@@ -42,7 +46,7 @@ const allowedOrigins = [
 const isAllowedOrigin = (origin: string | undefined) => {
   if (!origin) return true;
   if (allowedOrigins.includes(origin)) return true;
-  return /^(https?:\/\/)([a-z0-9-]+\.)?(academy|tracker|portal|civic|auth)\.(startupjigawa\.(com|test)|test)$/.test(origin)
+  return /^(https?:\/\/)([a-z0-9-]+\.)?(academy|tracker|portal|civic|auth|api)\.(startupjigawa\.(com|test)|test)$/.test(origin)
     || /^https?:\/\/localhost(:\d+)?$/.test(origin);
 };
 
@@ -211,7 +215,7 @@ app.use((req: express.Request, res: express.Response) => {
     return res.status(404).json({ error: 'Endpoint Not Found', status: 404 });
   }
   res.status(404).setHeader('Content-Type', 'text/html; charset=utf-8');
-  return res.send(renderErrorHTML(404, 'Page Not Found', `The requested route '${req.originalUrl}' does not exist on auth.startupjigawa.test.`));
+  return res.send(renderErrorHTML(404, 'Page Not Found', `The requested route '${req.originalUrl}' does not exist on auth.${process.env.BASE_DOMAIN || 'startupjigawa.test'}.`));
 });
 
 // 500 Error Handler

@@ -19,6 +19,7 @@ up: ## Start full Startup Jigawa ecosystem stack
 	@echo "✨ Ecosystem successfully online!"
 	@echo "   - Main Domain: http://$(BASE_DOMAIN)"
 	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN)"
+	@echo "   - API:         http://api.$(BASE_DOMAIN)"
 	@echo "   - Portal SSO:  http://portal.$(BASE_DOMAIN)"
 	@echo "=================================================="
 
@@ -54,6 +55,7 @@ local-dev: ## Start ecosystem stack in local development mode
 	@echo "✨ Local Development Environment successfully online with Live Reload!"
 	@echo "   - Main Domain: http://$(BASE_DOMAIN)"
 	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN)"
+	@echo "   - API:         http://api.$(BASE_DOMAIN)"
 	@echo "   - Portal SSO:  http://portal.$(BASE_DOMAIN)"
 	@echo "=================================================="
 
@@ -82,6 +84,7 @@ prod-deploy: ## Build workspaces, pull registry images & deploy full containeriz
 	@echo "✨ Production Stack successfully deployed in Containerized Mode!"
 	@echo "   - Main Domain: http://www.$(BASE_DOMAIN):8080"
 	@echo "   - Auth IdP:    http://auth.$(BASE_DOMAIN):8080"
+	@echo "   - API:         http://api.$(BASE_DOMAIN):8080"
 	@echo "=================================================="
 
 
@@ -163,12 +166,14 @@ maintenance-s: ## Atomically enable maintenance mode for specific subdomain with
 		echo "❌ Error: Specify target subdomain using s=<subdomain> (e.g. make maintenance-s s=portal)"; \
 		exit 1; \
 	fi
-	@if [ ! -f "infrastructure/nginx/conf.d/vhost.$(s).maintenance.conf" ]; then \
-		echo "❌ Pre-flight Check Failed: 'infrastructure/nginx/conf.d/vhost.$(s).maintenance.conf' does not exist!"; \
+	@sub="$(s)"; [ "$$sub" != "web-corporate" ] || sub=www; \
+	if [ ! -f "infrastructure/nginx/conf.d/vhost.$$sub.maintenance.conf" ]; then \
+		echo "❌ Pre-flight Check Failed: 'infrastructure/nginx/conf.d/vhost.$$sub.maintenance.conf' does not exist!"; \
 		exit 1; \
 	fi
 	@echo "🚨 [PRE-FLIGHT PASSED] Enabling maintenance mode for subdomain: $(s)..."
-	@cd infrastructure/nginx/conf.d && ln -sf vhost.$(s).maintenance.conf vhost.$(s).conf
+	@sub="$(s)"; [ "$$sub" != "web-corporate" ] || sub=www; \
+	cd infrastructure/nginx/conf.d && ln -sf vhost.$$sub.maintenance.conf vhost.$$sub.conf
 	@make reload-nginx
 	@echo "🚨 Subdomain '$(s)' is now in Maintenance Mode (HTTP 503)!"
 
@@ -177,12 +182,14 @@ restore-s: ## Atomically restore live traffic for specific subdomain with pre-fl
 		echo "❌ Error: Specify target subdomain using s=<subdomain> (e.g. make restore-s s=portal)"; \
 		exit 1; \
 	fi
-	@if [ ! -f "infrastructure/nginx/conf.d/vhost.$(s).live.conf" ]; then \
-		echo "❌ Pre-flight Check Failed: 'infrastructure/nginx/conf.d/vhost.$(s).live.conf' does not exist!"; \
+	@sub="$(s)"; [ "$$sub" != "web-corporate" ] || sub=www; \
+	if [ ! -f "infrastructure/nginx/conf.d/vhost.$$sub.live.conf" ]; then \
+		echo "❌ Pre-flight Check Failed: 'infrastructure/nginx/conf.d/vhost.$$sub.live.conf' does not exist!"; \
 		exit 1; \
 	fi
 	@echo "🔄 [PRE-FLIGHT PASSED] Restoring live traffic for subdomain: $(s)..."
-	@cd infrastructure/nginx/conf.d && ln -sf vhost.$(s).live.conf vhost.$(s).conf
+	@sub="$(s)"; [ "$$sub" != "web-corporate" ] || sub=www; \
+	cd infrastructure/nginx/conf.d && ln -sf vhost.$$sub.live.conf vhost.$$sub.conf
 	@make reload-nginx
 	@echo "✅ Subdomain '$(s)' restored to Live Production Mode (HTTP 200)!"
 
@@ -199,7 +206,7 @@ status-all: ## Display live vs maintenance status of all active ecosystem subdom
 	@echo "📊 Ecosystem Subdomain Status Report"
 	@echo "=================================================="
 	@cd infrastructure/nginx/conf.d && \
-	for sub in www auth academy tracker portal civic labs products cloud admin; do \
+	for sub in www auth api academy tracker portal civic labs products cloud admin; do \
 		f="vhost.$$sub.conf"; \
 		if [ -L "$$f" ]; then target=$$(readlink "$$f"); else target="$$f"; fi; \
 		if echo "$$target" | grep -q "maintenance" || grep -q 'return 503' "$$f" 2>/dev/null; then \
@@ -215,7 +222,7 @@ status: status-all ## Alias for status-all
 maintenance-except-www: ## Enable maintenance mode for ALL subdomains except www/corporate domain
 	@echo "🚨 Enabling maintenance mode for all subdomains EXCEPT www..."
 	@cd infrastructure/nginx/conf.d && \
-	for s in academy admin auth civic cloud labs portal products tracker; do \
+	for s in academy admin auth api civic cloud labs portal products tracker; do \
 		if [ -f "vhost.$$s.maintenance.conf" ]; then \
 			ln -sf vhost.$$s.maintenance.conf vhost.$$s.conf; \
 		fi; \
@@ -226,7 +233,7 @@ maintenance-except-www: ## Enable maintenance mode for ALL subdomains except www
 restore-all: ## Restore live production traffic for ALL ecosystem subdomains
 	@echo "🔄 Restoring live traffic for ALL ecosystem subdomains..."
 	@cd infrastructure/nginx/conf.d && \
-	for s in www academy admin auth civic cloud labs portal products tracker; do \
+	for s in www academy admin auth api civic cloud labs portal products tracker; do \
 		if [ -f "vhost.$$s.live.conf" ]; then \
 			ln -sf vhost.$$s.live.conf vhost.$$s.conf; \
 		fi; \

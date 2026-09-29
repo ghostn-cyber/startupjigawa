@@ -7,6 +7,7 @@ x-app-service: &app-service
   restart: unless-stopped
   environment:
     BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+    AUTH_SERVICE_HOST: auth.${BASE_DOMAIN:-startupjigawa.com}
     NODE_ENV: production
   networks:
     - startup-jigawa-net
@@ -36,6 +37,22 @@ services:
     networks:
       - startup-jigawa-net
 
+  minio:
+    image: quay.io/minio/minio:latest
+    container_name: jigawa_minio
+    restart: unless-stopped
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:?Set MINIO_ROOT_USER in .env}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:?Set MINIO_ROOT_PASSWORD in .env}
+    volumes:
+      - minio_data:/data
+    expose:
+      - '9000'
+      - '9001'
+    networks:
+      - startup-jigawa-net
+
   jigawa_redis:
     image: redis:7
     container_name: jigawa_redis
@@ -49,6 +66,31 @@ services:
     networks:
       - startup-jigawa-net
 
+  api-service:
+    build:
+      context: .
+      dockerfile: Dockerfile.app
+    command: ["node", "apps/api-service/src/index.js"]
+    container_name: jigawa_api_service
+    restart: unless-stopped
+    environment:
+      PORT: 4100
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      DATABASE_URL: postgresql://jigawa:jigawa_pass@jigawa_postgres:5432/jigawa_dev
+      NODE_ENV: production
+    expose:
+      - '4100'
+    healthcheck:
+      test: [ 'CMD-SHELL', 'node -e "require(\"http\").get(\"http://127.0.0.1:4100/health\", response => process.exit(response.statusCode < 500 ? 0 : 1)).on(\"error\", () => process.exit(1))"' ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      jigawa_postgres:
+        condition: service_healthy
+    networks:
+      - startup-jigawa-net
+
   auth-service:
     image: ${DOCKER_USER:-hhhamza}/auth-service:${TAG:-latest}
     container_name: auth_service
@@ -56,6 +98,7 @@ services:
     environment:
       PORT: 4000
       BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      AUTH_ISSUER: https://auth.${BASE_DOMAIN:-startupjigawa.com}
       DATABASE_URL: postgresql://jigawa:jigawa_pass@jigawa_postgres:5432/jigawa_dev
       REDIS_URL: redis://jigawa_redis:6379
       JWT_SECRET: changeme
@@ -181,6 +224,7 @@ services:
       - "host.docker.internal:host-gateway"
     depends_on:
       - auth-service
+      - api-service
       - www_service
       - academy_service
       - tracker_service
@@ -200,4 +244,6 @@ networks:
 
 volumes:
   db_data:
+    driver: local
+  minio_data:
     driver: local

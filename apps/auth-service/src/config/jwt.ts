@@ -49,7 +49,7 @@ export function buildJwtClaims(options: {
 
   return {
     sub: options.sub,
-    iss: 'https://auth.startupjigawa.com',
+    iss: process.env.AUTH_ISSUER || `https://auth.${process.env.BASE_DOMAIN || 'startupjigawa.com'}`,
     aud: options.aud,
     exp: now + 15 * 60,
     iat: now,

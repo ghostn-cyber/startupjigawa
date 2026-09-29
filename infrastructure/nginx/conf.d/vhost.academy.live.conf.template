@@ -2,6 +2,10 @@ server {
     listen 80;
     server_name academy.${BASE_DOMAIN};
 
+    location ^~ /api/ {
+        proxy_pass http://api-service:4100;
+    }
+
     location / {
         proxy_pass http://academy_service:3002;
     }

@@ -88,8 +88,9 @@ function renderUnifiedHeader(options = {}) {
   const logoUrl = getCanonicalLogoUrl(baseDomain, configuredLogoUrl);
 
   const corporateUrl = `http://www.${baseDomain}`;
-  const authUrl = `http://auth.${baseDomain}/login?returnTo=${encodeURIComponent(currentUrl)}`;
-  const dashboardUrl = `http://auth.${baseDomain}/dashboard`;
+  const authProtocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+  const authUrl = `${authProtocol}://auth.${baseDomain}/login?returnTo=${encodeURIComponent(currentUrl)}`;
+  const dashboardUrl = `${authProtocol}://auth.${baseDomain}/dashboard`;
 
   let profileKey = 'corporate';
   if (cleanSub.includes('tracker')) profileKey = 'tracker';
@@ -315,7 +316,7 @@ function renderUnifiedHeader(options = {}) {
                 <span class="mega-link-heading">Admin ERP & Compliance</span>
                 <span class="mega-link-sub">Internal state governance & system logs</span>
               </a>
-              <a href="http://auth.${baseDomain}" class="mega-link">
+              <a href="${authProtocol}://auth.${baseDomain}" class="mega-link">
                 <span class="mega-link-heading">SSO Identity Service</span>
                 <span class="mega-link-sub">Single sign-on unified authentication</span>
               </a>
@@ -468,6 +469,7 @@ function renderUnifiedHeader(options = {}) {
 function renderUnifiedFooter(options = {}) {
   const baseDomain = options.baseDomain || 'startupjigawa.test';
   const corporateUrl = `http://www.${baseDomain}`;
+  const authProtocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
   const configuredLogoUrl = options.logoUrl || (typeof process !== 'undefined' && process.env && (process.env.LOGO_URL || process.env.logo_url));
   const logoUrl = getCanonicalLogoUrl(baseDomain, configuredLogoUrl);
 
@@ -515,7 +517,7 @@ function renderUnifiedFooter(options = {}) {
             <li><strong>Email:</strong> <a href="mailto:info@startupjigawa.com">info@startupjigawa.com</a></li>
             <li><a href="http://portal.${baseDomain}">Partner Onboarding Desk</a></li>
             <li><a href="http://admin.${baseDomain}">Compliance & Due-Diligence Hub</a></li>
-            <li><a href="http://auth.${baseDomain}">SSO Identity Help Center</a></li>
+            <li><a href="${authProtocol}://auth.${baseDomain}">SSO Identity Help Center</a></li>
           </ul>
         </div>
 
@@ -816,7 +818,8 @@ function renderAccessDeniedHTML(options = {}) {
   const currentRoleBadges = userRoles.map(r => `<span class="sj-badge sj-badge-current">${r}</span>`).join(' ');
   const requiredRoleBadges = requiredRoles.map(r => `<span class="sj-badge sj-badge-required">${r}</span>`).join(' ');
 
-  const authHost = `http://auth.${baseDomain}`;
+  const authProtocol = process.env.NODE_ENV === 'production' ? 'https' : 'http';
+  const authHost = `${authProtocol}://auth.${baseDomain}`;
   const logoutUrl = `${authHost}/logout?returnTo=${encodeURIComponent(currentUrl)}`;
 
   return `<!DOCTYPE html>
