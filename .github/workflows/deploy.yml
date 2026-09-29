@@ -68,9 +68,27 @@ jobs:
             fi
             
             echo "Writing environment variables to .env..."
-            echo "DOCKER_USER=${{ secrets.DOCKER_USERNAME }}" > .env
-            echo "TAG=${{ github.sha }}" >> .env
-            echo "BASE_DOMAIN=startupjigawa.com" >> .env
+            touch .env
+            chmod 600 .env
+            set_env() {
+              key="$1"
+              value="$2"
+              if grep -q "^${key}=" .env; then
+                sed -i "s|^${key}=.*|${key}=${value}|" .env
+              else
+                printf '%s=%s\n' "$key" "$value" >> .env
+              fi
+            }
+            set_env DOCKER_USER "${{ secrets.DOCKER_USERNAME }}"
+            set_env TAG "${{ github.sha }}"
+            set_env BASE_DOMAIN "startupjigawa.com"
+
+            if ! grep -q '^MINIO_ROOT_USER=.' .env; then
+              set_env MINIO_ROOT_USER "jigawa-minio"
+            fi
+            if ! grep -q '^MINIO_ROOT_PASSWORD=.' .env; then
+              set_env MINIO_ROOT_PASSWORD "$(openssl rand -hex 32)"
+            fi
             
             echo "Executing production deployment via Makefile..."
             make switch-to-com
