@@ -35,11 +35,15 @@ function send(res, status, body, contentType = 'text/html; charset=utf-8') {
 function serveAsset(req, res) {
   const asset = req.url === '/assets/variables.css'
     ? '../../../packages/ui-components/variables.css'
-    : (req.url === '/assets/logo.jpeg' ? '../../../packages/ui-components/logo.jpeg' : null);
+    : (req.url === '/assets/logo.jpeg' ? '../../../packages/ui-components/logo.jpeg'
+    : (req.url === '/assets/logo-white.png' ? '../../../packages/ui-components/logo-white.png' : null));
   if (!asset) return false;
   const assetPath = path.resolve(__dirname, asset);
   if (!fs.existsSync(assetPath)) return false;
-  send(res, 200, fs.readFileSync(assetPath), req.url.endsWith('.css') ? 'text/css; charset=utf-8' : 'image/jpeg');
+  const contentType = req.url.endsWith('.css')
+    ? 'text/css; charset=utf-8'
+    : (req.url.endsWith('.png') ? 'image/png' : 'image/jpeg');
+  send(res, 200, fs.readFileSync(assetPath), contentType);
   return true;
 }
 

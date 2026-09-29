@@ -25,8 +25,19 @@ try {
   console.error('Warning: Unable to read variables.css in web-corporate module:', e.message);
 }
 
+const LOGO_WHITE_PATH = path.join(__dirname, '../../../packages/ui-components/logo-white.png');
+let logoWhiteBase64 = '';
+try {
+  if (fs.existsSync(LOGO_WHITE_PATH)) {
+    logoWhiteBase64 = `data:image/png;base64,${fs.readFileSync(LOGO_WHITE_PATH).toString('base64')}`;
+  }
+} catch (e) {
+  console.error('Warning: Unable to read logo-white.png in web-corporate module:', e.message);
+}
+
 function renderCorporateGatewayPage(options = {}) {
   const baseDomain = options.baseDomain || 'startupjigawa.test';
+  const logoWhiteSrc = logoWhiteBase64 || `http://${baseDomain}/assets/logo-white.png`;
   const config = options.config || {
     title: 'Startup Jigawa — Digital Innovation Center',
     slug: 'www'
@@ -280,73 +291,57 @@ function renderCorporateGatewayPage(options = {}) {
     }
     .sj-hero__trust-label { text-transform: uppercase; letter-spacing: 0.05em; }
 
-    /* ── Hero Showcase Card (Glassmorphic Telemetry Console) ── */
-    .sj-hero-showcase {
+    /* ── Hero Emblem (Pure White Brand Logo Without Background) ── */
+    .sj-hero-emblem-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
       position: relative;
-      background: rgba(17, 24, 39, 0.65);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 32px;
-      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      animation: sjFloat 6s ease-in-out infinite alternate;
+      padding: 24px;
     }
-    :root[data-theme="light"] .sj-hero-showcase {
-      background: rgba(255, 255, 255, 0.88);
-      border: 1px solid rgba(38, 87, 40, 0.16);
-      box-shadow: 0 25px 50px -12px rgba(38, 87, 40, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    .sj-hero-emblem-glow {
+      position: absolute;
+      width: 440px;
+      height: 440px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(38, 87, 40, 0.08) 50%, transparent 70%);
+      filter: blur(40px);
+      pointer-events: none;
+      animation: sjPulseGlow 5s ease-in-out infinite alternate;
     }
-    @keyframes sjFloat {
+    :root[data-theme="light"] .sj-hero-emblem-glow {
+      background: radial-gradient(circle, rgba(38, 87, 40, 0.28) 0%, rgba(16, 185, 129, 0.15) 50%, transparent 70%);
+    }
+    @keyframes sjPulseGlow {
+      0% { transform: scale(0.92); opacity: 0.65; }
+      100% { transform: scale(1.12); opacity: 1; }
+    }
+    .sj-hero-logo {
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      object-fit: contain;
+      position: relative;
+      z-index: 2;
+      filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 25px rgba(16, 185, 129, 0.35));
+      animation: sjLogoFloat 6s ease-in-out infinite alternate;
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), filter 0.3s ease;
+    }
+    :root[data-theme="light"] .sj-hero-logo {
+      filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.25)) drop-shadow(0 0 35px rgba(38, 87, 40, 0.45));
+    }
+    .sj-hero-logo:hover {
+      transform: scale(1.04) translateY(-6px);
+      filter: drop-shadow(0 20px 45px rgba(0, 0, 0, 0.6)) drop-shadow(0 0 40px rgba(16, 185, 129, 0.6));
+    }
+    @keyframes sjLogoFloat {
       0% { transform: translateY(0px); }
-      100% { transform: translateY(-8px); }
+      100% { transform: translateY(-12px); }
     }
     @media (prefers-reduced-motion: reduce) {
-      .sj-hero-showcase { animation: none; }
+      .sj-hero-emblem-glow { animation: none; }
+      .sj-hero-logo { animation: none; }
     }
-    .sj-showcase-header {
-      display: flex; align-items: center; justify-content: space-between;
-      border-bottom: 1px solid var(--surface-border, rgba(255, 255, 255, 0.08));
-      padding-bottom: 18px; margin-bottom: 24px;
-    }
-    .sj-showcase-status {
-      display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem;
-      font-weight: 600; color: #10B981;
-    }
-    .sj-showcase-badge {
-      font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;
-      padding: 4px 10px; border-radius: 6px; background: rgba(38, 87, 40, 0.18); color: #10B981;
-    }
-    .sj-showcase-grid {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 24px;
-    }
-    .sj-showcase-stat {
-      padding: 18px; border-radius: 12px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.05);
-    }
-    :root[data-theme="light"] .sj-showcase-stat {
-      background: #F8FAF8; border: 1px solid #E5E7EB;
-    }
-    .sj-showcase-val {
-      font-family: 'Manrope', sans-serif; font-size: 1.75rem; font-weight: 800;
-      color: var(--text-primary); line-height: 1.1; margin-bottom: 4px;
-    }
-    .sj-showcase-sub { font-size: 0.78rem; color: var(--text-secondary, #94a3b8); }
-    
-    .sj-showcase-banner {
-      padding: 16px 20px; border-radius: 12px;
-      background: linear-gradient(135deg, rgba(38, 87, 40, 0.25) 0%, rgba(16, 185, 129, 0.12) 100%);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      display: flex; align-items: center; gap: 14px;
-    }
-    .sj-showcase-banner-icon {
-      width: 36px; height: 36px; border-radius: 8px; flex-shrink: 0;
-      background: #265728; display: flex; align-items: center; justify-content: center;
-      color: #FFFFFF;
-    }
-    .sj-showcase-banner-title { font-size: 0.88rem; font-weight: 700; color: var(--text-primary); }
-    .sj-showcase-banner-desc { font-size: 0.78rem; color: var(--text-secondary, #94a3b8); }
 
     /* ── Impact Strip ── */
     .sj-impact {
@@ -652,8 +647,8 @@ function renderCorporateGatewayPage(options = {}) {
     @media (max-width: 480px) {
       .sj-container { padding: 0 16px; }
       .sj-hero h1 { font-size: 1.85rem; }
-      .sj-hero-showcase { padding: 22px 18px; }
-      .sj-showcase-grid { grid-template-columns: 1fr; }
+      .sj-hero-logo { max-width: 260px; }
+      .sj-hero-emblem-glow { width: 300px; height: 300px; }
       .sj-impact__grid { grid-template-columns: 1fr; }
       .sj-labs__grid { grid-template-columns: 1fr; }
       .sj-hero__ctas { flex-direction: column; }
@@ -696,44 +691,10 @@ function renderCorporateGatewayPage(options = {}) {
             </div>
           </div>
 
-          <!-- Hero Telemetry Showcase Console (Pure Stylized Component) -->
-          <div class="sj-hero-showcase">
-            <div class="sj-showcase-header">
-              <div class="sj-showcase-status">
-                <span class="sj-beacon-dot"></span>
-                <span>Ecosystem Live · 10 Active Portals</span>
-              </div>
-              <span class="sj-showcase-badge">Operational M&amp;E</span>
-            </div>
-
-            <div class="sj-showcase-grid">
-              <div class="sj-showcase-stat">
-                <div class="sj-showcase-val">50,000+</div>
-                <div class="sj-showcase-sub">Trained Beneficiaries</div>
-              </div>
-              <div class="sj-showcase-stat">
-                <div class="sj-showcase-val">27 LGAs</div>
-                <div class="sj-showcase-sub">Statewide Outreach</div>
-              </div>
-              <div class="sj-showcase-stat">
-                <div class="sj-showcase-val">Cohort 12</div>
-                <div class="sj-showcase-sub">Admissions Active</div>
-              </div>
-              <div class="sj-showcase-stat">
-                <div class="sj-showcase-val">9 Years</div>
-                <div class="sj-showcase-sub">Since Inception (2017)</div>
-              </div>
-            </div>
-
-            <div class="sj-showcase-banner">
-              <div class="sj-showcase-banner-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-              </div>
-              <div>
-                <div class="sj-showcase-banner-title">Verified Public Sector Impact</div>
-                <div class="sj-showcase-banner-desc">Full telemetry tracked via Beneficiary M&amp;E Tracker</div>
-              </div>
-            </div>
+          <!-- Hero Right Column: Pure White Brand Logo Without Background -->
+          <div class="sj-hero-emblem-wrap">
+            <div class="sj-hero-emblem-glow" aria-hidden="true"></div>
+            <img src="${logoWhiteSrc}" alt="Startup Jigawa" class="sj-hero-logo" width="360" height="360" />
           </div>
         </div>
       </div>
