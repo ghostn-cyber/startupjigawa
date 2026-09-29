@@ -6,11 +6,27 @@
  * 3-Column Corporate Mega-Dropdown, Slide-Over Mobile Drawer, and 4-Column Footer.
  */
 
+const fs = require('fs');
+const path = require('path');
+
+const LOGO_WHITE_PATH = path.join(__dirname, 'logo-white.png');
+let logoWhiteBase64 = '';
+try {
+  if (fs.existsSync(LOGO_WHITE_PATH)) {
+    logoWhiteBase64 = `data:image/png;base64,${fs.readFileSync(LOGO_WHITE_PATH).toString('base64')}`;
+  }
+} catch (e) {
+  // Ignore read error
+}
+
 function getCanonicalLogoUrl(baseDomain, configuredLogoUrl) {
   if (configuredLogoUrl) return configuredLogoUrl;
-  const protocol = (typeof process !== 'undefined' && process.env && process.env.ASSET_PROTOCOL)
-    || (baseDomain.endsWith('.test') ? 'http' : 'https');
-  return `${protocol}://${baseDomain}/assets/logo.jpeg`;
+  if (!baseDomain || baseDomain.endsWith('.test')) {
+    const protocol = (typeof process !== 'undefined' && process.env && process.env.ASSET_PROTOCOL)
+      || 'http';
+    return `${protocol}://${baseDomain || 'startupjigawa.test'}/assets/logo.jpeg`;
+  }
+  return logoWhiteBase64 || `https://${baseDomain}/assets/logo-white.png`;
 }
 
 function getSubdomainNavProfiles(baseDomain, corporateUrl) {
@@ -389,7 +405,7 @@ function renderUnifiedHeader(options = {}) {
         
         <!-- Left Side: Properly Positioned Brand Logo Lockup -->
         <a href="${corporateUrl}" class="sj-brand-logo-link" aria-label="Startup Jigawa Corporate Home">
-          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='${logoUrl}';" />
+          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-brand-logo-img" onerror="this.onerror=null; this.src='${logoWhiteBase64 || '/assets/logo-white.png'}';" />
           <div class="sj-brand-badge-fallback" style="display:none;">SJ</div>
           <div class="sj-brand-logo-text">
             <span class="sj-brand-title">Startup Jigawa</span>
@@ -422,7 +438,7 @@ function renderUnifiedHeader(options = {}) {
     <div id="sj-mobile-drawer" class="sj-mobile-drawer" aria-hidden="true">
       <div class="sj-mobile-drawer-header">
         <a href="${corporateUrl}" class="sj-mobile-drawer-logo-link" aria-label="Startup Jigawa Corporate Home">
-          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='${logoUrl}';" />
+          <img src="${logoUrl}" alt="Startup Jigawa" class="sj-mobile-drawer-logo" onerror="this.onerror=null; this.src='${logoWhiteBase64 || '/assets/logo-white.png'}';" />
           <div class="sj-brand-logo-text">
             <span class="sj-mobile-drawer-title">Startup Jigawa</span>
             <span class="sj-mobile-drawer-sub">Digital Innovation Center</span>
@@ -463,7 +479,7 @@ function renderUnifiedFooter(options = {}) {
         <!-- Column 1: Identity & Office Address -->
         <div class="sj-footer-col">
           <div class="sj-footer-brand">
-            <img src="${logoUrl}" alt="Startup Jigawa Logo" class="sj-footer-logo-img" onerror="this.onerror=null; this.src='${logoUrl}';" />
+            <img src="${logoUrl}" alt="Startup Jigawa Logo" class="sj-footer-logo-img" onerror="this.onerror=null; this.src='${logoWhiteBase64 || '/assets/logo-white.png'}';" />
             <span class="sj-footer-logo-badge" style="display:none;">SJ</span>
             <div class="sj-brand-logo-text">
               <span class="sj-footer-brand-title">Startup Jigawa Ltd</span>

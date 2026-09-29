@@ -81,6 +81,8 @@ services:
     environment:
       APP_KIND: www
       PORT: 3001
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3001']
 
   academy_service:
@@ -88,6 +90,8 @@ services:
     environment:
       APP_KIND: academy
       PORT: 3002
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3002']
 
   tracker_service:
@@ -95,6 +99,8 @@ services:
     environment:
       APP_KIND: tracker
       PORT: 3003
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3003']
 
   portal_service:
@@ -102,6 +108,8 @@ services:
     environment:
       APP_KIND: portal
       PORT: 3004
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3004']
 
   civic_service:
@@ -109,6 +117,8 @@ services:
     environment:
       APP_KIND: civic
       PORT: 3005
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3005']
 
   labs_service:
@@ -116,6 +126,8 @@ services:
     environment:
       APP_KIND: labs
       PORT: 3006
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3006']
 
   products_service:
@@ -123,6 +135,8 @@ services:
     environment:
       APP_KIND: products
       PORT: 3007
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3007']
 
   cloud_service:
@@ -130,6 +144,8 @@ services:
     environment:
       APP_KIND: cloud
       PORT: 3008
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3008']
 
   admin_service:
@@ -137,6 +153,8 @@ services:
     environment:
       APP_KIND: admin
       PORT: 3009
+      BASE_DOMAIN: ${BASE_DOMAIN:-startupjigawa.com}
+      NODE_ENV: production
     expose: ['3009']
 
   jigawa_nginx_proxy:

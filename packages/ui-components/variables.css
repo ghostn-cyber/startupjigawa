@@ -292,11 +292,26 @@ header.sj-unified-header {
   height: 44px;
   min-width: 44px;
   min-height: 44px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 10px;
   display: block;
   border: 1px solid rgba(255, 255, 255, 0.15);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+:root[data-theme="light"] .sj-brand-logo-img,
+:root[data-theme="light"] .sj-mobile-drawer-logo {
+  background: #111827;
+  padding: 4px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+}
+
+:root[data-theme="light"] .sj-footer-logo-img {
+  background: #111827;
+  padding: 4px;
+  border-radius: 8px;
 }
 
 .sj-brand-logo-text {

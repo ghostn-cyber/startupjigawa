@@ -59,10 +59,12 @@ async function handle(req, res) {
 
   const renderer = renderers[appKind];
   if (renderer) {
+    const proto = (req.headers && req.headers['x-forwarded-proto'])
+      || (baseDomain.endsWith('.test') ? 'http' : 'https');
     const html = await renderer()({
       config: { slug: appKind, title: `Startup Jigawa ${appKind}` },
       user: null,
-      currentUrl: `http://${appKind}.${baseDomain}${req.url}`,
+      currentUrl: `${proto}://${appKind}.${baseDomain}${req.url}`,
       baseDomain
     });
     return send(res, 200, html);

@@ -49,11 +49,13 @@ function renderCorporateGatewayPage(options = {}) {
     activeSubdomain: 'www',
     user,
     currentUrl,
-    baseDomain
+    baseDomain,
+    logoUrl: logoWhiteSrc
   });
 
   const footerHTML = renderUnifiedFooter({
-    baseDomain
+    baseDomain,
+    logoUrl: logoWhiteSrc
   });
 
   return `<!DOCTYPE html>
@@ -668,7 +670,6 @@ function renderCorporateGatewayPage(options = {}) {
         <div class="sj-hero__inner">
           <div class="sj-hero__content">
             <div class="sj-hero__badge">
-              <span class="sj-beacon-dot"></span>
               <span>RC 7256149 · Dutse, Jigawa State, Nigeria</span>
             </div>
             <h1>Digital Innovation for <em>Northern Nigeria</em></h1>
