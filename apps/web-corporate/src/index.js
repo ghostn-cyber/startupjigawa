@@ -35,6 +35,148 @@ try {
   console.error('Warning: Unable to read logo-white.png in web-corporate module:', e.message);
 }
 
+
+/**
+ * Dynamic Team Leadership Data Model
+ * Configurable via options.teamMembers or falls back to official Directorate team
+ */
+const DEFAULT_TEAM_MEMBERS = [
+  {
+    name: 'Muhammad Sani Uzairu',
+    role: 'Executive Director',
+    department: 'Executive Directorate',
+    initials: 'MSU',
+    bio: 'Directing statewide strategic vision, public-private alliances, and institutional frameworks to foster high-growth technology and digital enterprise ecosystems across Jigawa State.',
+    tag: 'Executive Strategy',
+    email: 'ed@startupjigawa.com',
+    iconType: 'executive'
+  },
+  {
+    name: 'Muhammad Auwal Abubakar',
+    role: 'Heads of Operation & Project Manager',
+    department: 'Operations & Projects',
+    initials: 'MAA',
+    bio: 'Overseeing daily operational excellence, cross-functional project execution, infrastructure milestones, and multi-agency coordination across all regional innovation centers.',
+    tag: 'Operations & PM',
+    email: 'operations@startupjigawa.com',
+    iconType: 'operations'
+  },
+  {
+    name: 'Abdurrahman Musa Sahabi',
+    role: 'Programs Manager',
+    department: 'Programs & Incubation',
+    initials: 'AMS',
+    bio: 'Spearheading flagship incubation programs, startup cohorts, youth empowerment tracks, and regional technology bootcamps across all 27 Local Government Areas.',
+    tag: 'Programs & Incubation',
+    email: 'programs@startupjigawa.com',
+    iconType: 'programs'
+  },
+  {
+    name: 'Jamilu Yusuf Musa',
+    role: 'Chief Technology Office',
+    department: 'Technology & Architecture',
+    initials: 'JYM',
+    bio: 'Leading core technology architecture, scalable cloud infrastructure, developer talent pipelines, and enterprise-grade civic software platforms.',
+    tag: 'Technology & Cloud',
+    email: 'cto@startupjigawa.com',
+    iconType: 'tech'
+  },
+  {
+    name: 'Hassan Hamza Hassa',
+    role: 'Head of Engineering & Interns',
+    department: 'Engineering & Interns',
+    initials: 'HHH',
+    bio: 'Directing engineering squads, hands-on technical mentoring, code reviews, and workforce transition pathways for young software engineering interns.',
+    tag: 'Engineering & Mentorship',
+    email: 'engineering@startupjigawa.com',
+    iconType: 'engineering'
+  }
+];
+
+function getMemberInitials(name = '') {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length >= 3) {
+    return (parts[0][0] + parts[1][0] + parts[parts.length - 1][0]).toUpperCase();
+  }
+  if (parts.length === 2) {
+    return (parts[0][0] + parts[1][0]).toUpperCase();
+  }
+  return name.slice(0, 3).toUpperCase() || 'SJ';
+}
+
+function getBadgeIconSvg(iconType = 'default') {
+  switch (iconType) {
+    case 'executive':
+    case 'director':
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>`;
+    case 'operations':
+    case 'project':
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>`;
+    case 'programs':
+    case 'academy':
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>`;
+    case 'tech':
+    case 'cto':
+    case 'cloud':
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`;
+    case 'engineering':
+    case 'interns':
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>`;
+    default:
+      return `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/></svg>`;
+  }
+}
+
+function renderTeamMemberCard(member = {}) {
+  const name = member.name || 'Team Member';
+  const role = member.role || 'Leadership';
+  const department = member.department || 'Startup Jigawa';
+  const initials = member.initials || getMemberInitials(name);
+  const bio = member.bio || 'Contributing to the growth of Jigawa\'s technology, digital skills, and entrepreneurship ecosystem.';
+  const tag = member.tag || department;
+  const email = member.email || 'contact@startupjigawa.com';
+  const iconType = member.iconType || 'default';
+  const photoUrl = member.photoUrl || member.avatarUrl || null;
+
+  const avatarMarkup = photoUrl
+    ? `<img src="${photoUrl}" alt="${name}" class="sj-team-avatar-img" loading="lazy">`
+    : `
+        <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
+          <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
+          <circle cx="50" cy="38" r="18" fill="#265728"/>
+          <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
+        </svg>
+        <span class="sj-team-initials">${initials}</span>
+      `;
+
+  return `
+          <div class="sj-card sj-team-card">
+            <div class="sj-team-card__top">
+              <div class="sj-team-avatar-wrap">
+                <div class="sj-team-avatar">
+                  ${avatarMarkup}
+                </div>
+                <div class="sj-team-badge-icon" title="${department}">
+                  ${getBadgeIconSvg(iconType)}
+                </div>
+              </div>
+              <span class="sj-team-dept">${department}</span>
+            </div>
+            <div class="sj-team-card__body">
+              <h3 class="sj-team-name">${name}</h3>
+              <div class="sj-team-role">${role}</div>
+              <p class="sj-team-bio">${bio}</p>
+            </div>
+            <div class="sj-team-card__footer">
+              <span class="sj-team-tag">${tag}</span>
+              <a href="mailto:${email}" class="sj-team-contact-btn" aria-label="Contact ${name}">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              </a>
+            </div>
+          </div>
+  `.trim();
+}
+
 function renderCorporateGatewayPage(options = {}) {
   const baseDomain = options.baseDomain || 'startupjigawa.test';
   const logoWhiteSrc = logoWhiteBase64 || `http://${baseDomain}/assets/logo-white.png`;
@@ -44,6 +186,9 @@ function renderCorporateGatewayPage(options = {}) {
   };
   const user = options.user || null;
   const currentUrl = options.currentUrl || `http://www.${baseDomain}/`;
+  const teamMembers = Array.isArray(options.teamMembers) && options.teamMembers.length > 0
+    ? options.teamMembers
+    : DEFAULT_TEAM_MEMBERS;
 
   const headerHTML = renderUnifiedHeader({
     activeSubdomain: 'www',
@@ -552,7 +697,7 @@ function renderCorporateGatewayPage(options = {}) {
     /* ── Team Section Styles ── */
     .sj-team__grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 28px;
     }
     .sj-team-card {
@@ -592,6 +737,13 @@ function renderCorporateGatewayPage(options = {}) {
       background: linear-gradient(135deg, #132717 0%, #1e4520 100%);
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
       border: 2px solid rgba(16, 185, 129, 0.3);
+    }
+    .sj-team-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border-radius: 16px;
     }
     .sj-team-avatar-svg {
       width: 100%;
@@ -1240,205 +1392,7 @@ function renderCorporateGatewayPage(options = {}) {
         </div>
 
         <div class="sj-team__grid sj-reveal">
-          
-          <!-- Team Member 1 -->
-          <div class="sj-card sj-team-card">
-            <div class="sj-team-card__top">
-              <div class="sj-team-avatar-wrap">
-                <div class="sj-team-avatar">
-                  <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
-                    <circle cx="50" cy="38" r="18" fill="#265728"/>
-                    <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
-                  </svg>
-                  <span class="sj-team-initials">AI</span>
-                </div>
-                <div class="sj-team-badge-icon" title="Executive Council">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-                </div>
-              </div>
-              <span class="sj-team-dept">Executive Office</span>
-            </div>
-            <div class="sj-team-card__body">
-              <h3 class="sj-team-name">Malam Ahmad Ibrahim</h3>
-              <div class="sj-team-role">Executive Director &amp; CEO</div>
-              <p class="sj-team-bio">
-                Leading digital economic transformation in Jigawa State. Forging strategic alliances with NITDA, FMCiDE, and JICA to expand regional startup financing and drive the 100,000-talent milestone.
-              </p>
-            </div>
-            <div class="sj-team-card__footer">
-              <span class="sj-team-tag">Strategy &amp; Ecosystem</span>
-              <a href="mailto:ceo@startupjigawa.com" class="sj-team-contact-btn" aria-label="Contact Ahmad Ibrahim">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Team Member 2 -->
-          <div class="sj-card sj-team-card">
-            <div class="sj-team-card__top">
-              <div class="sj-team-avatar-wrap">
-                <div class="sj-team-avatar">
-                  <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
-                    <circle cx="50" cy="38" r="18" fill="#265728"/>
-                    <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
-                  </svg>
-                  <span class="sj-team-initials">AH</span>
-                </div>
-                <div class="sj-team-badge-icon" title="Operations &amp; Governance">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                </div>
-              </div>
-              <span class="sj-team-dept">Operations &amp; Legal</span>
-            </div>
-            <div class="sj-team-card__body">
-              <h3 class="sj-team-name">Barr. Amina Haruna Yusuf</h3>
-              <div class="sj-team-role">Chief Operating Officer</div>
-              <p class="sj-team-bio">
-                Directing statewide corporate governance, operational compliance under CAMA (RC 7256149), and legal frameworks connecting 27 Local Government councils to public-private technology ventures.
-              </p>
-            </div>
-            <div class="sj-team-card__footer">
-              <span class="sj-team-tag">Governance &amp; Policy</span>
-              <a href="mailto:coo@startupjigawa.com" class="sj-team-contact-btn" aria-label="Contact Amina Haruna">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Team Member 3 -->
-          <div class="sj-card sj-team-card">
-            <div class="sj-team-card__top">
-              <div class="sj-team-avatar-wrap">
-                <div class="sj-team-avatar">
-                  <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
-                    <circle cx="50" cy="38" r="18" fill="#265728"/>
-                    <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
-                  </svg>
-                  <span class="sj-team-initials">AS</span>
-                </div>
-                <div class="sj-team-badge-icon" title="Cloud &amp; Architecture">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-                </div>
-              </div>
-              <span class="sj-team-dept">Engineering &amp; Cloud</span>
-            </div>
-            <div class="sj-team-card__body">
-              <h3 class="sj-team-name">Engr. Abubakar Sadiq Umar</h3>
-              <div class="sj-team-role">Head of Technology &amp; Infrastructure</div>
-              <p class="sj-team-bio">
-                Principal systems architect overseeing distributed Kubernetes/Docker infrastructure, subdomains proxy networks, NDPR-compliant data security, and civic microservices across the state.
-              </p>
-            </div>
-            <div class="sj-team-card__footer">
-              <span class="sj-team-tag">Cloud &amp; DevOps</span>
-              <a href="mailto:tech@startupjigawa.com" class="sj-team-contact-btn" aria-label="Contact Abubakar Sadiq">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Team Member 4 -->
-          <div class="sj-card sj-team-card">
-            <div class="sj-team-card__top">
-              <div class="sj-team-avatar-wrap">
-                <div class="sj-team-avatar">
-                  <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
-                    <circle cx="50" cy="38" r="18" fill="#265728"/>
-                    <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
-                  </svg>
-                  <span class="sj-team-initials">FB</span>
-                </div>
-                <div class="sj-team-badge-icon" title="Digital Academy">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                </div>
-              </div>
-              <span class="sj-team-dept">Innovation Academy</span>
-            </div>
-            <div class="sj-team-card__body">
-              <h3 class="sj-team-name">Fatima Bello Sanusi</h3>
-              <div class="sj-team-role">Director, Jigawa Innovation Academy</div>
-              <p class="sj-team-bio">
-                Directing flagship technical education cohorts, 3MTT bootcamp execution, women-in-tech pathways, and specialized certification curricula for thousands of youths across all 27 LGAs.
-              </p>
-            </div>
-            <div class="sj-team-card__footer">
-              <span class="sj-team-tag">Skills &amp; Talent</span>
-              <a href="mailto:academy@startupjigawa.com" class="sj-team-contact-btn" aria-label="Contact Fatima Bello">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Team Member 5 -->
-          <div class="sj-card sj-team-card">
-            <div class="sj-team-card__top">
-              <div class="sj-team-avatar-wrap">
-                <div class="sj-team-avatar">
-                  <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
-                    <circle cx="50" cy="38" r="18" fill="#265728"/>
-                    <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
-                  </svg>
-                  <span class="sj-team-initials">KM</span>
-                </div>
-                <div class="sj-team-badge-icon" title="M&amp;E Telemetry">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                </div>
-              </div>
-              <span class="sj-team-dept">Monitoring &amp; Evaluation</span>
-            </div>
-            <div class="sj-team-card__body">
-              <h3 class="sj-team-name">Dr. Kabir Mohammed Dutse</h3>
-              <div class="sj-team-role">Head of M&amp;E &amp; Impact Telemetry</div>
-              <p class="sj-team-bio">
-                Directing field-level data verification, econometric impact telemetry, and longitudinal career tracking of over 50,000 trained beneficiaries across rural and urban communities.
-              </p>
-            </div>
-            <div class="sj-team-card__footer">
-              <span class="sj-team-tag">Data &amp; Analytics</span>
-              <a href="mailto:me@startupjigawa.com" class="sj-team-contact-btn" aria-label="Contact Kabir Mohammed">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </a>
-            </div>
-          </div>
-
-          <!-- Team Member 6 -->
-          <div class="sj-card sj-team-card">
-            <div class="sj-team-card__top">
-              <div class="sj-team-avatar-wrap">
-                <div class="sj-team-avatar">
-                  <svg class="sj-team-avatar-svg" viewBox="0 0 100 100" fill="none">
-                    <circle cx="50" cy="50" r="48" fill="#132717" stroke="#10B981" stroke-width="2"/>
-                    <circle cx="50" cy="38" r="18" fill="#265728"/>
-                    <path d="M22 80c0-15.464 12.536-28 28-28s28 12.536 28 28" fill="#1E4520"/>
-                  </svg>
-                  <span class="sj-team-initials">ZU</span>
-                </div>
-                <div class="sj-team-badge-icon" title="Civic Innovation">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-                </div>
-              </div>
-              <span class="sj-team-dept">Civic Tech &amp; Growth</span>
-            </div>
-            <div class="sj-team-card__body">
-              <h3 class="sj-team-name">Zainab Usman Kazaure</h3>
-              <div class="sj-team-role">Head of Partnerships &amp; Civic Innovation</div>
-              <p class="sj-team-bio">
-                Building bridge programs with civil society, open contracting platforms, and incubator partnerships that elevate grassroots innovations into sustainable enterprise products.
-              </p>
-            </div>
-            <div class="sj-team-card__footer">
-              <span class="sj-team-tag">Partnerships &amp; OGP</span>
-              <a href="mailto:partnerships@startupjigawa.com" class="sj-team-contact-btn" aria-label="Contact Zainab Usman">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-              </a>
-            </div>
-          </div>
-
+          ${teamMembers.map(renderTeamMemberCard).join('\n')}
         </div>
       </div>
     </section>
@@ -1543,5 +1497,7 @@ function renderCorporateGatewayPage(options = {}) {
 }
 
 module.exports = {
-  renderCorporateGatewayPage
+  renderCorporateGatewayPage,
+  DEFAULT_TEAM_MEMBERS,
+  renderTeamMemberCard
 };
