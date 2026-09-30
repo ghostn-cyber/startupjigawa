@@ -2,153 +2,67 @@
    STARTUP JIGAWA ENTERPRISE DESIGN SYSTEM — UNIFIED THEMING ENGINE
    ========================================================================== */
 
-/* 1. Dark Theme Tokens (Default Surface & Dark Mode) */
+/* 1. Strict White Minimalist Theme Tokens (Universal Across Ecosystem) */
 :root,
+:root[data-theme="light"],
 :root[data-theme="dark"] {
-  color-scheme: dark;
-
-  --bg-canvas: #0B0F19;
-  --bg-canvas-subtle: #0B0F19;
-  --surface-card: #111827;
-  --surface-card-hover: #111827;
-  --surface-card-alt: #0d1322;
-  --surface-border: rgba(255, 255, 255, 0.08);
-  --surface-border-hover: rgba(38, 87, 40, 0.4);
-  --surface-border-strong: rgba(255, 255, 255, 0.15);
-
-  --header-bg: rgba(3, 7, 18, 0.85);
-  --header-top-border: rgba(255, 255, 255, 0.08);
-  --header-nav-bg: rgba(3, 7, 18, 0.4);
-  --mega-panel-bg: #060913;
-  --mega-panel-border: rgba(255, 255, 255, 0.1);
-  --drawer-bg: #060913;
-  --drawer-border: rgba(255, 255, 255, 0.1);
-  --footer-bg: #02040a;
-  --footer-border: rgba(255, 255, 255, 0.08);
-
-  --text-primary: #f8fafc;
-  --text-secondary: #94a3b8;
-  --text-muted: #64748b;
-  --text-inverse: #0f172a;
-  --sj-text-light: #f8fafc;
-  --sj-text-dark: #0f172a;
-
-  --sj-primary: #265728;
-  --sj-primary-hover: #1e4520;
-  --accent-primary: var(--sj-primary);
-  --accent-primary-hover: var(--sj-primary-hover);
-  --accent-glow: rgba(38, 87, 40, 0.18);
-  --accent-highlight-bg: rgba(38, 87, 40, 0.12);
-  --accent-highlight-border: rgba(38, 87, 40, 0.25);
-  --green-tint: #EAF2EA;
-  
-  --input-bg: rgba(255, 255, 255, 0.03);
-  --input-bg-hover: rgba(255, 255, 255, 0.06);
-  --input-border: rgba(255, 255, 255, 0.12);
-  --input-text: #f8fafc;
-
-  --shadow-main: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
-  --shadow-mega: 0 30px 60px -12px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.05);
-
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-}
-
-/* 2. Light Theme Tokens */
-:root[data-theme="light"] {
   color-scheme: light;
 
   --bg-canvas: #FFFFFF;
   --bg-canvas-subtle: #F8FAFC;
   --surface-card: #FFFFFF;
-  --surface-card-hover: #f8fafc;
-  --surface-card-alt: #f1f5f9;
-  --surface-border: rgba(0, 0, 0, 0.08);
-  --surface-border-hover: rgba(38, 87, 40, 0.4);
-  --surface-border-strong: rgba(0, 0, 0, 0.15);
+  --surface-card-hover: #F8FAFC;
+  --surface-card-alt: #F8FAFC;
+  --surface-border: #E2E8F0;
+  --surface-border-hover: rgba(38, 87, 40, 0.35);
+  --surface-border-strong: #CBD5E1;
 
-  --header-bg: rgba(255, 255, 255, 0.88);
-  --header-top-border: rgba(0, 0, 0, 0.08);
-  --header-nav-bg: rgba(248, 250, 252, 0.7);
-  --mega-panel-bg: #ffffff;
-  --mega-panel-border: rgba(0, 0, 0, 0.1);
-  --drawer-bg: #ffffff;
-  --drawer-border: rgba(0, 0, 0, 0.1);
-  --footer-bg: #f1f5f9;
-  --footer-border: rgba(0, 0, 0, 0.08);
+  --header-bg: rgba(255, 255, 255, 0.95);
+  --header-top-border: #E2E8F0;
+  --header-nav-bg: #FFFFFF;
+  --mega-panel-bg: #FFFFFF;
+  --mega-panel-border: #E2E8F0;
+  --drawer-bg: #FFFFFF;
+  --drawer-border: #E2E8F0;
+  --footer-bg: #F8FAFC;
+  --footer-border: #E2E8F0;
 
-  --text-primary: #0f172a;
+  --text-primary: #0F172A;
   --text-secondary: #334155;
-  --text-muted: #64748b;
-  --text-inverse: #f8fafc;
-  --sj-text-light: #f8fafc;
-  --sj-text-dark: #0f172a;
+  --text-muted: #64748B;
+  --text-inverse: #FFFFFF;
+  --sj-text-light: #FFFFFF;
+  --sj-text-dark: #0F172A;
 
   --sj-primary: #265728;
   --sj-primary-hover: #1e4520;
   --accent-primary: var(--sj-primary);
   --accent-primary-hover: var(--sj-primary-hover);
-  --accent-glow: rgba(38, 87, 40, 0.12);
+  --accent-glow: rgba(38, 87, 40, 0.1);
   --accent-highlight-bg: rgba(38, 87, 40, 0.08);
   --accent-highlight-border: rgba(38, 87, 40, 0.2);
   --green-tint: #EAF2EA;
 
-  --input-bg: rgba(0, 0, 0, 0.02);
-  --input-bg-hover: rgba(0, 0, 0, 0.04);
-  --input-border: rgba(0, 0, 0, 0.15);
-  --input-text: #0f172a;
+  --input-bg: #FFFFFF;
+  --input-bg-hover: #F8FAFC;
+  --input-border: #CBD5E1;
+  --input-text: #0F172A;
 
-  --shadow-main: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-  --shadow-mega: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
+  --shadow-main: 0 4px 20px -4px rgba(0, 0, 0, 0.06);
+  --shadow-mega: 0 20px 40px -12px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05);
+
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: 'Manrope', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
-/* 3. Automatic System Preference Fallback */
-@media (prefers-color-scheme: light) {
-  :root:not([data-theme="dark"]) {
+@media (prefers-color-scheme: dark) {
+  :root,
+  :root[data-theme="dark"],
+  :root[data-theme="light"] {
     color-scheme: light;
-
-    --bg-canvas: #f8fafc;
-    --bg-canvas-subtle: #f1f5f9;
-    --surface-card: #ffffff;
-    --surface-card-hover: #f8fafc;
-    --surface-card-alt: #f1f5f9;
-    --surface-border: rgba(0, 0, 0, 0.08);
-    --surface-border-hover: rgba(38, 87, 40, 0.4);
-    --surface-border-strong: rgba(0, 0, 0, 0.15);
-
-    --header-bg: rgba(255, 255, 255, 0.88);
-    --header-top-border: rgba(0, 0, 0, 0.08);
-    --header-nav-bg: rgba(248, 250, 252, 0.7);
-    --mega-panel-bg: #ffffff;
-    --mega-panel-border: rgba(0, 0, 0, 0.1);
-    --drawer-bg: #ffffff;
-    --drawer-border: rgba(0, 0, 0, 0.1);
-    --footer-bg: #f1f5f9;
-    --footer-border: rgba(0, 0, 0, 0.08);
-
-    --text-primary: #0f172a;
-    --text-secondary: #334155;
-    --text-muted: #64748b;
-    --text-inverse: #f8fafc;
-    --sj-text-light: #f8fafc;
-    --sj-text-dark: #0f172a;
-
-    --sj-primary: #265728;
-    --sj-primary-hover: #1e4520;
-    --accent-primary: var(--sj-primary);
-    --accent-primary-hover: var(--sj-primary-hover);
-    --accent-glow: rgba(38, 87, 40, 0.12);
-    --accent-highlight-bg: rgba(38, 87, 40, 0.08);
-    --accent-highlight-border: rgba(38, 87, 40, 0.2);
-    --green-tint: #EAF2EA;
-
-    --input-bg: rgba(0, 0, 0, 0.02);
-    --input-bg-hover: rgba(0, 0, 0, 0.04);
-    --input-border: rgba(0, 0, 0, 0.15);
-    --input-text: #0f172a;
-
-    --shadow-main: 0 10px 30px -10px rgba(0, 0, 0, 0.08);
-    --shadow-mega: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 0 0 1px rgba(0, 0, 0, 0.05);
+    --bg-canvas: #FFFFFF;
+    --surface-card: #FFFFFF;
+    --text-primary: #0F172A;
   }
 }
 
@@ -191,7 +105,7 @@ header.sj-unified-header {
 
 /* Layer 1: Institutional Credibility Top Bar */
 .sj-header-top-bar {
-  background: rgba(3, 7, 18, 0.95);
+  background: #F8FAFC;
   border-bottom: 1px solid var(--header-top-border);
   font-size: 0.72rem;
   color: var(--text-muted);
@@ -668,10 +582,10 @@ header.sj-unified-header {
   color: var(--text-primary);
 }
 
-/* Animated Hamburger Button Engine (3-Bar to X Morphing) */
+/* Animated Hamburger Button Engine (3-Bar to X Morphing) — White Minimalist */
 .sj-mobile-menu-btn {
   display: none;
-  background: var(--surface-card, #111827);
+  background: #FFFFFF;
   border: 1px solid var(--surface-border);
   color: var(--text-primary);
   width: 44px;
@@ -686,12 +600,13 @@ header.sj-unified-header {
   transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
   padding: 0;
   overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
 .sj-mobile-menu-btn:hover {
-  border-color: rgba(16, 185, 129, 0.4);
-  background: rgba(16, 185, 129, 0.1);
-  box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
+  border-color: rgba(38, 87, 40, 0.4);
+  background: #F0FDF4;
+  box-shadow: 0 2px 8px rgba(38, 87, 40, 0.12);
 }
 
 .sj-hamburger-box {
@@ -709,7 +624,7 @@ header.sj-unified-header {
   display: block;
   width: 22px;
   height: 2px;
-  background-color: var(--text-primary, #F8FAFC);
+  background-color: var(--text-primary, #0F172A);
   border-radius: 2px;
   position: absolute;
   top: 7px;
@@ -723,7 +638,7 @@ header.sj-unified-header {
   display: block;
   width: 22px;
   height: 2px;
-  background-color: var(--text-primary, #F8FAFC);
+  background-color: var(--text-primary, #0F172A);
   border-radius: 2px;
   position: absolute;
   left: 0;
@@ -742,7 +657,7 @@ header.sj-unified-header {
 .sj-mobile-menu-btn.is-active .sj-hamburger-bar,
 .sj-mobile-menu-btn[aria-expanded="true"] .sj-hamburger-bar {
   transform: rotate(45deg);
-  background-color: #10B981;
+  background-color: var(--sj-primary, #265728);
 }
 
 .sj-mobile-menu-btn.is-active .sj-hamburger-bar::before,
@@ -754,7 +669,7 @@ header.sj-unified-header {
 .sj-mobile-menu-btn.is-active .sj-hamburger-bar::after,
 .sj-mobile-menu-btn[aria-expanded="true"] .sj-hamburger-bar::after {
   transform: translateY(-7px) rotate(-90deg);
-  background-color: #10B981;
+  background-color: var(--sj-primary, #265728);
 }
 
 /* ==========================================================================
@@ -966,8 +881,8 @@ body.sj-drawer-open {
 }
 
 .sj-mobile-accordion-btn:hover {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--text-primary);
+  background: var(--green-tint, #EAF2EA);
+  color: var(--sj-primary, #265728);
 }
 
 .sj-mobile-accordion-btn .chevron-icon {
@@ -981,7 +896,7 @@ body.sj-drawer-open {
 .sj-mobile-accordion-content {
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
+  background: #F8FAFC;
   border-radius: 8px;
   margin: 0.25rem 0;
   padding: 0.25rem 0;
@@ -1020,26 +935,12 @@ body.sj-drawer-open {
   padding: 0.5rem 0.75rem;
 }
 
-@media (min-width: 769px) {
-  .sj-mobile-menu-btn {
-    display: none !important;
-  }
-}
-
 @media (max-width: 768px) {
-  .sj-desktop-nav-tier {
-    display: none !important;
-  }
-
-  /* Hide top-bar SSO CTA, Auth Capsule, and Theme Selector on mobile (< 768px) */
+  /* Hide desktop SSO CTA and Auth Capsule on mobile (< 768px) to keep mobile header clean */
   .sj-header-actions .sj-sso-cta-btn,
   .sj-header-actions .auth-session-capsule,
   .sj-header-actions .theme-select-wrap {
     display: none !important;
-  }
-
-  .sj-mobile-menu-btn {
-    display: flex !important;
   }
 }
 

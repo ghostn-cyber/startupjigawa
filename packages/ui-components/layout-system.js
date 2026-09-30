@@ -402,7 +402,7 @@ function renderUnifiedHeader(options = {}) {
     </div>
 
     <!-- Layer 2: Main Brand & Navigation Hub -->
-    <div class="sj-header-nav-bar sj-desktop-nav-tier">
+    <div class="sj-header-nav-bar">
       <div class="sj-header-container sj-nav-container">
         
         <!-- Left Side: Properly Positioned Brand Logo Lockup -->
