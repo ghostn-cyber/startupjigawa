@@ -4,16 +4,10 @@
 
 const FOUC_HEAD_SCRIPT = `(function() {
   try {
-    var match = document.cookie.match(new RegExp('(?:^|; )sj_theme=([^;]+)'));
-    var theme = match ? decodeURIComponent(match[1]) : (localStorage.getItem('jigawa_theme') || localStorage.getItem('jigawa_auth_theme') || 'system');
-    var resolved = theme;
-    if (!theme || theme === 'system') {
-      var isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      resolved = isDark ? 'dark' : 'light';
-    }
-    document.documentElement.setAttribute('data-theme', resolved);
-    document.documentElement.setAttribute('data-theme-preference', theme || 'system');
-    document.documentElement.classList.toggle('dark', resolved === 'dark');
+    // Light theme only — dark theme removed system-wide
+    document.documentElement.setAttribute('data-theme', 'light');
+    document.documentElement.setAttribute('data-theme-preference', 'light');
+    document.documentElement.classList.remove('dark');
   } catch (e) {}
 })();`;
 
@@ -36,34 +30,16 @@ function resolveSystemTheme() {
 
 function applyTheme(theme) {
   try {
-    const hostname = window.location.hostname;
-    const baseDomain = getBaseDomain(hostname);
-    const domainAttr = baseDomain.includes('startupjigawa') ? `; domain=.${baseDomain}` : '';
-    const maxAge = 365 * 24 * 60 * 60; // 1 year
-
-    // 1. Dual-Layer Persistence: Cross-Subdomain Cookie (sj_theme)
-    document.cookie = `sj_theme=${theme}; path=/${domainAttr}; max-age=${maxAge}; SameSite=Lax`;
-    
-    // 2. Dual-Layer Persistence: LocalStorage Cache
-    localStorage.setItem('jigawa_theme', theme);
-    localStorage.setItem('jigawa_auth_theme', theme);
-
-    // 3. Dynamic DOM Data Attribute Updating
-    const resolvedTheme = (theme === 'system' || !theme) ? resolveSystemTheme() : theme;
+    // Light theme only — dark theme removed system-wide
+    const resolvedTheme = 'light';
 
     document.documentElement.setAttribute('data-theme', resolvedTheme);
-    document.documentElement.setAttribute('data-theme-preference', theme);
-    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+    document.documentElement.setAttribute('data-theme-preference', resolvedTheme);
+    document.documentElement.classList.remove('dark');
     if (document.body) {
       document.body.setAttribute('data-theme', resolvedTheme);
-      document.body.setAttribute('data-theme-preference', theme);
+      document.body.setAttribute('data-theme-preference', resolvedTheme);
     }
-
-    // 4. Synchronize UI theme dropdowns
-    const sel = document.getElementById('theme-selector');
-    if (sel) sel.value = theme;
-    const mSel = document.getElementById('mobile-theme-selector');
-    if (mSel) mSel.value = theme;
   } catch (e) {}
 }
 

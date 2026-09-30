@@ -2,37 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>System Maintenance &amp; Optimization | Startup Jigawa</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Site Under Maintenance | Startup Jigawa</title>
+  <meta name="description" content="Startup Jigawa is currently undergoing scheduled maintenance. We'll be back shortly.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
   <style>
-    /* ==========================================================================
-       STARTUP JIGAWA ENTERPRISE MAINTENANCE EXPERIENCE (FULL-PAGE RESPONSIVE)
-       Main Website Brand Palette: Forest Green (#265728), Emerald (#10B981)
-       ========================================================================== */
+    /* ======================================================================
+       STARTUP JIGAWA — MAINTENANCE PAGE
+       Clean white minimal theme · Full-page responsive
+       ====================================================================== */
 
     :root {
-      --bg-canvas: #070B14;
-      --bg-canvas-subtle: #0B1120;
-      --surface-card: rgba(17, 24, 39, 0.7);
-      --surface-card-hover: rgba(30, 41, 59, 0.8);
-      --surface-border: rgba(255, 255, 255, 0.08);
-      --surface-border-strong: rgba(16, 185, 129, 0.25);
-      
-      --sj-primary: #265728;
-      --sj-primary-hover: #1e4520;
+      --sj-green: #265728;
       --sj-emerald: #10B981;
-      --sj-emerald-dark: #059669;
-      --sj-emerald-glow: rgba(16, 185, 129, 0.22);
-      
-      --text-primary: #F8FAFC;
-      --text-secondary: #94A3B8;
-      --text-muted: #64748B;
-      
+      --text-dark: #1E293B;
+      --text-mid: #475569;
+      --text-light: #94A3B8;
+      --border-light: #E2E8F0;
       --font-display: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
 
     * {
@@ -44,788 +34,353 @@
     html, body {
       width: 100%;
       min-height: 100vh;
-      background-color: var(--bg-canvas);
-      color: var(--text-primary);
+      background-color: #FFFFFF;
+      color: var(--text-dark);
       font-family: var(--font-sans);
       line-height: 1.6;
       overflow-x: hidden;
-      display: flex;
-      flex-direction: column;
     }
 
-    /* Ambient Brand Background Glows */
-    .sj-ambient-mesh {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-      background:
-        radial-gradient(ellipse 70% 50% at 50% -15%, rgba(38, 87, 40, 0.45) 0%, transparent 70%),
-        radial-gradient(ellipse 45% 35% at 90% 40%, rgba(16, 185, 129, 0.15) 0%, transparent 60%),
-        radial-gradient(ellipse 40% 30% at 10% 75%, rgba(38, 87, 40, 0.2) 0%, transparent 60%);
-    }
-
-    .sj-wrapper {
-      position: relative;
-      z-index: 1;
+    body {
       display: flex;
       flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Main Centered Content ── */
+    .sj-maintenance {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
       flex: 1;
-    }
-
-    .sj-container {
       width: 100%;
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 1.5rem;
+      max-width: 640px;
+      padding: 48px 24px;
     }
 
-    /* ── 1. Enterprise Top Bar ── */
-    .sj-topbar {
-      position: sticky;
-      top: 0;
-      z-index: 50;
-      background: rgba(7, 11, 20, 0.85);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-bottom: 1px solid var(--surface-border);
-      padding: 0.9rem 0;
+    /* ── Animated Logo ── */
+    .sj-logo-wrap {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin-bottom: 48px;
     }
 
-    .sj-topbar__inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1.25rem;
-    }
-
-    .sj-brand {
-      display: flex;
-      align-items: center;
-      gap: 0.9rem;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .sj-brand__logo {
-      width: 44px;
-      height: 44px;
-      object-fit: contain;
-      filter: drop-shadow(0 2px 8px rgba(16, 185, 129, 0.3));
-    }
-
-    .sj-brand__text {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.15;
-    }
-
-    .sj-brand__title {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 800;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-    }
-
-    .sj-brand__subtitle {
-      font-size: 0.72rem;
-      font-weight: 600;
-      color: var(--sj-emerald);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-
-    .sj-topbar__actions {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    .sj-status-pill {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.38rem 0.9rem;
-      border-radius: 9999px;
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.35);
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: #fbbf24;
-      letter-spacing: 0.02em;
-    }
-
-    .sj-pulse-dot {
-      width: 8px;
-      height: 8px;
+    .sj-logo-ring {
+      position: absolute;
+      inset: -12px;
       border-radius: 50%;
-      background-color: #fbbf24;
-      box-shadow: 0 0 10px #fbbf24;
-      animation: sjPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      border: 2px solid transparent;
+      border-top-color: var(--sj-emerald);
+      border-right-color: var(--sj-green);
+      animation: sjLogoSpin 3s linear infinite;
     }
 
-    @keyframes sjPulse {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(0.85); }
+    .sj-logo-ring--outer {
+      inset: -20px;
+      border-top-color: transparent;
+      border-right-color: transparent;
+      border-bottom-color: rgba(16, 185, 129, 0.3);
+      border-left-color: rgba(38, 87, 40, 0.2);
+      animation: sjLogoSpinReverse 4.5s linear infinite;
     }
 
-    /* ── 2. Full-Page Hero Stage ── */
-    .sj-hero {
-      padding: 5rem 0 3.5rem;
-      text-align: center;
+    .sj-logo-pulse {
+      position: absolute;
+      inset: -6px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+      animation: sjLogoPulse 2.5s ease-in-out infinite;
+    }
+
+    @keyframes sjLogoSpin {
+      to { transform: rotate(360deg); }
+    }
+
+    @keyframes sjLogoSpinReverse {
+      to { transform: rotate(-360deg); }
+    }
+
+    @keyframes sjLogoPulse {
+      0%, 100% { transform: scale(1); opacity: 0.6; }
+      50% { transform: scale(1.15); opacity: 1; }
+    }
+
+    .sj-logo-img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
       position: relative;
+      z-index: 2;
+      animation: sjLogoFloat 4s ease-in-out infinite;
     }
 
-    .sj-hero__badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.4rem 1.1rem;
-      border-radius: 9999px;
-      background: rgba(38, 87, 40, 0.25);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--sj-emerald);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1.75rem;
+    @keyframes sjLogoFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
     }
 
-    .sj-hero__title {
-      font-family: var(--font-display);
-      font-size: 3.25rem;
-      font-weight: 800;
-      line-height: 1.12;
-      letter-spacing: -0.03em;
-      color: #FFFFFF;
-      max-width: 900px;
-      margin: 0 auto 1.5rem;
-    }
-
-    .sj-hero__title em {
-      font-style: normal;
-      background: linear-gradient(135deg, #10B981 0%, #34D399 50%, #6EE7B7 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .sj-hero__desc {
-      font-size: 1.18rem;
-      color: var(--text-secondary);
-      max-width: 720px;
-      margin: 0 auto 2.5rem;
-      line-height: 1.7;
-    }
-
-    .sj-hero__ctas {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 3rem;
-    }
-
-    .sj-btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.65rem;
-      padding: 0.85rem 1.85rem;
-      border-radius: 12px;
-      font-size: 0.95rem;
-      font-weight: 700;
-      text-decoration: none;
-      cursor: pointer;
-      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-      border: none;
-    }
-
-    .sj-btn--primary {
-      background: linear-gradient(135deg, var(--sj-primary) 0%, var(--sj-emerald) 100%);
-      color: #FFFFFF;
-      box-shadow: 0 4px 20px rgba(16, 185, 129, 0.35);
-    }
-
-    .sj-btn--primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5);
-    }
-
-    .sj-btn--primary svg.spin {
-      animation: sjSpin 1s linear infinite;
-    }
-
-    @keyframes sjSpin {
-      100% { transform: rotate(360deg); }
-    }
-
-    .sj-btn--outline {
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--text-primary);
-      border: 1px solid var(--surface-border);
-      backdrop-filter: blur(8px);
-    }
-
-    .sj-btn--outline:hover {
-      background: rgba(255, 255, 255, 0.09);
-      border-color: rgba(255, 255, 255, 0.2);
-      transform: translateY(-2px);
-    }
-
-    /* ── Real-Time Progress Bar ── */
-    .sj-progress-panel {
-      max-width: 680px;
-      margin: 0 auto;
-      background: var(--surface-card);
-      border: 1px solid var(--surface-border);
-      border-radius: 16px;
-      padding: 1.25rem 1.75rem;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-    }
-
-    .sj-progress-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 0.75rem;
-      font-size: 0.85rem;
-    }
-
-    .sj-progress-label {
-      font-weight: 700;
-      color: var(--text-primary);
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    .sj-progress-val {
-      font-weight: 800;
-      color: var(--sj-emerald);
-      font-family: var(--font-display);
-    }
-
-    .sj-progress-track {
+    /* ── Flowing Marquee Text ── */
+    .sj-marquee-wrapper {
       width: 100%;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border-radius: 9999px;
       overflow: hidden;
+      margin-bottom: 40px;
       position: relative;
     }
 
-    .sj-progress-fill {
-      width: 88%;
-      height: 100%;
-      background: linear-gradient(90deg, #265728 0%, #10B981 100%);
-      border-radius: 9999px;
-      position: relative;
-      animation: sjProgressGlow 3s ease-in-out infinite alternate;
+    .sj-marquee-wrapper::before,
+    .sj-marquee-wrapper::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 48px;
+      z-index: 2;
+      pointer-events: none;
     }
 
-    @keyframes sjProgressGlow {
-      0% { filter: brightness(1); }
-      100% { filter: brightness(1.25); }
+    .sj-marquee-wrapper::before {
+      left: 0;
+      background: linear-gradient(to right, #FFFFFF, transparent);
     }
 
-    .sj-progress-footer {
+    .sj-marquee-wrapper::after {
+      right: 0;
+      background: linear-gradient(to left, #FFFFFF, transparent);
+    }
+
+    .sj-marquee-track {
       display: flex;
-      justify-content: space-between;
-      margin-top: 0.65rem;
-      font-size: 0.75rem;
-      color: var(--text-muted);
+      width: max-content;
+      animation: sjMarquee 18s linear infinite;
     }
 
-    /* ── 3. Ecosystem Telemetry Subsystem Grid ── */
-    .sj-telemetry {
-      padding: 3rem 0 5rem;
+    @keyframes sjMarquee {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
     }
 
-    .sj-section-header {
-      text-align: center;
-      margin-bottom: 2.75rem;
-    }
-
-    .sj-section-label {
-      display: inline-block;
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--sj-emerald);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.5rem;
-    }
-
-    .sj-section-title {
+    .sj-marquee-text {
       font-family: var(--font-display);
-      font-size: 2.15rem;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-light);
+      white-space: nowrap;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .sj-marquee-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--sj-emerald);
+      flex-shrink: 0;
+    }
+
+    /* ── Heading ── */
+    .sj-heading {
+      font-family: var(--font-display);
+      font-size: 2rem;
       font-weight: 800;
       letter-spacing: -0.02em;
-      color: var(--text-primary);
-      margin-bottom: 0.65rem;
+      color: var(--text-dark);
+      margin-bottom: 12px;
+      line-height: 1.2;
     }
 
-    .sj-section-desc {
-      font-size: 0.98rem;
-      color: var(--text-secondary);
-      max-width: 600px;
-      margin: 0 auto;
+    .sj-subheading {
+      font-size: 1.05rem;
+      color: var(--text-mid);
+      max-width: 440px;
+      margin: 0 auto 40px;
+      line-height: 1.65;
     }
 
-    .sj-telemetry-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-
-    .sj-telemetry-card {
-      background: var(--surface-card);
-      border: 1px solid var(--surface-border);
-      border-radius: 16px;
-      padding: 1.5rem;
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      transition: all 0.25s ease;
+    /* ── Contact Section ── */
+    .sj-contact {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .sj-telemetry-card:hover {
-      border-color: var(--surface-border-strong);
-      transform: translateY(-3px);
-      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
-    }
-
-    .sj-telemetry-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-bottom: 1rem;
-    }
-
-    .sj-telemetry-icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: rgba(38, 87, 40, 0.25);
-      border: 1px solid rgba(16, 185, 129, 0.25);
-      display: flex;
       align-items: center;
-      justify-content: center;
-      color: var(--sj-emerald);
+      gap: 16px;
+      padding-top: 32px;
+      border-top: 1px solid var(--border-light);
+      width: 100%;
     }
 
-    .sj-badge {
-      font-size: 0.72rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      padding: 0.3rem 0.75rem;
-      border-radius: 9999px;
-    }
-
-    .sj-badge--amber {
-      background: rgba(245, 158, 11, 0.12);
-      border: 1px solid rgba(245, 158, 11, 0.3);
-      color: #fbbf24;
-    }
-
-    .sj-badge--emerald {
-      background: rgba(16, 185, 129, 0.12);
-      border: 1px solid rgba(16, 185, 129, 0.3);
-      color: #34d399;
-    }
-
-    .sj-badge--cyan {
-      background: rgba(6, 182, 212, 0.12);
-      border: 1px solid rgba(6, 182, 212, 0.3);
-      color: #38bdf8;
-    }
-
-    .sj-telemetry-name {
-      font-family: var(--font-display);
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.35rem;
-    }
-
-    .sj-telemetry-url {
-      font-size: 0.8rem;
-      color: var(--sj-emerald);
-      font-family: monospace;
-      margin-bottom: 0.75rem;
-      display: block;
-    }
-
-    .sj-telemetry-desc {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
-
-    /* ── 4. Transparency & Corporate Governance Info ── */
-    .sj-transparency {
-      padding: 0 0 5rem;
-    }
-
-    .sj-transparency-card {
-      background: linear-gradient(135deg, rgba(38, 87, 40, 0.2) 0%, rgba(17, 24, 39, 0.6) 100%);
-      border: 1px solid rgba(16, 185, 129, 0.2);
-      border-radius: 20px;
-      padding: 2.25rem 2.5rem;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 2rem;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-    }
-
-    .sj-info-block {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .sj-info-title {
+    .sj-contact-label {
       font-size: 0.75rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--sj-emerald);
-      margin-bottom: 0.4rem;
+      letter-spacing: 0.1em;
+      color: var(--text-light);
     }
 
-    .sj-info-val {
-      font-family: var(--font-display);
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-primary);
-      margin-bottom: 0.35rem;
-    }
-
-    .sj-info-desc {
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      line-height: 1.5;
-    }
-
-    /* ── 5. Enterprise Footer ── */
-    .sj-footer {
-      background: #02040A;
-      border-top: 1px solid var(--surface-border);
-      padding: 2.5rem 0;
-      margin-top: auto;
-    }
-
-    .sj-footer__inner {
+    .sj-contact-links {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
       flex-wrap: wrap;
-      gap: 1.5rem;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-    }
-
-    .sj-footer__legal {
-      display: flex;
       align-items: center;
-      gap: 0.75rem;
+      justify-content: center;
+      gap: 24px;
     }
 
-    .sj-footer__legal a {
-      color: var(--text-secondary);
+    .sj-contact-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
       text-decoration: none;
-      transition: color 0.15s;
+      color: var(--text-dark);
+      font-size: 0.9rem;
+      font-weight: 600;
+      padding: 10px 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-light);
+      background: #FAFAFA;
+      transition: all 0.2s ease;
     }
 
-    .sj-footer__legal a:hover {
+    .sj-contact-item:hover {
+      border-color: var(--sj-emerald);
+      color: var(--sj-green);
+      background: #F0FDF4;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.12);
+    }
+
+    .sj-contact-item svg {
+      flex-shrink: 0;
       color: var(--sj-emerald);
     }
 
-    /* ── Responsive Behavior ── */
-    @media (max-width: 1024px) {
-      .sj-hero__title { font-size: 2.75rem; }
-      .sj-telemetry-grid { grid-template-columns: repeat(2, 1fr); }
-      .sj-transparency-card { grid-template-columns: 1fr; gap: 1.5rem; }
+    /* ── Footer ── */
+    .sj-footer {
+      width: 100%;
+      text-align: center;
+      padding: 24px;
+      font-size: 0.78rem;
+      color: var(--text-light);
+      border-top: 1px solid var(--border-light);
     }
 
+    /* ── Responsive ── */
     @media (max-width: 640px) {
-      .sj-hero { padding: 3.5rem 0 2.5rem; }
-      .sj-hero__title { font-size: 2.1rem; }
-      .sj-hero__desc { font-size: 1.02rem; }
-      .sj-telemetry-grid { grid-template-columns: 1fr; }
-      .sj-topbar__inner { flex-direction: column; align-items: flex-start; gap: 0.75rem; }
-      .sj-topbar__actions { width: 100%; justify-content: space-between; }
-      .sj-hero__ctas { flex-direction: column; width: 100%; }
-      .sj-btn { width: 100%; }
-      .sj-footer__inner { flex-direction: column; align-items: flex-start; }
+      .sj-logo-wrap {
+        width: 96px;
+        height: 96px;
+        margin-bottom: 36px;
+      }
+
+      .sj-logo-img {
+        width: 96px;
+        height: 96px;
+      }
+
+      .sj-heading {
+        font-size: 1.55rem;
+      }
+
+      .sj-subheading {
+        font-size: 0.95rem;
+      }
+
+      .sj-marquee-text {
+        font-size: 0.9rem;
+      }
+
+      .sj-contact-links {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .sj-contact-item {
+        width: 100%;
+        justify-content: center;
+      }
     }
   </style>
 </head>
 <body>
 
-  <div class="sj-ambient-mesh" aria-hidden="true"></div>
+  <main class="sj-maintenance">
 
-  <div class="sj-wrapper">
+    <!-- Animated Logo -->
+    <div class="sj-logo-wrap">
+      <div class="sj-logo-pulse"></div>
+      <div class="sj-logo-ring"></div>
+      <div class="sj-logo-ring sj-logo-ring--outer"></div>
+      <img
+        src="data:image/png;base64,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"
+        alt="Startup Jigawa Logo"
+        class="sj-logo-img"
+        onerror="this.src='logo-white.png';"
+      >
+    </div>
 
-    <!-- ── 1. Enterprise Top Navigation Bar ── -->
-    <header class="sj-topbar">
-      <div class="sj-container sj-topbar__inner">
-        <a href="/" class="sj-brand" aria-label="Startup Jigawa Corporate Home">
-          <img src="data:image/png;base64,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" alt="Startup Jigawa Logo" class="sj-brand__logo" onerror="this.src='logo-white.png';">
-          <div class="sj-brand__text">
-            <span class="sj-brand__title">Startup Jigawa</span>
-            <span class="sj-brand__subtitle">Digital Innovation Center</span>
-          </div>
+    <!-- Flowing Marquee Text -->
+    <div class="sj-marquee-wrapper" aria-label="Site under maintenance">
+      <div class="sj-marquee-track">
+        <span class="sj-marquee-text">
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+        </span>
+        <span class="sj-marquee-text" aria-hidden="true">
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+          <span class="sj-marquee-dot"></span> Site Under Maintenance
+        </span>
+      </div>
+    </div>
+
+    <!-- Heading -->
+    <h1 class="sj-heading">We'll Be Back Shortly</h1>
+    <p class="sj-subheading">
+      Our platform is currently undergoing scheduled maintenance to improve your experience. Thank you for your patience.
+    </p>
+
+    <!-- Contact Details -->
+    <div class="sj-contact">
+      <span class="sj-contact-label">Get In Touch</span>
+      <div class="sj-contact-links">
+        <a href="mailto:info@startupjigawa.com" class="sj-contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+          <span>info@startupjigawa.com</span>
         </a>
-
-        <div class="sj-topbar__actions">
-          <div class="sj-status-pill">
-            <span class="sj-pulse-dot"></span>
-            <span>Platform Optimization In Progress</span>
-          </div>
-        </div>
+        <a href="tel:+2349019997733" class="sj-contact-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+          </svg>
+          <span>+234 901 999 7733</span>
+        </a>
       </div>
-    </header>
+    </div>
 
-    <main>
-      <!-- ── 2. Full-Page Hero Stage ── -->
-      <section class="sj-hero">
-        <div class="sj-container">
-          <div class="sj-hero__badge">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-            <span>Scheduled Platform Maintenance · RC 7256149</span>
-          </div>
+  </main>
 
-          <h1 class="sj-hero__title">
-            Upgrading Digital Infrastructure for <em>Northern Nigeria</em>
-          </h1>
-
-          <p class="sj-hero__desc">
-            We are performing scheduled cloud infrastructure enhancements, database indexing, and telemetry synchronization to optimize speed, security, and uptime across all Startup Jigawa services.
-          </p>
-
-          <div class="sj-hero__ctas">
-            <button class="sj-btn sj-btn--primary" id="btn-refresh" onclick="checkStatus()">
-              <svg id="icon-refresh" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"/>
-              </svg>
-              <span>Check System Status</span>
-            </button>
-
-            <a href="mailto:support@startupjigawa.com?subject=Inquiry:%20Startup%20Jigawa%20Maintenance" class="sj-btn sj-btn--outline">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-                <polyline points="22,6 12,13 2,6"/>
-              </svg>
-              <span>Contact DevOps Team</span>
-            </a>
-          </div>
-
-          <!-- Real-Time Progress Indicator -->
-          <div class="sj-progress-panel">
-            <div class="sj-progress-header">
-              <span class="sj-progress-label">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#10B981" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Current Stage: Microservice Container Synchronization
-              </span>
-              <span class="sj-progress-val">88% Complete</span>
-            </div>
-            <div class="sj-progress-track">
-              <div class="sj-progress-fill"></div>
-            </div>
-            <div class="sj-progress-footer">
-              <span>Automatic health check in <strong id="countdown" style="color:#10B981;">30s</strong></span>
-              <span>HTTP 503 Maintenance Window</span>
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      <!-- ── 3. Ecosystem Telemetry Subsystem Grid ── -->
-      <section class="sj-telemetry">
-        <div class="sj-container">
-          <div class="sj-section-header">
-            <span class="sj-section-label">Subsystem Readiness</span>
-            <h2 class="sj-section-title">Ecosystem Portal Status</h2>
-            <p class="sj-section-desc">Real-time operational status across distributed gateways, portals, and cloud workloads.</p>
-          </div>
-
-          <div class="sj-telemetry-grid">
-            
-            <!-- Service 1: Corporate Gateway -->
-            <div class="sj-telemetry-card">
-              <div>
-                <div class="sj-telemetry-top">
-                  <div class="sj-telemetry-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                  </div>
-                  <span class="sj-badge sj-badge--amber">Optimizing</span>
-                </div>
-                <div class="sj-telemetry-name">Corporate Gateway</div>
-                <span class="sj-telemetry-url">www.startupjigawa.com</span>
-                <p class="sj-telemetry-desc">Landing experience, high-performance static cache warming, and brand media delivery.</p>
-              </div>
-            </div>
-
-            <!-- Service 2: Innovation Academy -->
-            <div class="sj-telemetry-card">
-              <div>
-                <div class="sj-telemetry-top">
-                  <div class="sj-telemetry-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
-                  </div>
-                  <span class="sj-badge sj-badge--amber">Syncing</span>
-                </div>
-                <div class="sj-telemetry-name">Innovation Academy</div>
-                <span class="sj-telemetry-url">academy.startupjigawa.com</span>
-                <p class="sj-telemetry-desc">Course curriculum delivery, digital skills cohorts, and verification registry synchronization.</p>
-              </div>
-            </div>
-
-            <!-- Service 3: Beneficiary & M&E Tracker -->
-            <div class="sj-telemetry-card">
-              <div>
-                <div class="sj-telemetry-top">
-                  <div class="sj-telemetry-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-                  </div>
-                  <span class="sj-badge sj-badge--emerald">Securing</span>
-                </div>
-                <div class="sj-telemetry-name">Beneficiary Tracker</div>
-                <span class="sj-telemetry-url">tracker.startupjigawa.com</span>
-                <p class="sj-telemetry-desc">27 Local Government Areas monitoring &amp; evaluation database indexing and integrity audits.</p>
-              </div>
-            </div>
-
-            <!-- Service 4: Due-Diligence Vault -->
-            <div class="sj-telemetry-card">
-              <div>
-                <div class="sj-telemetry-top">
-                  <div class="sj-telemetry-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-                  </div>
-                  <span class="sj-badge sj-badge--amber">Maintenance</span>
-                </div>
-                <div class="sj-telemetry-name">Due-Diligence Portal</div>
-                <span class="sj-telemetry-url">portal.startupjigawa.com</span>
-                <p class="sj-telemetry-desc">Enterprise stakeholder submissions, NDPR privacy compliance, and statutory verification checks.</p>
-              </div>
-            </div>
-
-            <!-- Service 5: Identity & Single Sign-On -->
-            <div class="sj-telemetry-card">
-              <div>
-                <div class="sj-telemetry-top">
-                  <div class="sj-telemetry-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-                  </div>
-                  <span class="sj-badge sj-badge--emerald">Operational</span>
-                </div>
-                <div class="sj-telemetry-name">Identity &amp; SSO Auth</div>
-                <span class="sj-telemetry-url">auth.startupjigawa.com</span>
-                <p class="sj-telemetry-desc">Cross-subdomain unified authentication token engine and secure credentials vault.</p>
-              </div>
-            </div>
-
-            <!-- Service 6: Cloud Control Plane -->
-            <div class="sj-telemetry-card">
-              <div>
-                <div class="sj-telemetry-top">
-                  <div class="sj-telemetry-icon">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></svg>
-                  </div>
-                  <span class="sj-badge sj-badge--cyan">Standing By</span>
-                </div>
-                <div class="sj-telemetry-name">Cloud Control Plane</div>
-                <span class="sj-telemetry-url">cloud.startupjigawa.com</span>
-                <p class="sj-telemetry-desc">Distributed proxy orchestrator, container healthchecks, and telemetry aggregation pipeline.</p>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <!-- ── 4. Transparency, Governance & Contact Grid ── -->
-      <section class="sj-transparency">
-        <div class="sj-container">
-          <div class="sj-transparency-card">
-            <div class="sj-info-block">
-              <span class="sj-info-title">Corporate Registration</span>
-              <span class="sj-info-val">RC 7256149</span>
-              <p class="sj-info-desc">Incorporated under Federal Republic of Nigeria Companies and Allied Matters Act.</p>
-            </div>
-
-            <div class="sj-info-block">
-              <span class="sj-info-title">Headquarters</span>
-              <span class="sj-info-val">Dutse, Jigawa State</span>
-              <p class="sj-info-desc">97 Nasiriyya House, Along Nuhu Muhammad Sunusi Road, Dutse, Nigeria.</p>
-            </div>
-
-            <div class="sj-info-block">
-              <span class="sj-info-title">DevOps &amp; Support</span>
-              <span class="sj-info-val">support@startupjigawa.com</span>
-              <p class="sj-info-desc">Direct communications line for institutional partners, trainers, and beneficiaries.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <!-- ── 5. Enterprise Footer ── -->
-    <footer class="sj-footer">
-      <div class="sj-container sj-footer__inner">
-        <div>
-          &copy; <span id="year">2026</span> Startup Jigawa Ltd. All rights reserved.
-        </div>
-        <div class="sj-footer__legal">
-          <span>Official Public Sector &amp; Innovation Portal</span>
-          <span>·</span>
-          <span>Dutse, Jigawa State, Nigeria</span>
-        </div>
-      </div>
-    </footer>
-
-  </div>
+  <!-- Footer -->
+  <footer class="sj-footer">
+    &copy; <span id="year">2026</span> Startup Jigawa Ltd. All rights reserved.
+  </footer>
 
   <script>
-    // Real-Time Auto Check & Countdown
-    let secondsLeft = 30;
-    const countdownEl = document.getElementById('countdown');
-    const refreshBtn = document.getElementById('btn-refresh');
-    const refreshIcon = document.getElementById('icon-refresh');
-
-    function updateCountdown() {
-      secondsLeft--;
-      if (countdownEl) countdownEl.innerText = secondsLeft + 's';
-      if (secondsLeft <= 0) {
-        checkStatus();
-      }
-    }
-
-    const timer = setInterval(updateCountdown, 1000);
-
-    function checkStatus() {
-      if (refreshIcon) refreshIcon.classList.add('spin');
-      if (refreshBtn) refreshBtn.disabled = true;
-      clearInterval(timer);
-      setTimeout(() => {
-        window.location.reload();
-      }, 700);
-    }
-
-    try {
-      document.getElementById('year').innerText = new Date().getFullYear();
-    } catch (e) {}
+    document.getElementById('year').textContent = new Date().getFullYear();
   </script>
+
 </body>
 </html>
