@@ -201,8 +201,8 @@ function renderUnifiedHeader(options = {}) {
                   </li>
                   <li>
                     <a href="${corporateUrl}#leadership" class="mega-link">
-                      <span class="mega-link-heading">Leadership & Organogram</span>
-                      <span class="mega-link-sub">Executive direction & supervisory board</span>
+                      <span class="mega-link-heading">Meet Our Team & Leadership</span>
+                      <span class="mega-link-sub">Executive management, directorate & department heads</span>
                     </a>
                   </li>
                   <li>
@@ -342,6 +342,7 @@ function renderUnifiedHeader(options = {}) {
             </button>
             <div id="sj-mobile-accordion-content" class="sj-mobile-accordion-content" hidden>
               <a href="${corporateUrl}#about" class="sj-mobile-sub-item">Institutional Foundation</a>
+              <a href="${corporateUrl}#leadership" class="sj-mobile-sub-item">Meet Our Team & Leadership</a>
               <a href="${corporateUrl}#structure" class="sj-mobile-sub-item">Governance & Structure</a>
               <a href="${corporateUrl}#strategy" class="sj-mobile-sub-item">Strategic Roadmap</a>
               <a href="http://admin.${baseDomain}" class="sj-mobile-sub-item highlight">Due-Diligence Vault &rarr;</a>
@@ -425,7 +426,9 @@ function renderUnifiedHeader(options = {}) {
 
           <!-- Mobile Touch-Optimized Hamburger Button (44px x 44px min target) -->
           <button id="sj-mobile-toggle" class="sj-mobile-menu-btn md:hidden min-w-[44px] min-h-[44px] flex items-center justify-center" aria-label="Toggle Mobile Navigation" aria-expanded="false">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+            <span class="sj-hamburger-box" aria-hidden="true">
+              <span class="sj-hamburger-bar"></span>
+            </span>
           </button>
         </div>
 
@@ -684,6 +687,7 @@ function getHeaderFooterScripts() {
           }
           if (mobileToggle) {
             mobileToggle.setAttribute('aria-expanded', 'true');
+            mobileToggle.classList.add('is-active');
           }
           if (document.body) {
             document.body.classList.add('sj-drawer-open');
@@ -701,13 +705,24 @@ function getHeaderFooterScripts() {
           }
           if (mobileToggle) {
             mobileToggle.setAttribute('aria-expanded', 'false');
+            mobileToggle.classList.remove('is-active');
           }
           if (document.body) {
             document.body.classList.remove('sj-drawer-open');
           }
         }
 
-        if (mobileToggle) mobileToggle.addEventListener('click', openDrawer);
+        if (mobileToggle) {
+          mobileToggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            var isOpen = mobileToggle.getAttribute('aria-expanded') === 'true';
+            if (isOpen) {
+              closeDrawer();
+            } else {
+              openDrawer();
+            }
+          });
+        }
         if (mobileClose) mobileClose.addEventListener('click', closeDrawer);
         if (mobileOverlay) mobileOverlay.addEventListener('click', closeDrawer);
 

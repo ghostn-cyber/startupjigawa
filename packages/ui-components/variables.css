@@ -668,23 +668,93 @@ header.sj-unified-header {
   color: var(--text-primary);
 }
 
+/* Animated Hamburger Button Engine (3-Bar to X Morphing) */
 .sj-mobile-menu-btn {
   display: none;
-  background: var(--surface-card, #FFFFFF);
+  background: var(--surface-card, #111827);
   border: 1px solid var(--surface-border);
   color: var(--text-primary);
+  width: 44px;
+  height: 44px;
   min-width: 44px;
   min-height: 44px;
-  border-radius: 8px;
+  border-radius: 10px;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.15s ease;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  padding: 0;
+  overflow: hidden;
 }
 
 .sj-mobile-menu-btn:hover {
-  border-color: var(--sj-primary);
-  color: var(--sj-primary);
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.1);
+  box-shadow: 0 0 16px rgba(16, 185, 129, 0.3);
+}
+
+.sj-hamburger-box {
+  width: 22px;
+  height: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  pointer-events: none;
+}
+
+.sj-hamburger-bar {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--text-primary, #F8FAFC);
+  border-radius: 2px;
+  position: absolute;
+  top: 7px;
+  left: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+}
+
+.sj-hamburger-bar::before,
+.sj-hamburger-bar::after {
+  content: '';
+  display: block;
+  width: 22px;
+  height: 2px;
+  background-color: var(--text-primary, #F8FAFC);
+  border-radius: 2px;
+  position: absolute;
+  left: 0;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease, background-color 0.25s ease;
+}
+
+.sj-hamburger-bar::before {
+  top: -7px;
+}
+
+.sj-hamburger-bar::after {
+  bottom: -7px;
+}
+
+/* Morph to Animated 'X' when active / open */
+.sj-mobile-menu-btn.is-active .sj-hamburger-bar,
+.sj-mobile-menu-btn[aria-expanded="true"] .sj-hamburger-bar {
+  transform: rotate(45deg);
+  background-color: #10B981;
+}
+
+.sj-mobile-menu-btn.is-active .sj-hamburger-bar::before,
+.sj-mobile-menu-btn[aria-expanded="true"] .sj-hamburger-bar::before {
+  opacity: 0;
+  transform: translateY(7px) rotate(90deg);
+}
+
+.sj-mobile-menu-btn.is-active .sj-hamburger-bar::after,
+.sj-mobile-menu-btn[aria-expanded="true"] .sj-hamburger-bar::after {
+  transform: translateY(-7px) rotate(-90deg);
+  background-color: #10B981;
 }
 
 /* ==========================================================================
