@@ -338,33 +338,12 @@ function renderCorporateGatewayPage(options = {}) {
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(ellipse 65% 55% at 50% -10%, rgba(38, 87, 40, 0.24) 0%, transparent 70%),
-        radial-gradient(circle at 10% 30%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
-        var(--bg-canvas);
-    }
-    :root[data-theme="light"] .sj-hero {
-      background:
         radial-gradient(ellipse 70% 50% at 50% -10%, rgba(38, 87, 40, 0.12) 0%, transparent 70%),
         #FAFAFA;
     }
     .sj-hero__inner { display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 56px; align-items: center; }
     .sj-hero__content { max-width: 600px; }
     
-    .sj-hero__badge {
-      display: inline-flex; align-items: center; gap: 10px;
-      font-size: 0.82rem; font-weight: 600; color: var(--text-secondary, #94a3b8);
-      background: rgba(255, 255, 255, 0.04); padding: 7px 16px;
-      border-radius: 9999px; border: 1px solid var(--surface-border, rgba(255, 255, 255, 0.1));
-      margin-bottom: 24px; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-    }
-    .sj-hero {
-      padding: 92px 0 108px;
-      position: relative;
-      overflow: hidden;
-      background:
-        radial-gradient(ellipse 70% 50% at 50% -10%, rgba(38, 87, 40, 0.12) 0%, transparent 70%),
-        #FAFAFA;
-    }
     .sj-hero__badge {
       display: inline-flex; align-items: center; gap: 10px;
       font-size: 0.82rem; font-weight: 600; color: #1e4520;
@@ -506,6 +485,7 @@ function renderCorporateGatewayPage(options = {}) {
     /* ── Opportunity Cards ── */
     .sj-opps__grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; }
     .sj-opp-card { display: flex; flex-direction: column; justify-content: space-between; }
+    .sj-opp-card > div:first-child { flex: 1; display: flex; flex-direction: column; }
     .sj-opp-card__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .sj-opp-card__status {
       display: inline-flex; align-items: center; gap: 6px;
@@ -520,7 +500,7 @@ function renderCorporateGatewayPage(options = {}) {
     }
     .sj-opp-card__title { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 1.25rem; margin-bottom: 12px; color: var(--text-primary); }
     .sj-opp-card__meta {
-      font-size: 0.88rem; color: var(--text-secondary, #475569); margin-bottom: 24px; line-height: 1.6;
+      font-size: 0.88rem; color: var(--text-secondary, #475569); margin-bottom: 24px; line-height: 1.6; flex: 1;
     }
     .sj-opp-card__cta {
       display: inline-flex; align-items: center; gap: 8px;
@@ -529,14 +509,7 @@ function renderCorporateGatewayPage(options = {}) {
     }
     .sj-opp-card:hover .sj-opp-card__cta svg { transform: translateX(3px); }
     .sj-opp-card__cta svg { width: 15px; height: 15px; transition: transform 0.2s ease; }
-    :root[data-theme="light"] .sj-opp-card__cta { color: #265728; }
-    .sj-opp-card:hover .sj-opp-card__cta svg { transform: translateX(3px); }
-    .sj-opp-card__cta svg { width: 15px; height: 15px; transition: transform 0.2s ease; }
 
-    /* ── Innovation Labs ── */
-    .sj-labs__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
-    .sj-lab { text-align: center; display: flex; flex-direction: column; align-items: center; }
-    .sj-lab__icon {
     /* ── Innovation Labs ── */
     .sj-labs__grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
     .sj-lab { text-align: center; display: flex; flex-direction: column; align-items: center; }
@@ -596,7 +569,7 @@ function renderCorporateGatewayPage(options = {}) {
       padding: 32px; text-align: center; position: relative;
     }
     .sj-story__visual-badge {
-      display: inline-flex; align-items: gap: 8px; padding: 6px 14px;
+      display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px;
       border-radius: 9999px; background: #EAF2EA;
       border: 1px solid rgba(38, 87, 40, 0.25); color: #265728;
       font-size: 0.78rem; font-weight: 700; text-transform: uppercase; margin-bottom: 20px;
@@ -717,11 +690,17 @@ function renderCorporateGatewayPage(options = {}) {
       color: #265728;
       margin-bottom: 12px;
     }
+    .sj-team-card__body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
     .sj-team-bio {
       font-size: 0.88rem;
       color: var(--text-secondary, #475569);
       line-height: 1.6;
       margin-bottom: 20px;
+      flex: 1;
     }
     .sj-team-card__footer {
       display: flex;
@@ -771,13 +750,13 @@ function renderCorporateGatewayPage(options = {}) {
 
     /* ── News ── */
     .sj-news__grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .sj-news-card { display: flex; flex-direction: column; }
+    .sj-news-card { display: flex; flex-direction: column; justify-content: space-between; }
     .sj-news-item__date {
       display: inline-block; font-size: 0.78rem; font-weight: 600; color: #265728;
       text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 10px;
     }
     .sj-news-item__title { font-family: 'Manrope', sans-serif; font-weight: 700; font-size: 1.15rem; margin-bottom: 8px; color: var(--text-primary); }
-    .sj-news-item__excerpt { font-size: 0.9rem; color: var(--text-secondary, #475569); line-height: 1.6; }
+    .sj-news-item__excerpt { font-size: 0.9rem; color: var(--text-secondary, #475569); line-height: 1.6; flex: 1; }
 
     /* ── Closing CTA ── */
     .sj-cta-section {
